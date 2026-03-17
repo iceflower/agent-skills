@@ -9,6 +9,10 @@
 .DS_Store
 Thumbs.db
 
+# Python
+__pycache__/
+*.pyc
+
 # Node.js (if needed for tooling)
 node_modules/
 package-lock.json

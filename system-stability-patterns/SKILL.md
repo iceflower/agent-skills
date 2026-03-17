@@ -1,3 +1,11 @@
+---
+name: system-stability-patterns
+description: >-
+  System stability anti-patterns and patterns including circuit breaker,
+  bulkhead, backpressure, load shedding, and timeout strategies.
+  Use when reviewing system stability or designing fault-tolerant systems.
+---
+
 # Skill: System Stability Patterns
 
 **Source**: Release It! Second Edition - Michael Nygard

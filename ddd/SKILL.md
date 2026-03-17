@@ -1,3 +1,11 @@
+---
+name: ddd
+description: >-
+  Domain-Driven Design patterns including entities, value objects, aggregates,
+  repositories, domain services, domain events, and bounded contexts.
+  Use when designing domain models or implementing business logic.
+---
+
 # Domain-Driven Design (DDD) Skill
 
 Domain-Driven Design patterns and practices for building complex software systems. Use when designing domain models, implementing business logic, or structuring domain-centric applications.

@@ -1,3 +1,11 @@
+---
+name: dockerfile
+description: >-
+  Dockerfile best practices including multi-stage builds, layer caching,
+  security, and JVM/Spring Boot containerization patterns.
+  Use when writing or reviewing Dockerfiles.
+---
+
 # Dockerfile Rules
 
 ## 1. Multi-Stage Build Pattern

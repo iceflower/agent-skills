@@ -1,3 +1,11 @@
+---
+name: microservices
+description: >-
+  Microservices architecture patterns including service decomposition, communication,
+  API gateway, Saga, CQRS, data management, and fault isolation.
+  Use when designing or reviewing microservice architectures.
+---
+
 # Microservices Architecture Pattern Rules
 
 ## 1. Service Decomposition Principles

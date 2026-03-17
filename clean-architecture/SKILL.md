@@ -1,3 +1,11 @@
+---
+name: clean-architecture
+description: >-
+  Clean Architecture and Hexagonal Architecture (Ports & Adapters) patterns.
+  Use when designing layered architecture, defining port/adapter boundaries,
+  or structuring domain-centric applications.
+---
+
 # Clean Architecture / Hexagonal Architecture Rules
 
 ## 1. Architecture Principles

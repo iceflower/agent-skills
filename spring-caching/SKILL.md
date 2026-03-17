@@ -1,3 +1,11 @@
+---
+name: spring-caching
+description: >-
+  Spring Boot caching implementation patterns including Caffeine, Redis,
+  @Cacheable, and event-based invalidation.
+  Use when writing Spring Boot cache code.
+---
+
 # Spring Boot Caching Rules
 
 일반적인 캐싱 원칙(캐시 전략 선택, TTL 설계, 무효화 패턴, 안티패턴)은 `caching.md` 참조.

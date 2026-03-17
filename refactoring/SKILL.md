@@ -1,3 +1,11 @@
+---
+name: refactoring
+description: >-
+  Refactoring techniques including code smell identification, extract/inline methods,
+  conditional simplification, and data organization.
+  Use when refactoring code or identifying code smells.
+---
+
 # Refactoring Rules
 
 ## 1. Refactoring Principles

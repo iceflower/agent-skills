@@ -1,3 +1,11 @@
+---
+name: api-design
+description: >-
+  REST API design principles including URL design, HTTP methods, status codes,
+  pagination, versioning, security, and OpenAPI documentation.
+  Use when designing or implementing REST APIs.
+---
+
 # REST API Design Rules
 
 ## 1. URL Design

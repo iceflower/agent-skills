@@ -1,3 +1,11 @@
+---
+name: technical-documentation
+description: >-
+  Technical documentation guide covering writing principles, user research,
+  deployment process, and quality measurement.
+  Use when writing or reviewing technical documentation.
+---
+
 # Technical Documentation Guide
 
 Comprehensive guide for writing, researching, deploying, and measuring technical documentation quality.

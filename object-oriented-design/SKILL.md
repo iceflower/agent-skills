@@ -1,3 +1,11 @@
+---
+name: object-oriented-design
+description: >-
+  Object-oriented design principles (SOLID) with practical examples.
+  Use when designing class hierarchies, applying SOLID principles,
+  or reviewing object-oriented design.
+---
+
 # Object-Oriented Design Principles (SOLID Advanced)
 
 ## 1. SRP (Single Responsibility Principle)

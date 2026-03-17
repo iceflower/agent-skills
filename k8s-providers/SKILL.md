@@ -1,3 +1,11 @@
+---
+name: k8s-providers
+description: >-
+  Managed Kubernetes providers comparison and best practices for AWS EKS,
+  Azure AKS, and GCP GKE including networking, storage, security, and upgrades.
+  Use when working with managed Kubernetes services.
+---
+
 # Managed Kubernetes Providers Guide
 
 ## 1. Provider Comparison

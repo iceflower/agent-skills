@@ -1,3 +1,11 @@
+---
+name: jvm-performance
+description: >-
+  JVM performance tuning including garbage collection algorithms, GC selection,
+  heap analysis, profiling tools, and cloud-native considerations.
+  Use when diagnosing performance issues or tuning JVM parameters.
+---
+
 # JVM Performance Optimization
 
 Java Virtual Machine performance tuning, garbage collection, and profiling techniques. Use when diagnosing performance issues, tuning JVM parameters, or optimizing Java applications.

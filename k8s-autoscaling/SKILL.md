@@ -1,3 +1,11 @@
+---
+name: k8s-autoscaling
+description: >-
+  Kubernetes autoscaling guide covering KEDA, Knative, event-driven scaling,
+  and scale-to-zero patterns.
+  Use when configuring autoscaling on Kubernetes.
+---
+
 
 # Kubernetes Autoscaling Guide
 

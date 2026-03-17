@@ -1,3 +1,11 @@
+---
+name: spring-monitoring
+description: >-
+  Spring Boot monitoring patterns including Actuator, Micrometer custom metrics,
+  distributed tracing, and health check implementation.
+  Use when implementing Spring Boot observability.
+---
+
 # Spring Boot Monitoring Rules
 
 일반적인 모니터링 원칙(옵저버빌리티 3대 요소, 메트릭 유형/명명, 핵심 메트릭, 알림 규칙, 헬스체크 개념, 안티패턴)은 `monitoring.md` 참조.

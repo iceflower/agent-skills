@@ -1,3 +1,11 @@
+---
+name: concurrency
+description: >-
+  JVM concurrency rules including thread safety, synchronization tools,
+  Executor framework, CompletableFuture, Kotlin coroutines, and virtual threads.
+  Use when writing concurrent or parallel code.
+---
+
 # JVM Concurrency Rules
 
 ## 1. Thread Safety Principles

@@ -1,3 +1,11 @@
+---
+name: spring-error-handling
+description: >-
+  Spring Boot error handling patterns including @ControllerAdvice,
+  BusinessException, ErrorCode enum, and error response implementation.
+  Use when writing Spring Boot exception handling code.
+---
+
 # Spring Boot Error Handling Rules
 
 일반적인 에러 처리 원칙(예외 계층, 에러 응답 포맷, 계층별 가이드라인, 외부 API 에러 처리, 안티패턴)은 `error-handling.md` 참조.

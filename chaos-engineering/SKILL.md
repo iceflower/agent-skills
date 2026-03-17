@@ -1,3 +1,10 @@
+---
+name: chaos-engineering
+description: >-
+  Chaos engineering principles and practices for building resilient systems.
+  Use when designing reliability testing, failure injection experiments, or game days.
+---
+
 # Skill: Chaos Engineering
 
 **Source**: Release It! Second Edition - Michael Nygard (Chapter 17)

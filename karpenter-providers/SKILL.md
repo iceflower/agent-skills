@@ -1,3 +1,11 @@
+---
+name: karpenter-providers
+description: >-
+  Karpenter cloud provider configurations for AWS EC2NodeClass, Azure AKSNodeClass,
+  and GCP GKENodeClass including spot instances, monitoring, and troubleshooting.
+  Use when configuring Karpenter for specific cloud providers.
+---
+
 
 # Karpenter Cloud Providers Guide
 

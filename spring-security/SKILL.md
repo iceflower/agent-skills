@@ -1,3 +1,11 @@
+---
+name: spring-security
+description: >-
+  Spring Boot security implementation including SecurityFilterChain,
+  Bean Validation, CORS configuration, and rate limiting.
+  Use when writing Spring Security configuration.
+---
+
 # Spring Boot Security Rules
 
 일반적인 보안 원칙(입력 검증, 인증/인가, CORS, 보안 헤더, Rate Limiting, 응답 필터링, 시크릿 관리, 안티패턴)은 `security.md` 참조.

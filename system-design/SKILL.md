@@ -1,3 +1,11 @@
+---
+name: system-design
+description: >-
+  Large-scale system design patterns including database architecture, caching,
+  CDN, stateless design, message queues, consistent hashing, and rate limiting.
+  Use when designing scalable system architectures.
+---
+
 # System Design Interview Patterns
 
 Large-scale system design principles and patterns. Use when designing scalable architectures, preparing for system design interviews, or evaluating system architecture.

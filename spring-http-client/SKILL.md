@@ -1,3 +1,11 @@
+---
+name: spring-http-client
+description: >-
+  Spring Boot API client patterns including RestClient, Spring Retry,
+  Resilience4j circuit breaker, and response DTO mapping.
+  Use when writing Spring Boot HTTP client code.
+---
+
 # Spring Boot API Client Rules
 
 일반적인 외부 API 클라이언트 원칙(타임아웃 전략, 에러 분류, 재시도 전략, Circuit Breaker 파라미터, 응답 매핑 원칙, 안티패턴)은 `http-client.md` 참조.

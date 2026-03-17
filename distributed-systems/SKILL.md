@@ -1,3 +1,11 @@
+---
+name: distributed-systems
+description: >-
+  Distributed systems design patterns including data replication, partitioning,
+  distributed time, cluster management, and network communication.
+  Use when designing or implementing distributed systems.
+---
+
 # Distributed Systems Patterns
 
 30 patterns for building reliable distributed systems. Use when designing or implementing distributed databases, messaging systems, or microservices architectures.

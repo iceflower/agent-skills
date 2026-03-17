@@ -1,12 +1,12 @@
 ---
-name: accuweather
+name: weather
 description: >-
-  AccuWeather-based weather information lookup rules.
+  Weather and air quality information lookup using AccuWeather and AirKorea.
   Use when users ask for weather forecasts, hourly forecasts, weather conditions,
   sunrise/sunset times, UV index, or air quality (미세먼지/초미세먼지).
 ---
 
-# AccuWeather Weather Information Rules
+# Weather Information Rules
 
 ## 1. Overview
 
@@ -318,7 +318,61 @@ Present hourly data in a table format:
 | 비 또는 눈      | Rain or snow           |
 | 천둥            | Thunderstorm           |
 
-## 11. Best Practices
+## 11. Weather Script
+
+A Python script is provided at `scripts/weather.py` to fetch weather data directly from AccuWeather via HTML scraping. **Always prefer using this script over WebFetch**, as it handles bot-detection headers and HTML parsing reliably.
+
+### Prerequisites
+
+- Python 3.x
+- `requests` and `beautifulsoup4` packages
+
+### Usage
+
+```bash
+# Daily forecast (default: seoul)
+python3 scripts/weather.py daily [--city CITY]
+
+# Hourly forecast (day: 1=today, 2=tomorrow, 3=day after)
+python3 scripts/weather.py hourly [--city CITY] [--day DAY]
+
+# Air quality
+python3 scripts/weather.py air [--city CITY]
+
+# Hourly air quality (24h PM2.5, PM10, O3, NO2)
+python3 scripts/weather.py air-hourly [--city CITY]
+```
+
+### Supported Cities
+
+`seoul`, `busan`, `daegu`, `incheon`, `gwangju`, `daejeon`, `ulsan`, `sejong`, `gangneung`, `chuncheon`, `jeonju`, `cheongju`, `jeju`, `seogwipo`
+
+### Examples
+
+```bash
+# Tomorrow's hourly forecast for Seoul
+python3 scripts/weather.py hourly --day 2
+
+# Daily forecast for Busan
+python3 scripts/weather.py daily --city busan
+
+# Air quality for Daegu
+python3 scripts/weather.py air --city daegu
+
+# Hourly air quality for Seoul
+python3 scripts/weather.py air-hourly
+```
+
+### Fallback
+
+If the script fails (e.g., network issues, dependency missing), fall back to the WebFetch-based approach described in the URL sections above.
+
+### Query Strategy
+
+1. **First**: Try `scripts/weather.py` (most reliable)
+2. **Fallback**: Use WebFetch with URLs from this document
+
+## 12. Best Practices
 
 ### Query Strategy
 
@@ -353,7 +407,7 @@ Always cite AccuWeather as the source:
 출처: AccuWeather
 ```
 
-## 12. Limitations
+## 13. Limitations
 
 - AccuWeather website may change structure; adapt as needed
 - Some detailed data may require JavaScript rendering

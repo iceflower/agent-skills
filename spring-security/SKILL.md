@@ -8,7 +8,7 @@ description: >-
 
 # Spring Boot Security Rules
 
-일반적인 보안 원칙(입력 검증, 인증/인가, CORS, 보안 헤더, Rate Limiting, 응답 필터링, 시크릿 관리, 안티패턴)은 `security.md` 참조.
+일반적인 보안 원칙(입력 검증, 인증/인가, CORS, 보안 헤더, Rate Limiting, 응답 필터링, 시크릿 관리, 안티패턴)은 `security` 스킬 참조.
 
 이 문서는 Spring Boot에서의 보안 구현 패턴만 다룹니다.
 

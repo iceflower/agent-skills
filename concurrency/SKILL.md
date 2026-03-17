@@ -787,11 +787,11 @@ new ThreadPoolExecutor(
 
 ## 11. Related Rules
 
-- **Java conventions**: see `java-convention.md` (virtual threads, sealed classes, records)
-- **Kotlin conventions**: see `kotlin-convention.md` (coroutines basics, extension functions)
-- **Spring WebFlux and Coroutines**: see `spring-webflux.md` (non-blocking, Flow, R2DBC)
-- **JVM performance**: see `jvm-performance.md` (GC tuning, profiling, memory layout)
-- **Spring Framework**: see `spring-framework.md` (`@Async`, `@Scheduled`, event system)
+- **Java conventions**: `java-convention` 스킬 참조 (virtual threads, sealed classes, records)
+- **Kotlin conventions**: `kotlin-convention` 스킬 참조 (coroutines basics, extension functions)
+- **Spring WebFlux and Coroutines**: `spring-webflux` 스킬 참조 (non-blocking, Flow, R2DBC)
+- **JVM performance**: `jvm-performance` 스킬 참조 (GC tuning, profiling, memory layout)
+- **Spring Framework**: `spring-framework` 스킬 참조 (`@Async`, `@Scheduled`, event system)
 
 ---
 

@@ -613,16 +613,16 @@ class FakeOrderRepository : OrderRepository {
 
 ## 10. Related Rules
 
-| Rule File                  | When to Reference                                             |
+| 관련 스킬                  | When to Reference                                             |
 | -------------------------- | ------------------------------------------------------------- |
-| `ddd.md`                   | Designing entities, aggregates, value objects, domain events  |
-| `code-quality.md`          | Abstraction layers, modularity, single responsibility         |
-| `spring-framework.md`      | IoC, DI, `@Transactional`, event publishing                   |
-| `spring-jpa.md`            | Repository implementation, N+1 prevention, entity conventions |
-| `kotlin-convention.md`     | Sealed classes, extension functions, naming conventions       |
-| `testing-unit.md`              | Writing tests for use cases and domain logic                  |
-| `error-handling.md`        | Exception hierarchy, business vs system exceptions            |
-| `spring-error-handling.md` | `@ControllerAdvice`, `ErrorCode` enum, error response format  |
+| `ddd` 스킬                | Designing entities, aggregates, value objects, domain events  |
+| `code-quality` 스킬       | Abstraction layers, modularity, single responsibility         |
+| `spring-framework` 스킬   | IoC, DI, `@Transactional`, event publishing                   |
+| `spring-jpa` 스킬         | Repository implementation, N+1 prevention, entity conventions |
+| `kotlin-convention` 스킬  | Sealed classes, extension functions, naming conventions       |
+| `testing-unit` 스킬       | Writing tests for use cases and domain logic                  |
+| `error-handling` 스킬     | Exception hierarchy, business vs system exceptions            |
+| `spring-error-handling` 스킬 | `@ControllerAdvice`, `ErrorCode` enum, error response format  |
 
 ---
 

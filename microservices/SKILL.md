@@ -579,20 +579,20 @@ fun notificationSender(
 
 ## 11. Related Rule References
 
-| Topic                 | Rule File                  | Relevance                                          |
+| Topic                 | 관련 스킬                  | Relevance                                          |
 | --------------------- | -------------------------- | -------------------------------------------------- |
-| Messaging patterns    | `messaging.md`             | Broker selection, producer/consumer patterns       |
-| API client resilience | `http-client.md`            | Timeout, retry, circuit breaker configuration      |
-| Spring API client     | `spring-http-client.md`     | RestClient, Spring Retry, Resilience4j setup       |
-| Error handling        | `error-handling.md`        | Exception hierarchy, error response format         |
-| Spring error handling | `spring-error-handling.md` | @ControllerAdvice, ErrorCode enum                  |
-| Monitoring            | `monitoring.md`            | Metrics, tracing, alerting for distributed systems |
-| Spring monitoring     | `spring-monitoring.md`     | Actuator, Micrometer, distributed tracing          |
-| Caching               | `caching.md`               | Cache strategy, TTL, invalidation patterns         |
-| Database              | `database.md`              | Migration, transaction management, query patterns  |
-| API design            | `api-design.md`            | REST conventions, versioning, pagination           |
-| Security              | `security.md`              | Authentication, authorization, rate limiting       |
-| Logging               | `logging.md`               | Structured logging, traceId correlation            |
+| Messaging patterns    | `messaging` 스킬           | Broker selection, producer/consumer patterns       |
+| API client resilience | `http-client` 스킬          | Timeout, retry, circuit breaker configuration      |
+| Spring API client     | `spring-http-client` 스킬   | RestClient, Spring Retry, Resilience4j setup       |
+| Error handling        | `error-handling` 스킬      | Exception hierarchy, error response format         |
+| Spring error handling | `spring-error-handling` 스킬 | @ControllerAdvice, ErrorCode enum                  |
+| Monitoring            | `monitoring` 스킬          | Metrics, tracing, alerting for distributed systems |
+| Spring monitoring     | `spring-monitoring` 스킬   | Actuator, Micrometer, distributed tracing          |
+| Caching               | `caching` 스킬             | Cache strategy, TTL, invalidation patterns         |
+| Database              | `database` 스킬            | Migration, transaction management, query patterns  |
+| API design            | `api-design` 스킬          | REST conventions, versioning, pagination           |
+| Security              | `security` 스킬            | Authentication, authorization, rate limiting       |
+| Logging               | `logging` 스킬             | Structured logging, traceId correlation            |
 
 ---
 

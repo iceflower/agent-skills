@@ -8,7 +8,7 @@ description: >-
 
 # Spring Boot Caching Rules
 
-일반적인 캐싱 원칙(캐시 전략 선택, TTL 설계, 무효화 패턴, 안티패턴)은 `caching.md` 참조.
+일반적인 캐싱 원칙(캐시 전략 선택, TTL 설계, 무효화 패턴, 안티패턴)은 `caching` 스킬 참조.
 
 이 문서는 Spring Boot에서의 캐시 구현 패턴만 다룹니다.
 

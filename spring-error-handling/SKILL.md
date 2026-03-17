@@ -8,7 +8,7 @@ description: >-
 
 # Spring Boot Error Handling Rules
 
-일반적인 에러 처리 원칙(예외 계층, 에러 응답 포맷, 계층별 가이드라인, 외부 API 에러 처리, 안티패턴)은 `error-handling.md` 참조.
+일반적인 에러 처리 원칙(예외 계층, 에러 응답 포맷, 계층별 가이드라인, 외부 API 에러 처리, 안티패턴)은 `error-handling` 스킬 참조.
 
 이 문서는 Spring Boot에서의 구현 패턴만 다룹니다.
 

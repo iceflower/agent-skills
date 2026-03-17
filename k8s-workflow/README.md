@@ -1,6 +1,6 @@
 # k8s-workflow
 
-Kubernetes 매니페스트 작성 규칙 및 운영 가이드
+Kubernetes 매니페스트 + 관리형 K8s (EKS, AKS, GKE) + 오토스케일링 (KEDA, Knative)
 
 ## 사용 방법
 
@@ -9,15 +9,24 @@ Kubernetes 매니페스트 작성 규칙 및 운영 가이드
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/k8s-workflow
-cp SKILL.md ~/.agents/skills/k8s-workflow/
+cp -r k8s-workflow/ ~/.agents/skills/k8s-workflow/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/k8s-workflow
-cp SKILL.md .agents/skills/k8s-workflow/
+cp -r k8s-workflow/ .agents/skills/k8s-workflow/
+```
+
+## 디렉토리 구조
+
+```text
+k8s-workflow/
+├── SKILL.md
+├── README.md
+└── references/
+    ├── autoscaling.md
+    └── providers.md
 ```
 
 ## 호환 도구

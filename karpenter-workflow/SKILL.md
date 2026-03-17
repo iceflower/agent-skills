@@ -1,8 +1,10 @@
 ---
 name: karpenter-workflow
 description: >-
-  Karpenter core workflow, NodePool/EC2NodeClass configuration,
-  autoscaling patterns, and troubleshooting. Use for general Karpenter operations.
+  Karpenter core workflow, NodePool configuration, autoscaling patterns,
+  and troubleshooting. Includes cloud provider configurations
+  (AWS EC2NodeClass, Azure AKSNodeClass, GCP GKENodeClass).
+  Use for Karpenter operations.
 ---
 
 # Karpenter Workflow Guide
@@ -486,3 +488,7 @@ For provider-specific configurations, see dedicated skills:
 - [Karpenter GitHub](https://github.com/kubernetes-sigs/karpenter)
 - [Karpenter Best Practices](https://karpenter.sh/docs/concepts/)
 - [v1 Migration Guide](https://karpenter.sh/v1.0/upgrading/v1-migration/)
+
+## Additional References
+
+- For cloud provider configurations (EC2NodeClass, AKSNodeClass, GKENodeClass), see [references/providers.md](references/providers.md)

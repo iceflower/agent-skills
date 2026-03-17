@@ -1,6 +1,6 @@
 # kotlin-convention
 
-Kotlin 코딩 컨벤션 (Null Safety, 확장 함수, 코루틴)
+Kotlin 코딩 컨벤션 + 버전 마이그레이션 가이드 (1.4 → 2.3)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@ Kotlin 코딩 컨벤션 (Null Safety, 확장 함수, 코루틴)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/kotlin-convention
-cp SKILL.md ~/.agents/skills/kotlin-convention/
+cp -r kotlin-convention/ ~/.agents/skills/kotlin-convention/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/kotlin-convention
-cp SKILL.md .agents/skills/kotlin-convention/
+cp -r kotlin-convention/ .agents/skills/kotlin-convention/
+```
+
+## 디렉토리 구조
+
+```text
+kotlin-convention/
+├── SKILL.md
+├── README.md
+└── references/
+    └── migration.md
 ```
 
 ## 호환 도구

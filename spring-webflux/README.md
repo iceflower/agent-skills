@@ -9,15 +9,13 @@ Spring WebFlux & Kotlin Coroutines (R2DBC, Flow, WebClient, SSE)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/spring-webflux
-cp SKILL.md ~/.agents/skills/spring-webflux/
+cp -r spring-webflux/ ~/.agents/skills/spring-webflux/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/spring-webflux
-cp SKILL.md .agents/skills/spring-webflux/
+cp -r spring-webflux/ .agents/skills/spring-webflux/
 ```
 
 ## 호환 도구

@@ -9,15 +9,13 @@ Dockerfile 작성 규칙 (멀티스테이지 빌드, JVM/Spring Boot 패턴)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/dockerfile
-cp SKILL.md ~/.agents/skills/dockerfile/
+cp -r dockerfile/ ~/.agents/skills/dockerfile/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/dockerfile
-cp SKILL.md .agents/skills/dockerfile/
+cp -r dockerfile/ .agents/skills/dockerfile/
 ```
 
 ## 호환 도구

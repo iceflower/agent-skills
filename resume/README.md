@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/resume
-cp SKILL.md ~/.agents/skills/resume/
+cp -r resume/ ~/.agents/skills/resume/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/resume
-cp SKILL.md .agents/skills/resume/
+cp -r resume/ .agents/skills/resume/
 ```
 
 ## 호환 도구

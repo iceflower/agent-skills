@@ -9,15 +9,13 @@ GitHub Actions 기반 CI/CD 파이프라인 패턴
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/ci-cd
-cp SKILL.md ~/.agents/skills/ci-cd/
+cp -r ci-cd/ ~/.agents/skills/ci-cd/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/ci-cd
-cp SKILL.md .agents/skills/ci-cd/
+cp -r ci-cd/ .agents/skills/ci-cd/
 ```
 
 ## 호환 도구

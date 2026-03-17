@@ -1,6 +1,6 @@
 # code-quality
 
-코드 품질 6대 원칙 (가독성, 예측성, 오용 방지, 모듈성, 재사용성, 테스트 용이성)
+코드 품질 6대 원칙 + 리팩토링 기법 (코드 스멜, 추출/인라인, 조건문 단순화)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/code-quality
-cp SKILL.md ~/.agents/skills/code-quality/
+cp -r code-quality/ ~/.agents/skills/code-quality/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/code-quality
-cp SKILL.md .agents/skills/code-quality/
+cp -r code-quality/ .agents/skills/code-quality/
+```
+
+## 디렉토리 구조
+
+```text
+code-quality/
+├── SKILL.md
+├── README.md
+└── references/
+    └── refactoring.md
 ```
 
 ## 호환 도구

@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/ddd
-cp SKILL.md ~/.agents/skills/ddd/
+cp -r ddd/ ~/.agents/skills/ddd/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/ddd
-cp SKILL.md .agents/skills/ddd/
+cp -r ddd/ .agents/skills/ddd/
 ```
 
 ## 호환 도구

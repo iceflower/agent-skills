@@ -1,6 +1,6 @@
 # database
 
-데이터베이스 공통 규칙 (마이그레이션, 쿼리 성능, 트랜잭션 관리)
+데이터베이스 공통 규칙 + MySQL/PostgreSQL 특화 가이드
 
 ## 사용 방법
 
@@ -9,15 +9,24 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/database
-cp SKILL.md ~/.agents/skills/database/
+cp -r database/ ~/.agents/skills/database/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/database
-cp SKILL.md .agents/skills/database/
+cp -r database/ .agents/skills/database/
+```
+
+## 디렉토리 구조
+
+```text
+database/
+├── SKILL.md
+├── README.md
+└── references/
+    ├── mysql.md
+    └── postgresql.md
 ```
 
 ## 호환 도구

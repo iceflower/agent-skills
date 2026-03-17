@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/microservices
-cp SKILL.md ~/.agents/skills/microservices/
+cp -r microservices/ ~/.agents/skills/microservices/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/microservices
-cp SKILL.md .agents/skills/microservices/
+cp -r microservices/ .agents/skills/microservices/
 ```
 
 ## 호환 도구

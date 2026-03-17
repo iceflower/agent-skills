@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/messaging
-cp SKILL.md ~/.agents/skills/messaging/
+cp -r messaging/ ~/.agents/skills/messaging/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/messaging
-cp SKILL.md .agents/skills/messaging/
+cp -r messaging/ .agents/skills/messaging/
 ```
 
 ## 호환 도구

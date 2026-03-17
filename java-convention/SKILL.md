@@ -2,8 +2,8 @@
 name: java-convention
 description: >-
   Java coding conventions and modern idioms with Spring Boot integration.
-  Use when writing or reviewing Java code, including records, sealed classes,
-  pattern matching, virtual threads, and Spring Boot patterns.
+  Includes version migration guide (8 → 11 → 17 → 21 → 25).
+  Use when writing or reviewing Java code.
 ---
 
 # Java Convention Rules
@@ -582,3 +582,7 @@ try (inputStream) {
 - Empty catch blocks — at minimum log the exception
 - Using `==` for String comparison — use `.equals()`
 - `synchronized` with virtual threads on Java 21–23 — use `ReentrantLock` (fixed in Java 24+)
+
+## Additional References
+
+- For Java version migration (8 → 25), see [references/migration.md](references/migration.md)

@@ -9,15 +9,13 @@ Gradle 빌드 컨벤션 (멀티모듈, 버전 카탈로그, Convention 플러그
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/gradle-convention
-cp SKILL.md ~/.agents/skills/gradle-convention/
+cp -r gradle-convention/ ~/.agents/skills/gradle-convention/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/gradle-convention
-cp SKILL.md .agents/skills/gradle-convention/
+cp -r gradle-convention/ .agents/skills/gradle-convention/
 ```
 
 ## 호환 도구

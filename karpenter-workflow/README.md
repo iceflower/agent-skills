@@ -1,6 +1,6 @@
 # karpenter-workflow
 
-Karpenter 노드 오토스케일링 워크플로우
+Karpenter 워크플로우 + 클라우드 프로바이더별 설정 (AWS, Azure, GKE)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@ Karpenter 노드 오토스케일링 워크플로우
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/karpenter-workflow
-cp SKILL.md ~/.agents/skills/karpenter-workflow/
+cp -r karpenter-workflow/ ~/.agents/skills/karpenter-workflow/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/karpenter-workflow
-cp SKILL.md .agents/skills/karpenter-workflow/
+cp -r karpenter-workflow/ .agents/skills/karpenter-workflow/
+```
+
+## 디렉토리 구조
+
+```text
+karpenter-workflow/
+├── SKILL.md
+├── README.md
+└── references/
+    └── providers.md
 ```
 
 ## 호환 도구

@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/code-review
-cp SKILL.md ~/.agents/skills/code-review/
+cp -r code-review/ ~/.agents/skills/code-review/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/code-review
-cp SKILL.md .agents/skills/code-review/
+cp -r code-review/ .agents/skills/code-review/
 ```
 
 ## 호환 도구

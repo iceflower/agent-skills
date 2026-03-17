@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/object-oriented-design
-cp SKILL.md ~/.agents/skills/object-oriented-design/
+cp -r object-oriented-design/ ~/.agents/skills/object-oriented-design/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/object-oriented-design
-cp SKILL.md .agents/skills/object-oriented-design/
+cp -r object-oriented-design/ .agents/skills/object-oriented-design/
 ```
 
 ## 호환 도구

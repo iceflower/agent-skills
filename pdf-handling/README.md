@@ -9,15 +9,13 @@ PDF 파일 읽기 및 처리 규칙 (pdftoppm 변환)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/pdf-handling
-cp SKILL.md ~/.agents/skills/pdf-handling/
+cp -r pdf-handling/ ~/.agents/skills/pdf-handling/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/pdf-handling
-cp SKILL.md .agents/skills/pdf-handling/
+cp -r pdf-handling/ .agents/skills/pdf-handling/
 ```
 
 ## 호환 도구

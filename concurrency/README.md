@@ -9,15 +9,13 @@ JVM 동시성 (스레드 안전, Executor, CompletableFuture, 코루틴, 가상 
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/concurrency
-cp SKILL.md ~/.agents/skills/concurrency/
+cp -r concurrency/ ~/.agents/skills/concurrency/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/concurrency
-cp SKILL.md .agents/skills/concurrency/
+cp -r concurrency/ .agents/skills/concurrency/
 ```
 
 ## 호환 도구

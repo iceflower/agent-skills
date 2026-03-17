@@ -1,6 +1,6 @@
 # spring-framework
 
-Spring Framework 핵심 (IoC/DI, AOP, @Transactional, 이벤트, MVC)
+Spring Framework 핵심 + Framework/Boot 버전 마이그레이션 가이드
 
 ## 사용 방법
 
@@ -9,15 +9,24 @@ Spring Framework 핵심 (IoC/DI, AOP, @Transactional, 이벤트, MVC)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/spring-framework
-cp SKILL.md ~/.agents/skills/spring-framework/
+cp -r spring-framework/ ~/.agents/skills/spring-framework/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/spring-framework
-cp SKILL.md .agents/skills/spring-framework/
+cp -r spring-framework/ .agents/skills/spring-framework/
+```
+
+## 디렉토리 구조
+
+```text
+spring-framework/
+├── SKILL.md
+├── README.md
+└── references/
+    ├── boot-migration.md
+    └── framework-migration.md
 ```
 
 ## 호환 도구

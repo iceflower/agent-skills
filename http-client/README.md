@@ -1,6 +1,6 @@
 # http-client
 
-외부 API 클라이언트 규칙 (타임아웃, 재시도, Circuit Breaker)
+외부 API 클라이언트 규칙 + Spring Boot 구현 (RestClient, Resilience4j)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/http-client
-cp SKILL.md ~/.agents/skills/http-client/
+cp -r http-client/ ~/.agents/skills/http-client/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/http-client
-cp SKILL.md .agents/skills/http-client/
+cp -r http-client/ .agents/skills/http-client/
+```
+
+## 디렉토리 구조
+
+```text
+http-client/
+├── SKILL.md
+├── README.md
+└── references/
+    └── spring.md
 ```
 
 ## 호환 도구

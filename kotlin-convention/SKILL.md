@@ -177,3 +177,7 @@ data class FeatureProperties(
 - `@Autowired` field injection — use constructor injection
 - `lateinit var` for injected dependencies — use constructor parameters
 - `open` classes/methods for Spring proxying — use `allopen` plugin instead
+
+## Additional References
+
+- For Kotlin version migration (1.4 → 2.3), see [references/migration.md](references/migration.md)

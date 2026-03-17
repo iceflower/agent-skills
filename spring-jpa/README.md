@@ -9,15 +9,13 @@ Spring Data JPA (N+1 방지, @Transactional, 엔티티 컨벤션)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/spring-jpa
-cp SKILL.md ~/.agents/skills/spring-jpa/
+cp -r spring-jpa/ ~/.agents/skills/spring-jpa/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/spring-jpa
-cp SKILL.md .agents/skills/spring-jpa/
+cp -r spring-jpa/ .agents/skills/spring-jpa/
 ```
 
 ## 호환 도구

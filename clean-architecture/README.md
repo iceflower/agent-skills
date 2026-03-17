@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/clean-architecture
-cp SKILL.md ~/.agents/skills/clean-architecture/
+cp -r clean-architecture/ ~/.agents/skills/clean-architecture/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/clean-architecture
-cp SKILL.md .agents/skills/clean-architecture/
+cp -r clean-architecture/ .agents/skills/clean-architecture/
 ```
 
 ## 호환 도구

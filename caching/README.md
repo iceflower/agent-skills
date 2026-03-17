@@ -1,6 +1,6 @@
 # caching
 
-캐시 전략 선택, TTL 설계, 무효화 패턴, 안티패턴
+캐시 전략, TTL 설계, 무효화 패턴 + Spring Boot 캐시 구현 (Caffeine, Redis)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/caching
-cp SKILL.md ~/.agents/skills/caching/
+cp -r caching/ ~/.agents/skills/caching/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/caching
-cp SKILL.md .agents/skills/caching/
+cp -r caching/ .agents/skills/caching/
+```
+
+## 디렉토리 구조
+
+```text
+caching/
+├── SKILL.md
+├── README.md
+└── references/
+    └── spring.md
 ```
 
 ## 호환 도구

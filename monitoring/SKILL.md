@@ -1,8 +1,9 @@
 ---
 name: monitoring
 description: >-
-  Framework-agnostic observability patterns including metrics, logging, tracing,
-  alerting rules, and health check concepts.
+  Framework-agnostic observability patterns including metrics, logging,
+  tracing, alerting rules, and health check concepts.
+  Includes Spring Boot implementation (Actuator, Micrometer, distributed tracing).
   Use when implementing monitoring or alerting.
 ---
 # Monitoring and Observability Rules
@@ -139,3 +140,7 @@ Dashboard: {dashboard_url}
 - Dashboard with 50+ panels (information overload)
 - No baseline metrics (cannot detect regressions)
 - Monitoring only infrastructure, not business metrics
+
+## Additional References
+
+- For Spring Boot implementation patterns, see [references/spring.md](references/spring.md)

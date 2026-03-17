@@ -3,6 +3,7 @@ name: error-handling
 description: >-
   Framework-agnostic error handling patterns including exception hierarchy,
   error classification, response format, and handling principles.
+  Includes Spring Boot implementation patterns (@ControllerAdvice, ErrorCode enum).
   Use when designing error handling strategies.
 ---
 # Error Handling Rules
@@ -127,3 +128,7 @@ description: >-
 - Missing error codes (only HTTP status, no application code)
 - Logging errors without stack traces
 - Retrying on non-idempotent failures without safeguards
+
+## Additional References
+
+- For Spring Boot implementation patterns, see [references/spring.md](references/spring.md)

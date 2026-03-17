@@ -1,6 +1,6 @@
 # monitoring
 
-옵저버빌리티 패턴 (메트릭, 로깅, 트레이싱, 알림 규칙)
+옵저버빌리티 패턴 + Spring Boot 구현 (Actuator, Micrometer, 분산 트레이싱)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/monitoring
-cp SKILL.md ~/.agents/skills/monitoring/
+cp -r monitoring/ ~/.agents/skills/monitoring/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/monitoring
-cp SKILL.md .agents/skills/monitoring/
+cp -r monitoring/ .agents/skills/monitoring/
+```
+
+## 디렉토리 구조
+
+```text
+monitoring/
+├── SKILL.md
+├── README.md
+└── references/
+    └── spring.md
 ```
 
 ## 호환 도구

@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/distributed-systems
-cp SKILL.md ~/.agents/skills/distributed-systems/
+cp -r distributed-systems/ ~/.agents/skills/distributed-systems/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/distributed-systems
-cp SKILL.md .agents/skills/distributed-systems/
+cp -r distributed-systems/ .agents/skills/distributed-systems/
 ```
 
 ## 호환 도구

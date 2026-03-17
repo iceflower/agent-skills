@@ -9,15 +9,13 @@ JetBrains Exposed ORM (DSL, DAO, 테이블 정의, Spring Boot 통합)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/exposed
-cp SKILL.md ~/.agents/skills/exposed/
+cp -r exposed/ ~/.agents/skills/exposed/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/exposed
-cp SKILL.md .agents/skills/exposed/
+cp -r exposed/ .agents/skills/exposed/
 ```
 
 ## 호환 도구

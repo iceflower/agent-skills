@@ -1,6 +1,6 @@
 # java-convention
 
-Java 코딩 컨벤션 (Records, Sealed Classes, 패턴 매칭, 가상 스레드)
+Java 코딩 컨벤션 + 버전 마이그레이션 가이드 (8 → 25)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@ Java 코딩 컨벤션 (Records, Sealed Classes, 패턴 매칭, 가상 스레드)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/java-convention
-cp SKILL.md ~/.agents/skills/java-convention/
+cp -r java-convention/ ~/.agents/skills/java-convention/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/java-convention
-cp SKILL.md .agents/skills/java-convention/
+cp -r java-convention/ .agents/skills/java-convention/
+```
+
+## 디렉토리 구조
+
+```text
+java-convention/
+├── SKILL.md
+├── README.md
+└── references/
+    └── migration.md
 ```
 
 ## 호환 도구

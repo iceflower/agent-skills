@@ -1,6 +1,6 @@
 # security
 
-보안 규칙 (입력 검증, 인증/인가, CORS, Rate Limiting, 시크릿 관리)
+보안 규칙 + Spring Boot 구현 (SecurityFilterChain, Bean Validation)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/security
-cp SKILL.md ~/.agents/skills/security/
+cp -r security/ ~/.agents/skills/security/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/security
-cp SKILL.md .agents/skills/security/
+cp -r security/ .agents/skills/security/
+```
+
+## 디렉토리 구조
+
+```text
+security/
+├── SKILL.md
+├── README.md
+└── references/
+    └── spring.md
 ```
 
 ## 호환 도구

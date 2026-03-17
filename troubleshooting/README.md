@@ -1,6 +1,6 @@
 # troubleshooting
 
-트러블슈팅 가이드 (느린 API, 롤백, 연결 문제, 디버깅 원칙)
+트러블슈팅 가이드 + Spring Boot 트러블슈팅 (시작 실패, OOM, HikariCP)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/troubleshooting
-cp SKILL.md ~/.agents/skills/troubleshooting/
+cp -r troubleshooting/ ~/.agents/skills/troubleshooting/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/troubleshooting
-cp SKILL.md .agents/skills/troubleshooting/
+cp -r troubleshooting/ .agents/skills/troubleshooting/
+```
+
+## 디렉토리 구조
+
+```text
+troubleshooting/
+├── SKILL.md
+├── README.md
+└── references/
+    └── spring.md
 ```
 
 ## 호환 도구

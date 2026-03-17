@@ -2,7 +2,9 @@
 name: terraform-workflow
 description: >-
   Terraform core workflow rules, state management, module design patterns,
-  and version considerations. Use for general Terraform operations and best practices.
+  and version considerations. Includes provider-specific guides for AWS (v6.x),
+  Azure (v4.x), and GCP (v6.x).
+  Use for Terraform operations and best practices.
 ---
 # Terraform Workflow Rules
 
@@ -352,3 +354,8 @@ For provider-specific issues and best practices, see dedicated skills:
 - **Azure Provider**: `terraform-azure-provider` skill
 - **GCP Provider**: `terraform-gcp-provider` skill
 
+## Additional References
+
+- For AWS provider v6.x issues and best practices, see [references/aws-provider.md](references/aws-provider.md)
+- For Azure provider v4.x issues and best practices, see [references/azure-provider.md](references/azure-provider.md)
+- For GCP provider v6.x issues and best practices, see [references/gcp-provider.md](references/gcp-provider.md)

@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/technical-documentation
-cp SKILL.md ~/.agents/skills/technical-documentation/
+cp -r technical-documentation/ ~/.agents/skills/technical-documentation/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/technical-documentation
-cp SKILL.md .agents/skills/technical-documentation/
+cp -r technical-documentation/ .agents/skills/technical-documentation/
 ```
 
 ## 호환 도구

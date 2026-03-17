@@ -3,6 +3,7 @@ name: system-design
 description: >-
   Large-scale system design patterns including database architecture, caching,
   CDN, stateless design, message queues, consistent hashing, and rate limiting.
+  Includes system stability patterns (circuit breaker, bulkhead, backpressure).
   Use when designing scalable system architectures.
 ---
 
@@ -634,3 +635,7 @@ class SnowflakeIdGenerator {
 - Designing Data-Intensive Applications by Martin Kleppmann
 - Building Secure and Reliable Systems by Google
 - Various technical blogs and community resources
+
+## Additional References
+
+- For system stability patterns, see [references/stability-patterns.md](references/stability-patterns.md)

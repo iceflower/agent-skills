@@ -9,15 +9,13 @@ JVM 성능 튜닝 (GC 알고리즘, 힙 분석, 프로파일링)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/jvm-performance
-cp SKILL.md ~/.agents/skills/jvm-performance/
+cp -r jvm-performance/ ~/.agents/skills/jvm-performance/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/jvm-performance
-cp SKILL.md .agents/skills/jvm-performance/
+cp -r jvm-performance/ .agents/skills/jvm-performance/
 ```
 
 ## 호환 도구

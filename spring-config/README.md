@@ -9,15 +9,13 @@ Spring Boot 설정 관리 (@ConfigurationProperties, 프로파일, HikariCP)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/spring-config
-cp SKILL.md ~/.agents/skills/spring-config/
+cp -r spring-config/ ~/.agents/skills/spring-config/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/spring-config
-cp SKILL.md .agents/skills/spring-config/
+cp -r spring-config/ .agents/skills/spring-config/
 ```
 
 ## 호환 도구

@@ -1,6 +1,6 @@
 # terraform-workflow
 
-Terraform 핵심 워크플로우 (상태 관리, 모듈 설계, 버전 관리)
+Terraform 핵심 워크플로우 + AWS/Azure/GCP 프로바이더 가이드
 
 ## 사용 방법
 
@@ -9,15 +9,25 @@ Terraform 핵심 워크플로우 (상태 관리, 모듈 설계, 버전 관리)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/terraform-workflow
-cp SKILL.md ~/.agents/skills/terraform-workflow/
+cp -r terraform-workflow/ ~/.agents/skills/terraform-workflow/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/terraform-workflow
-cp SKILL.md .agents/skills/terraform-workflow/
+cp -r terraform-workflow/ .agents/skills/terraform-workflow/
+```
+
+## 디렉토리 구조
+
+```text
+terraform-workflow/
+├── SKILL.md
+├── README.md
+└── references/
+    ├── aws-provider.md
+    ├── azure-provider.md
+    └── gcp-provider.md
 ```
 
 ## 호환 도구

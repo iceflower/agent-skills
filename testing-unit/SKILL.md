@@ -109,3 +109,7 @@ Every test must satisfy all five criteria:
 - Constructor injection allows replacing dependencies with fakes or mocks during tests
 - Dependency injection improves not only testability but also modularity and flexibility
 - Combine static factory methods with constructor injection to maintain both production convenience and testability
+
+## Additional References
+
+- For integration testing patterns, see [references/integration.md](references/integration.md)

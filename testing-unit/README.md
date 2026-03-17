@@ -1,6 +1,6 @@
 # testing-unit
 
-BDD 스타일 단위 테스트 (Describe-Context-It, 테스트 더블)
+BDD 스타일 단위 테스트 + 통합 테스트 (Testcontainers, Mock 서버)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@ BDD 스타일 단위 테스트 (Describe-Context-It, 테스트 더블)
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/testing-unit
-cp SKILL.md ~/.agents/skills/testing-unit/
+cp -r testing-unit/ ~/.agents/skills/testing-unit/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/testing-unit
-cp SKILL.md .agents/skills/testing-unit/
+cp -r testing-unit/ .agents/skills/testing-unit/
+```
+
+## 디렉토리 구조
+
+```text
+testing-unit/
+├── SKILL.md
+├── README.md
+└── references/
+    └── integration.md
 ```
 
 ## 호환 도구

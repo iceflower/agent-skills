@@ -3,6 +3,7 @@ name: spring-framework
 description: >-
   Spring Framework core conventions including IoC/DI, AOP, transaction management,
   event system, bean lifecycle, MVC interceptors, validation, and scheduling.
+  Includes migration guides for Framework (5.x → 7.0) and Boot (2.7 → 4.0).
   Use when working with Spring Framework core features.
 ---
 
@@ -559,3 +560,8 @@ public class NotificationService {
 - Heavy initialization in `@PostConstruct` — delays startup
 - Ignoring `@TransactionalEventListener` phase — side effects may execute before commit
 - Using `@Scheduled(fixedRate)` for long-running tasks without overlap protection
+
+## Additional References
+
+- For Spring Framework migration (5.x → 6.x → 7.0), see [references/framework-migration.md](references/framework-migration.md)
+- For Spring Boot migration (2.7 → 3.x → 4.0), see [references/boot-migration.md](references/boot-migration.md)

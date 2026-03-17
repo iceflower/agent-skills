@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/logging
-cp SKILL.md ~/.agents/skills/logging/
+cp -r logging/ ~/.agents/skills/logging/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/logging
-cp SKILL.md .agents/skills/logging/
+cp -r logging/ .agents/skills/logging/
 ```
 
 ## 호환 도구

@@ -3,6 +3,7 @@ name: database
 description: >-
   Framework-agnostic database rules including migration conventions, query
   performance, transaction management, and anti-patterns.
+  Includes MySQL and PostgreSQL specific guides.
   Use when writing SQL or designing database access.
 ---
 
@@ -202,3 +203,8 @@ WHERE u.status = 'ACTIVE';
 - Storing large blobs in relational tables without evaluating object storage
 - Missing foreign key constraints on related tables
 - Using `FLOAT`/`DOUBLE` for monetary values (use `DECIMAL`/`NUMERIC`)
+
+## Additional References
+
+- For MySQL-specific rules, see [references/mysql.md](references/mysql.md)
+- For PostgreSQL-specific rules, see [references/postgresql.md](references/postgresql.md)

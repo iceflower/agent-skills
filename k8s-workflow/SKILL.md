@@ -2,7 +2,9 @@
 name: k8s-workflow
 description: >-
   Kubernetes core workflow rules, manifest conventions, security best practices,
-  and version considerations. Use for general Kubernetes operations and manifest authoring.
+  and version considerations. Includes managed K8s providers (EKS, AKS, GKE)
+  and autoscaling (KEDA, Knative, event-driven scaling).
+  Use for Kubernetes operations and manifest authoring.
 ---
 
 # Kubernetes Workflow Rules
@@ -251,3 +253,8 @@ For provider-specific managed Kubernetes services, see dedicated skills:
 - Using `NodePort` in production — use `ClusterIP` + Ingress
 - Ignoring deprecation warnings before upgrades
 - Not testing upgrades in non-production first
+
+## Additional References
+
+- For managed Kubernetes providers (EKS, AKS, GKE), see [references/providers.md](references/providers.md)
+- For autoscaling (KEDA, Knative, event-driven), see [references/autoscaling.md](references/autoscaling.md)

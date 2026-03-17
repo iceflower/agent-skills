@@ -9,15 +9,13 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/chaos-engineering
-cp SKILL.md ~/.agents/skills/chaos-engineering/
+cp -r chaos-engineering/ ~/.agents/skills/chaos-engineering/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/chaos-engineering
-cp SKILL.md .agents/skills/chaos-engineering/
+cp -r chaos-engineering/ .agents/skills/chaos-engineering/
 ```
 
 ## 호환 도구

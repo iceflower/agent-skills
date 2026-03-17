@@ -1,6 +1,6 @@
 # system-design
 
-대규모 시스템 설계 패턴 (샤딩, 캐싱, CDN, 메시지 큐)
+대규모 시스템 설계 패턴 + 시스템 안정성 패턴 (Circuit Breaker, Bulkhead)
 
 ## 사용 방법
 
@@ -9,15 +9,23 @@
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/system-design
-cp SKILL.md ~/.agents/skills/system-design/
+cp -r system-design/ ~/.agents/skills/system-design/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/system-design
-cp SKILL.md .agents/skills/system-design/
+cp -r system-design/ .agents/skills/system-design/
+```
+
+## 디렉토리 구조
+
+```text
+system-design/
+├── SKILL.md
+├── README.md
+└── references/
+    └── stability-patterns.md
 ```
 
 ## 호환 도구

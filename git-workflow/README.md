@@ -9,15 +9,13 @@ Git 커밋 컨벤션 및 브랜치 전략
 ### 전역 설치
 
 ```bash
-mkdir -p ~/.agents/skills/git-workflow
-cp SKILL.md ~/.agents/skills/git-workflow/
+cp -r git-workflow/ ~/.agents/skills/git-workflow/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-mkdir -p .agents/skills/git-workflow
-cp SKILL.md .agents/skills/git-workflow/
+cp -r git-workflow/ .agents/skills/git-workflow/
 ```
 
 ## 호환 도구

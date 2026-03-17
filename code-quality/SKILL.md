@@ -1,7 +1,8 @@
 ---
 name: code-quality
 description: >-
-  Code quality and design principles.
+  Code quality and design principles. Includes refactoring techniques,
+  code smell identification, and safe refactoring workflows.
   Use when writing, reviewing, or refactoring code.
 ---
 # Code Quality and Design Principles
@@ -301,3 +302,7 @@ Every piece of code should satisfy these six qualities:
 - Three occurrences is a reasonable threshold
   for extraction (Rule of Three)
 - Over-abstraction is as harmful as duplication
+
+## Additional References
+
+- For refactoring techniques and code smells, see [references/refactoring.md](references/refactoring.md)

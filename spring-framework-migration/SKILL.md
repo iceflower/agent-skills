@@ -309,7 +309,7 @@ public class UserControllerV2 {
 
 ### See Also
 
-For Spring Boot 4.0 specific auto-configuration and starter changes, see `spring-boot-migration` skill.
+For Spring Boot 4.0 specific auto-configuration and starter changes, `spring-boot-migration` 스킬 참조.
 
 ---
 

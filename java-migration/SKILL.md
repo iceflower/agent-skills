@@ -481,7 +481,7 @@ if (obj instanceof Point(var x, _)) {
 
 ## 8. Spring Boot Version Compatibility
 
-For detailed Spring Boot migration guide (2.7 → 3.x → 4.0), see `spring-boot-migration.md`.
+For detailed Spring Boot migration guide (2.7 → 3.x → 4.0), `spring-boot-migration` 스킬을 참조하세요.
 
 | Spring Boot | Minimum Java | Recommended Java | Jakarta EE    |
 | ----------- | ------------ | ---------------- | ------------- |

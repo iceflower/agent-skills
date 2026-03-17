@@ -628,12 +628,12 @@ describe("LegacyPriceCalculator") {
 
 ## 10. Related Rules
 
-| Rule File         | Relevance                                                              |
+| 관련 스킬           | Relevance                                                              |
 | ----------------- | ---------------------------------------------------------------------- |
-| `code-quality.md` | Quality pillars that refactoring aims to achieve                       |
-| `code-review.md`  | Code review is a key trigger for identifying refactoring opportunities |
-| `testing-unit.md`     | Tests provide the safety net for refactoring                           |
-| `git-workflow.md` | Commit conventions for refactoring changes                             |
+| `code-quality` 스킬 | Quality pillars that refactoring aims to achieve                       |
+| `code-review` 스킬  | Code review is a key trigger for identifying refactoring opportunities |
+| `testing-unit` 스킬 | Tests provide the safety net for refactoring                           |
+| `git-workflow` 스킬 | Commit conventions for refactoring changes                             |
 
 ---
 

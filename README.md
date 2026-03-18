@@ -44,10 +44,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 
 | 스킬 | 설명 |
 |------|------|
-| [spring-framework](./spring-framework/) | Spring Framework 핵심 + Framework/Boot 버전 마이그레이션 가이드 |
-| [spring-jpa](./spring-jpa/) | Spring Data JPA (N+1 방지, @Transactional, 엔티티 컨벤션) |
-| [spring-webflux](./spring-webflux/) | Spring WebFlux & Kotlin Coroutines (R2DBC, Flow, WebClient, SSE) |
-| [spring-config](./spring-config/) | Spring Boot 설정 관리 (@ConfigurationProperties, 프로파일, HikariCP) |
+| [spring-framework](./spring-framework/) | Spring Framework 핵심 (IoC, MVC, WebFlux, JPA, Config) + Framework/Boot 버전 마이그레이션 가이드 |
 
 ### Java & Kotlin
 

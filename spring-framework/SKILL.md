@@ -2,7 +2,8 @@
 name: spring-framework
 description: >-
   Spring Framework core conventions including IoC/DI, AOP, transaction management,
-  event system, bean lifecycle, MVC interceptors, validation, and scheduling.
+  event system, bean lifecycle, WebMVC, WebFlux, validation, scheduling,
+  configuration management, and JPA/data access patterns.
   Includes migration guides for Framework (5.x → 7.0) and Boot (2.7 → 4.0).
   Use when working with Spring Framework core features.
 ---
@@ -367,46 +368,15 @@ public class CacheWarmer {
 
 ---
 
-## 6. Spring MVC Core
+## 6. Spring WebMVC
 
-### HandlerInterceptor
-
-```java
-@Component
-public class RequestTimingInterceptor implements HandlerInterceptor {
-
-    @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) {
-        request.setAttribute("startTime", System.currentTimeMillis());
-        return true; // Continue processing
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Object handler, Exception ex) {
-        long start = (Long) request.getAttribute("startTime");
-        long duration = System.currentTimeMillis() - start;
-        log.info("{} {} completed in {}ms",
-            request.getMethod(), request.getRequestURI(), duration);
-    }
-}
-
-// Register interceptor
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-    private final RequestTimingInterceptor timingInterceptor;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(timingInterceptor)
-            .addPathPatterns("/api/**")
-            .excludePathPatterns("/api/health");
-    }
-}
-```
+> **See [references/webmvc.md](references/webmvc.md) for detailed patterns including:**
+> - REST Controller patterns (CRUD, pagination, binding)
+> - Exception handling (`@RestControllerAdvice`)
+> - Filter vs Interceptor usage
+> - CORS configuration
+> - File upload/download
+> - ResponseEntity patterns
 
 ### Filter vs Interceptor vs AOP
 
@@ -416,13 +386,35 @@ public class WebConfig implements WebMvcConfigurer {
 | `Interceptor`  | Spring MVC        | Handler method info          | Request timing, authorization  |
 | `AOP`          | Spring bean       | Method args, return value    | Business cross-cutting concerns|
 
-- Filters run before Spring MVC — use for servlet-level concerns
-- Interceptors run within Spring MVC — use when handler info is needed
-- AOP applies to any Spring bean — use for service/repository concerns
+---
+
+## 7. Spring WebFlux
+
+> **See [references/webflux.md](references/webflux.md) for detailed patterns including:**
+> - Kotlin Coroutines integration (suspend functions, Flow)
+> - R2DBC database access
+> - WebClient configuration and usage
+> - Parallel execution with coroutineScope
+> - SSE streaming
+> - Error handling and timeouts
+
+### WebFlux vs MVC Selection
+
+| Scenario                                    | WebFlux | MVC  |
+| ------------------------------------------- | ------- | ---- |
+| High concurrency with I/O-bound workloads   | Yes     |      |
+| Streaming data (SSE, WebSocket)             | Yes     |      |
+| CPU-bound workloads                         |         | Yes  |
+| Blocking libraries (JDBC, legacy SDK)       |         | Yes  |
+
+### Key Constraint
+
+- WebFlux runs on a small, fixed thread pool (event loop)
+- **Never block the event loop** — use `Dispatchers.IO` for blocking calls
 
 ---
 
-## 7. Validation
+## 8. Validation
 
 ### Bean Validation with Custom Validators
 
@@ -486,7 +478,7 @@ public UserResponse update(@Validated(OnUpdate.class) @RequestBody UserRequest r
 
 ---
 
-## 8. Task Scheduling
+## 9. Task Scheduling
 
 ### @Scheduled
 
@@ -548,18 +540,103 @@ public class NotificationService {
 
 ---
 
-## 9. Anti-Patterns
+## 10. Configuration Management
+
+### Profile Structure
+
+```text
+src/main/resources/
+├── application.yml              # Common settings (all profiles)
+├── application-local.yml        # Local development
+├── application-dev.yml          # Dev environment
+├── application-staging.yml      # Staging environment
+└── application-prod.yml         # Production environment
+```
+
+### Profile Activation
+
+```yaml
+# application.yml — default profile
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+```
+
+### Profile Separation Rules
+
+| Setting              | Common | Local | Dev | Staging | Prod |
+| -------------------- | ------ | ----- | --- | ------- | ---- |
+| Server port          | Yes    |       |     |         |      |
+| DB URL               |        | Yes   | Yes | Yes     | Yes  |
+| Log level            |        | Yes   | Yes | Yes     | Yes  |
+| Feature flags        |        |       | Yes | Yes     | Yes  |
+| Connection pool size |        |       | Yes | Yes     | Yes  |
+| CORS origins         |        |       | Yes | Yes     | Yes  |
+
+- Common settings go in `application.yml`
+- Environment-specific overrides go in profile files
+- Never put secrets in any yml file — use environment variables
+
+---
+
+## 11. @ConfigurationProperties
+
+> **See [references/configuration-properties.md](references/configuration-properties.md) for detailed patterns including:**
+> - Kotlin data class and Java record patterns
+> - Environment variable binding and secret management
+> - HikariCP connection pool configuration
+> - Actuator configuration
+
+---
+
+## 12. JPA and Data Access
+
+> **See [references/jpa-patterns.md](references/jpa-patterns.md) for detailed patterns including:**
+> - N+1 problem prevention (fetch join, EntityGraph)
+> - JPA entity conventions and design rules
+> - Spring Data repository patterns
+
+---
+
+## 13. Anti-Patterns
+
+### IoC and AOP
 
 - Field injection with `@Autowired` — use constructor injection
 - Storing mutable state in singleton beans — causes concurrency bugs
 - Self-invocation expecting AOP/proxy behavior (`@Transactional`, `@Async`, `@Cacheable`)
+- Heavy initialization in `@PostConstruct` — delays startup
+
+### Transaction Management
+
 - Calling external APIs inside `@Transactional` — holds DB locks
 - Catching exceptions inside `@Transactional` — prevents rollback
 - `@Transactional` on private methods — silently ignored
-- Using `ApplicationEvent` for cross-service communication — use messaging
-- Heavy initialization in `@PostConstruct` — delays startup
 - Ignoring `@TransactionalEventListener` phase — side effects may execute before commit
+
+### Event System
+
+- Using `ApplicationEvent` for cross-service communication — use messaging
+
+### Scheduling
+
 - Using `@Scheduled(fixedRate)` for long-running tasks without overlap protection
+
+### Configuration
+
+- Hardcoding environment-specific values in `application.yml`
+- Using `@Value` for complex or grouped configuration
+- Putting secrets with default values in config files
+- Duplicating common settings across profile files
+- Missing validation on configuration properties
+- Exposing all actuator endpoints without access control
+
+### JPA and Data Access
+
+- Returning JPA entities directly from controllers — use response DTOs
+- N+1 queries — use fetch join or `@EntityGraph`
+- Using `EnumType.ORDINAL` for enums — use `EnumType.STRING`
+- Missing pagination on large result sets
 
 ## Additional References
 

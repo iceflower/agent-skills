@@ -1,54 +1,6 @@
----
-name: spring-config
-description: Spring Boot configuration management patterns. Use when writing or
-  reviewing application.yml, profile config, @ConfigurationProperties, or actuator
-  settings.
----
+# Configuration Properties
 
-# Spring Boot Configuration Rules
-
-## 1. Profile Management
-
-### Profile Structure
-
-```text
-src/main/resources/
-├── application.yml              # Common settings (all profiles)
-├── application-local.yml        # Local development
-├── application-dev.yml          # Dev environment
-├── application-staging.yml      # Staging environment
-└── application-prod.yml         # Production environment
-```
-
-### Profile Activation
-
-```yaml
-# application.yml — default profile
-spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
-```
-
-### Profile Separation Rules
-
-| Setting              | Common | Local | Dev | Staging | Prod |
-| -------------------- | ------ | ----- | --- | ------- | ---- |
-| Server port          | Yes    |       |     |         |      |
-| DB URL               |        | Yes   | Yes | Yes     | Yes  |
-| Log level            |        | Yes   | Yes | Yes     | Yes  |
-| Feature flags        |        |       | Yes | Yes     | Yes  |
-| Connection pool size |        |       | Yes | Yes     | Yes  |
-| CORS origins         |        |       | Yes | Yes     | Yes  |
-
-- Common settings go in `application.yml`
-- Environment-specific overrides go in profile files
-- Never put secrets in any yml file — use environment variables
-
----
-
-## 2. @ConfigurationProperties
-
-### Preferred Pattern
+## Preferred Pattern (Kotlin)
 
 ```kotlin
 @ConfigurationProperties(prefix = "app.feature")
@@ -60,7 +12,31 @@ data class FeatureProperties(
 )
 ```
 
-### Registration
+## Preferred Pattern (Java)
+
+```java
+@ConfigurationProperties(prefix = "app.feature")
+public record FeatureProperties(
+    boolean enabled,
+    int maxRetries,
+    Duration timeout,
+    List<String> allowedOrigins
+) {
+    public FeatureProperties {
+        if (maxRetries < 0) throw new IllegalArgumentException("maxRetries must be >= 0");
+        if (timeout == null) timeout = Duration.ofSeconds(30);
+        if (allowedOrigins == null) allowedOrigins = List.of();
+    }
+}
+```
+
+## Registration
+
+```java
+@Configuration
+@EnableConfigurationProperties(FeatureProperties.class)
+public class AppConfig {}
+```
 
 ```kotlin
 @Configuration
@@ -68,10 +44,10 @@ data class FeatureProperties(
 class AppConfig
 ```
 
-### Configuration Properties Rules
+## Configuration Properties Rules
 
 - Always use `@ConfigurationProperties` over `@Value` for grouped config
-- Use `data class` for immutable configuration binding
+- Use `data class` (Kotlin) or `record` (Java) for immutable configuration binding
 - Provide sensible defaults for all properties
 - Use `Duration`, `DataSize` types instead of raw numbers
 - Validate with `@Validated` and JSR-303 annotations when needed
@@ -81,29 +57,13 @@ class AppConfig
 @ConfigurationProperties(prefix = "app.http-client")
 data class HttpClientProperties(
     val connectTimeout: Duration = Duration.ofSeconds(5),
-
     val readTimeout: Duration = Duration.ofSeconds(30),
-
     @field:Min(1) @field:Max(100)
     val maxConnections: Int = 20
 )
 ```
 
----
-
-## 3. Environment Variable Binding
-
-### Naming Convention
-
-```yaml
-# application.yml
-app:
-  database:
-    connection-pool-size: ${APP_DATABASE_CONNECTION_POOL_SIZE:10}
-    max-lifetime: ${APP_DATABASE_MAX_LIFETIME:30m}
-```
-
-### Binding Rules
+## Environment Variable Binding
 
 | YAML key                | Environment variable              |
 | ----------------------- | --------------------------------- |
@@ -116,13 +76,10 @@ app:
 - Always provide defaults for non-secret values
 - Never provide defaults for secrets (force explicit configuration)
 
----
-
-## 4. Secret Management
-
-### Do
+## Secret Management
 
 ```yaml
+# Do
 spring:
   datasource:
     url: ${DB_URL}
@@ -133,31 +90,11 @@ jwt:
   secret: ${JWT_SECRET}
 ```
 
-### Do Not
-
-```yaml
-# Never hardcode secrets
-spring:
-  datasource:
-    password: my-secret-password  # WRONG
-
-# Never commit default secrets
-jwt:
-  secret: ${JWT_SECRET:default-secret}  # WRONG
-```
-
-### Secret Handling Rules
-
 - Secrets must come from environment variables or secret managers
 - No default values for secrets — fail fast if missing
 - Use Kubernetes Secrets or cloud provider secret managers in production
-- Rotate secrets without application restart when possible
 
----
-
-## 5. Connection Pool Configuration
-
-### HikariCP Defaults
+## Connection Pool Configuration (HikariCP)
 
 ```yaml
 spring:
@@ -171,8 +108,6 @@ spring:
       pool-name: app-hikari-pool
 ```
 
-### Sizing Guidelines
-
 | Environment | Min Idle | Max Pool | Rationale                  |
 | ----------- | -------- | -------- | -------------------------- |
 | Local       | 2        | 5        | Minimal resources          |
@@ -182,13 +117,8 @@ spring:
 
 - Formula: `max_pool_size = (core_count * 2) + disk_spindles`
 - Always set `max-lifetime` below database connection timeout
-- Monitor pool usage before adjusting sizes
 
----
-
-## 6. Actuator Configuration
-
-### Recommended Setup
+## Actuator Configuration
 
 ```yaml
 management:
@@ -209,20 +139,5 @@ management:
       enabled: true
 ```
 
-### Security Rules
-
 - Never expose all actuator endpoints in production
 - Protect sensitive endpoints (env, configprops, beans) behind authentication
-- Use separate management port for internal-only endpoints when needed
-
----
-
-## 7. Anti-Patterns
-
-- Hardcoding environment-specific values in `application.yml`
-- Using `@Value` for complex or grouped configuration
-- Putting secrets with default values in config files
-- Duplicating common settings across profile files
-- Using `spring.profiles.include` chains that are hard to trace
-- Missing validation on configuration properties
-- Exposing all actuator endpoints without access control

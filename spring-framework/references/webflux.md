@@ -1,16 +1,6 @@
----
-name: spring-webflux
-description: >-
-  Spring WebFlux and Kotlin Coroutines conventions.
-  Use when writing reactive endpoints, suspend functions in controllers,
-  R2DBC repositories, WebClient, Flow pipelines, or SSE streaming.
----
+# Spring WebFlux and Coroutines
 
-# Spring WebFlux and Coroutines Rules
-
-## 1. WebFlux vs MVC Selection Criteria
-
-### When to Use WebFlux
+## WebFlux vs MVC Selection
 
 | Scenario                                    | WebFlux | MVC  |
 | ------------------------------------------- | ------- | ---- |
@@ -28,9 +18,7 @@ description: >-
 - **Never block the event loop** — blocking calls (JDBC, `Thread.sleep`, synchronized) will starve all requests
 - If you must use blocking libraries, use `Dispatchers.IO` or `Schedulers.boundedElastic()`
 
----
-
-## 2. Kotlin Coroutines with Spring WebFlux
+## Kotlin Coroutines with WebFlux
 
 ### Controller Layer
 
@@ -52,7 +40,9 @@ class UserController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    suspend fun createUser(@Valid @RequestBody request: CreateUserRequest): UserResponse =
+    suspend fun createUser(
+        @Valid @RequestBody request: CreateUserRequest
+    ): UserResponse =
         userService.create(request)
 }
 ```
@@ -101,13 +91,12 @@ interface UserRepository : CoroutineCrudRepository<User, Long> {
 - Never use `runBlocking` in request-handling code — it blocks the event loop
 - Use `coroutineScope` for structured parallel operations
 
----
+## Parallel Execution
 
-## 3. Parallel Execution
-
-### Structured Concurrency with coroutineScope
+### Structured Concurrency
 
 ```kotlin
+// All-or-nothing: any failure cancels siblings
 suspend fun getDashboard(userId: Long): DashboardResponse = coroutineScope {
     val profile = async { userService.findById(userId) }
     val orders = async { orderService.findRecentByUserId(userId) }
@@ -119,6 +108,17 @@ suspend fun getDashboard(userId: Long): DashboardResponse = coroutineScope {
         notifications = notifications.await()
     )
 }
+
+// Independent failures: child failure does not cancel siblings
+suspend fun getDashboardWithFallback(userId: Long): DashboardResponse = supervisorScope {
+    val profile = async { userService.findById(userId) }
+    val orders = async {
+        try { orderService.findRecentByUserId(userId) }
+        catch (e: Exception) { emptyList() }
+    }
+
+    DashboardResponse(profile.await(), orders.await())
+}
 ```
 
 ### Rules
@@ -126,31 +126,26 @@ suspend fun getDashboard(userId: Long): DashboardResponse = coroutineScope {
 - Always use `coroutineScope` or `supervisorScope` — never `GlobalScope`
 - Use `async` + `await` for parallel I/O operations
 - Use `supervisorScope` when child failures should not cancel siblings
-- `coroutineScope` cancels all children if any child fails — use for all-or-nothing operations
 
----
-
-## 4. Flow Patterns
+## Flow Patterns
 
 ### Flow Operators
 
 ```kotlin
-// Transform
+// Transform and filter
 fun findActiveUsers(): Flow<UserResponse> =
     userRepository.findAll()
         .filter { it.status == UserStatus.ACTIVE }
         .map { it.toResponse() }
 
-// Batch processing (collect to list, then chunk)
+// Batch processing
 suspend fun batchProcess(items: Flow<Item>) {
     items.toList()
         .chunked(100)
-        .forEach { batch ->
-            processBatch(batch)
-        }
+        .forEach { batch -> processBatch(batch) }
 }
 
-// Error handling in Flow
+// Error handling
 fun fetchData(): Flow<Data> =
     dataRepository.findAll()
         .catch { e ->
@@ -160,6 +155,16 @@ fun fetchData(): Flow<Data> =
         .onCompletion { cause ->
             if (cause != null) log.warn("Flow completed with error", cause)
         }
+
+// FlatMap for nested flows
+fun getUserOrders(): Flow<OrderResponse> =
+    userRepository.findAll()
+        .flatMapMerge { user -> orderService.findByUserId(user.id) }
+
+// Rate limiting
+fun fetchWithRateLimit(): Flow<Data> =
+    dataRepository.findAll()
+        .onEach { delay(100) } // 100ms between items
 ```
 
 ### Flow vs List
@@ -175,13 +180,11 @@ fun fetchData(): Flow<Data> =
 ### Flow Rules
 
 - Prefer `Flow` over `List` for database queries that may return large result sets
-- `Flow` is cold — collection does not start until `collect` is called
+- `Flow` is cold — collection does not start until terminal operator
 - Never collect a `Flow` inside another `Flow.map` — use `flatMapConcat` or `flatMapMerge`
 - Use `flowOn(Dispatchers.IO)` to shift blocking operations off the event loop
 
----
-
-## 5. WebClient (HTTP Client)
+## WebClient (HTTP Client)
 
 ### Configuration
 
@@ -228,7 +231,32 @@ class PaymentClient(
                 Mono.error(PaymentValidationException("Payment validation failed"))
             }
             .awaitBody()
+
+    suspend fun listPayments(): List<PaymentResponse> =
+        webClient.get()
+            .uri("/payments")
+            .retrieve()
+            .bodyToFlow<PaymentResponse>()
+            .toList()
 }
+```
+
+### Streaming Response
+
+```kotlin
+suspend fun streamEvents(): Flow<Event> =
+    webClient.get()
+        .uri("/events/stream")
+        .retrieve()
+        .bodyToFlow<Event>()
+
+// SSE streaming
+suspend fun streamSSE(): Flow<ServerSentEvent<Data>> =
+    webClient.get()
+        .uri("/events")
+        .accept(MediaType.TEXT_EVENT_STREAM)
+        .retrieve()
+        .bodyToFlow<ServerSentEvent<Data>>()
 ```
 
 ### WebClient Rules
@@ -237,63 +265,9 @@ class PaymentClient(
 - Never use `block()` — it defeats the purpose of non-blocking
 - Configure timeouts explicitly — WebClient defaults may be infinite
 - Use `onStatus` for HTTP error mapping before `awaitBody()`
+- Use `bodyToFlow()` for streaming responses
 
----
-
-## 6. Error Handling
-
-### Coroutine Exception Handling
-
-```kotlin
-@RestControllerAdvice
-class GlobalExceptionHandler {
-
-    @ExceptionHandler(BusinessException::class)
-    suspend fun handleBusinessException(e: BusinessException): ResponseEntity<ErrorResponse> {
-        log.warn("Business exception: ${e.errorCode.code}", e)
-        return ResponseEntity
-            .status(e.errorCode.status)
-            .body(ErrorResponse.of(e.errorCode, e.message))
-    }
-
-    @ExceptionHandler(WebClientResponseException::class)
-    suspend fun handleWebClientException(e: WebClientResponseException): ResponseEntity<ErrorResponse> {
-        log.error("External API error: ${e.statusCode}", e)
-        return ResponseEntity
-            .status(HttpStatus.BAD_GATEWAY)
-            .body(ErrorResponse.of(ErrorCode.EXTERNAL_API_ERROR))
-    }
-}
-```
-
-### Timeout Handling
-
-```kotlin
-suspend fun fetchWithTimeout(): Data =
-    withTimeout(5000L) {
-        externalClient.fetchData()
-    }
-
-// Or catch timeout
-suspend fun fetchSafely(): Data? =
-    try {
-        withTimeout(5000L) { externalClient.fetchData() }
-    } catch (e: TimeoutCancellationException) {
-        log.warn("External API timeout", e)
-        null
-    }
-```
-
-### Error Handling Rules
-
-- `@RestControllerAdvice` works the same way as in MVC
-- Use `withTimeout` for coroutine-level timeout control
-- `CancellationException` should not be caught — it is the cancellation signal for structured concurrency
-- Wrap external API errors in domain exceptions at the client boundary
-
----
-
-## 7. R2DBC Database Access
+## R2DBC Database Access
 
 ### Dependencies
 
@@ -333,16 +307,55 @@ data class User(
 )
 ```
 
+### Custom Repository Methods
+
+```kotlin
+interface UserRepository : CoroutineCrudRepository<User, Long> {
+    suspend fun findByEmail(email: String): User?
+    fun findByStatus(status: UserStatus): Flow<User>
+
+    @Query("SELECT * FROM users WHERE name LIKE :keyword% ORDER BY name")
+    fun searchByNamePrefix(keyword: String): Flow<User>
+
+    @Query("SELECT u.* FROM users u JOIN orders o ON u.id = o.user_id WHERE o.id = :orderId")
+    suspend fun findByOrderId(orderId: Long): User?
+}
+
+// Using DatabaseClient for complex queries
+@Repository
+class CustomUserRepository(
+    private val databaseClient: DatabaseClient
+) {
+    suspend fun findWithOrderCount(userId: Long): UserWithOrderCount? =
+        databaseClient.sql("""
+            SELECT u.*, COUNT(o.id) as order_count
+            FROM users u
+            LEFT JOIN orders o ON u.id = o.user_id
+            WHERE u.id = :userId
+            GROUP BY u.id
+        """)
+            .bind("userId", userId)
+            .map { row ->
+                UserWithOrderCount(
+                    id = row.get("id", Long::class.java)!!,
+                    name = row.get("name", String::class.java)!!,
+                    orderCount = row.get("order_count", Long::class.java) ?: 0L
+                )
+            }
+            .awaitSingleOrNull()
+}
+```
+
 ### R2DBC Rules
 
 - R2DBC does not support lazy loading or JPA relationships — fetch joins manually
 - Use `@Query` with SQL for join queries — no JPQL support
 - Use `DatabaseClient` for complex queries that `CoroutineCrudRepository` cannot express
-- Schema migration still uses Flyway/Liquibase (they run blocking at startup, which is acceptable)
+- Schema migration still uses Flyway/Liquibase (blocking at startup is acceptable)
 
----
+## Server-Sent Events (SSE)
 
-## 8. Server-Sent Events (SSE)
+### Server Side
 
 ```kotlin
 @GetMapping("/stream", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
@@ -354,16 +367,100 @@ fun streamEvents(): Flow<ServerSentEvent<EventData>> =
                 .event(event.type)
                 .build()
         }
+
+// With keepalive
+@GetMapping("/events")
+fun streamWithKeepalive(): Flow<ServerSentEvent<Any>> = flow {
+    while (currentCoroutineContext().isActive) {
+        val event = eventQueue.receiveOrNull() ?: HeartbeatEvent()
+        emit(ServerSentEvent.builder<Any>()
+            .event(event.type)
+            .data(event)
+            .build())
+    }
+}
 ```
 
----
+### Client Side (WebClient)
 
-## 9. Testing
+```kotlin
+suspend fun subscribeToEvents(): Flow<Event> =
+    webClient.get()
+        .uri("/events")
+        .accept(MediaType.TEXT_EVENT_STREAM)
+        .retrieve()
+        .bodyToFlow<ServerSentEvent<Event>>()
+        .mapNotNull { it.data() }
+```
+
+## Error Handling
+
+### Global Exception Handler
+
+```kotlin
+@RestControllerAdvice
+class GlobalExceptionHandler {
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    suspend fun handleNotFound(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
+        log.warn("Entity not found: ${e.message}")
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse(
+                code = "ENTITY_NOT_FOUND",
+                message = e.message ?: "Entity not found"
+            ))
+    }
+
+    @ExceptionHandler(WebClientResponseException::class)
+    suspend fun handleWebClientException(e: WebClientResponseException): ResponseEntity<ErrorResponse> {
+        log.error("External API error: ${e.statusCode}", e)
+        return ResponseEntity
+            .status(HttpStatus.BAD_GATEWAY)
+            .body(ErrorResponse(
+                code = "EXTERNAL_API_ERROR",
+                message = "External service error"
+            ))
+    }
+
+    @ExceptionHandler(TimeoutCancellationException::class)
+    suspend fun handleTimeout(e: TimeoutCancellationException): ResponseEntity<ErrorResponse> {
+        log.warn("Request timeout", e)
+        return ResponseEntity
+            .status(HttpStatus.GATEWAY_TIMEOUT)
+            .body(ErrorResponse(
+                code = "TIMEOUT",
+                message = "Request timed out"
+            ))
+    }
+}
+```
+
+### Timeout Handling
+
+```kotlin
+suspend fun fetchWithTimeout(): Data =
+    withTimeout(5000L) {
+        externalClient.fetchData()
+    }
+
+// With fallback
+suspend fun fetchSafely(): Data? =
+    try {
+        withTimeout(5000L) { externalClient.fetchData() }
+    } catch (e: TimeoutCancellationException) {
+        log.warn("External API timeout", e)
+        null
+    }
+```
+
+## Testing
 
 ### Controller Test
 
 ```kotlin
 @WebFluxTest(UserController::class)
+@Import(TestSecurityConfig::class)
 class UserControllerTest(
     @Autowired private val webTestClient: WebTestClient,
     @MockkBean private val userService: UserService
@@ -379,34 +476,73 @@ class UserControllerTest(
             .expectBody<UserResponse>()
             .isEqualTo(userResponse)
     }
+
+    @Test
+    fun `should create user`() {
+        coEvery { userService.create(any()) } returns userResponse
+
+        webTestClient.post()
+            .uri("/api/v1/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(createRequest)
+            .exchange()
+            .expectStatus().isCreated
+            .expectBody<UserResponse>()
+            .isEqualTo(userResponse)
+    }
 }
 ```
 
-### Coroutine Test
+### Service Test
+
+```kotlin
+@ExtendWith(MockKExtension::class)
+class UserServiceTest {
+    @MockK
+    private lateinit var userRepository: UserRepository
+
+    @InjectMockKs
+    private lateinit var userService: UserService
+
+    @Test
+    fun `should find user by id`() = runTest {
+        coEvery { userRepository.findById(1L) } returns user
+
+        val result = userService.findById(1L)
+
+        assertThat(result).isEqualTo(userResponse)
+        coVerify { userRepository.findById(1L) }
+    }
+
+    @Test
+    fun `should throw when user not found`() = runTest {
+        coEvery { userRepository.findById(999L) } returns null
+
+        assertThrows<EntityNotFoundException> {
+            userService.findById(999L)
+        }
+    }
+}
+```
+
+### Flow Test (Turbine)
 
 ```kotlin
 @Test
-fun `should fetch dashboard in parallel`() = runTest {
-    coEvery { userService.findById(1L) } returns profile
-    coEvery { orderService.findRecentByUserId(1L) } returns orders
+fun `should stream users`() = runTest {
+    every { userRepository.findAll() } returns flowOf(user1, user2, user3)
 
-    val result = dashboardService.getDashboard(1L)
-
-    assertThat(result.profile).isEqualTo(profile)
-    assertThat(result.orders).isEqualTo(orders)
+    userService.findAll()
+        .test {
+            assertThat(awaitItem()).isEqualTo(user1.toResponse())
+            assertThat(awaitItem()).isEqualTo(user2.toResponse())
+            assertThat(awaitItem()).isEqualTo(user3.toResponse())
+            awaitComplete()
+        }
 }
 ```
 
-### Testing Rules
-
-- Use `runTest` from `kotlinx-coroutines-test` for suspend function tests
-- Use `WebTestClient` for controller integration tests
-- Use `coEvery` / `coVerify` from MockK for coroutine mock interactions
-- Use `Turbine` library for `Flow` assertion
-
----
-
-## 10. Blocking Code Integration
+## Blocking Code Integration
 
 ### When Blocking is Unavoidable
 
@@ -422,6 +558,13 @@ fun processWithBlocking(): Flow<Data> =
     sourceFlow
         .map { blockingTransform(it) }
         .flowOn(Dispatchers.IO)
+
+// Bounded elastic for limited concurrency
+val boundedDispatcher = Dispatchers.IO.limitedParallelism(10)
+suspend fun limitedBlocking(): Result =
+    withContext(boundedDispatcher) {
+        blockingCall()
+    }
 ```
 
 ### Rules
@@ -429,17 +572,17 @@ fun processWithBlocking(): Flow<Data> =
 - Use `Dispatchers.IO` for JDBC, file I/O, or legacy blocking SDK calls
 - Never call blocking code on `Dispatchers.Default` or the event loop
 - If most of the application is blocking, use Spring MVC instead of WebFlux
-- `withContext(Dispatchers.IO)` is acceptable for isolated blocking calls, not as a general pattern
+- Use `limitedParallelism` to prevent thread pool exhaustion
 
----
+## WebFlux Anti-Patterns
 
-## 11. Anti-Patterns
-
-- Using `runBlocking` in request handlers (blocks event loop threads)
+- Using `runBlocking` in request handlers (blocks event loop)
 - Using `block()` on Mono/Flux (defeats non-blocking purpose)
-- Mixing Reactor API (`Mono`, `Flux`) with Coroutines without bridge functions (`awaitSingle`, `asFlow`)
+- Mixing Reactor API (`Mono`, `Flux`) with Coroutines without bridge functions
 - Using `GlobalScope.launch` (unstructured concurrency, memory leaks)
 - Catching `CancellationException` without rethrowing (breaks structured concurrency)
 - Using JDBC/JPA with WebFlux (blocking drivers on non-blocking runtime)
 - Creating unbounded `Flow` without backpressure consideration
 - Using `Thread.sleep()` instead of `delay()` in coroutine context
+- Calling `toList()` on large Flows (defeats streaming purpose)
+- Not configuring WebClient timeouts (may hang indefinitely)

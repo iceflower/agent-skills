@@ -367,123 +367,7 @@ public AsyncTaskExecutor applicationTaskExecutor() {
 
 ---
 
-## 8. Spring Boot Integration
-
-### Constructor Injection
-
-```java
-@Service
-public class UserService {
-    private final UserRepository userRepository;
-    private final ApplicationEventPublisher eventPublisher;
-
-    // Single constructor — @Autowired not needed
-    public UserService(UserRepository userRepository,
-                       ApplicationEventPublisher eventPublisher) {
-        this.userRepository = userRepository;
-        this.eventPublisher = eventPublisher;
-    }
-}
-```
-
-### Configuration Properties
-
-```java
-@ConfigurationProperties(prefix = "app.feature")
-public record FeatureProperties(
-    boolean enabled,
-    int maxRetries,
-    Duration timeout,
-    List<String> allowedOrigins
-) {
-    public FeatureProperties {
-        if (maxRetries < 0) throw new IllegalArgumentException("maxRetries must be >= 0");
-        if (timeout == null) timeout = Duration.ofSeconds(30);
-        if (allowedOrigins == null) allowedOrigins = List.of();
-    }
-}
-```
-
-### Controller Pattern
-
-```java
-@RestController
-@RequestMapping("/api/v1/users")
-public class UserController {
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable Long id) {
-        return userService.findById(id);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
-        return userService.create(request);
-    }
-}
-```
-
-### Entity Pattern (JPA)
-
-```java
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, length = 100)
-    private String name;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserStatus status = UserStatus.ACTIVE;
-
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
-
-    @Column(nullable = false)
-    private Instant updatedAt = Instant.now();
-
-    protected User() {} // JPA required
-
-    public User(String name, String email) {
-        this.name = Objects.requireNonNull(name);
-        this.email = Objects.requireNonNull(email);
-    }
-
-    public void deactivate() {
-        this.status = UserStatus.INACTIVE;
-        this.updatedAt = Instant.now();
-    }
-
-    // Getters only — no setters for immutable fields
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    // ...
-}
-```
-
-### Spring Boot Anti-Patterns
-
-- Field injection with `@Autowired` — use constructor injection
-- Returning JPA entities directly from controllers — use response DTOs
-- `@Transactional` on private methods — Spring proxies cannot intercept
-- Catching generic `Exception` in controllers — use `@ControllerAdvice`
-
----
-
-## 9. Functional Interfaces and Lambdas
+## 8. Functional Interfaces and Lambdas
 
 ### Standard Functional Interfaces
 
@@ -518,7 +402,7 @@ public interface RetryableAction<T> {
 
 ---
 
-## 10. Error Handling
+## 9. Error Handling
 
 ### Exception Hierarchy
 
@@ -570,7 +454,7 @@ try (inputStream) {
 
 ---
 
-## 11. Anti-Patterns
+## 10. Anti-Patterns
 
 - Using raw types (`List` instead of `List<User>`)
 - Returning `null` from collection methods — return `List.of()`

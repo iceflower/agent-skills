@@ -147,37 +147,6 @@ suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
 
 ---
 
-## 7. Spring Boot Specific
-
-### Constructor Injection (preferred)
-
-```kotlin
-@Service
-class UserService(
-    private val userRepository: UserRepository,
-    private val eventPublisher: ApplicationEventPublisher
-) {
-    // No @Autowired needed — single constructor auto-wired
-}
-```
-
-### Configuration Properties
-
-```kotlin
-@ConfigurationProperties(prefix = "app.feature")
-data class FeatureProperties(
-    val enabled: Boolean = false,
-    val maxRetries: Int = 3,
-    val timeout: Duration = Duration.ofSeconds(30)
-)
-```
-
-### Spring Boot Anti-Patterns
-
-- `@Autowired` field injection — use constructor injection
-- `lateinit var` for injected dependencies — use constructor parameters
-- `open` classes/methods for Spring proxying — use `allopen` plugin instead
-
 ## Additional References
 
 - For Kotlin version migration (1.4 → 2.3), see [references/migration.md](references/migration.md)

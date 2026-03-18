@@ -1,14 +1,6 @@
----
-name: spring-jpa
-description: >-
-  Spring Boot JPA patterns including N+1 prevention, @Transactional,
-  JPA entity conventions, and Spring Data repository patterns.
-  Use when writing JPA entities or Spring Data repositories.
----
+# JPA and Data Access Patterns
 
-# Spring Boot Database Rules
-
-## 1. N+1 Problem Prevention
+## N+1 Problem Prevention
 
 ```kotlin
 // Bad: N+1 queries
@@ -26,40 +18,7 @@ fun findAllWithOrders(): List<User>
 fun findAll(): List<User>
 ```
 
----
-
-## 2. Spring Transaction Management
-
-### Transactional Service Example
-
-```kotlin
-@Transactional
-fun createOrder(request: CreateOrderRequest): Order {
-    val user = userRepository.findByIdOrThrow(request.userId)
-    val order = Order.create(user, request.items)
-    return orderRepository.save(order)
-}
-
-// External API calls should NOT be inside a transaction
-fun processOrder(orderId: Long) {
-    val order = orderService.findById(orderId) // read
-    val result = paymentClient.charge(order)    // external call — outside tx
-    orderService.updatePaymentResult(order, result) // separate tx
-}
-```
-
-### Spring Transaction Rules
-
-| Rule                                             | Reason                                 |
-| ------------------------------------------------ | -------------------------------------- |
-| Use `@Transactional(readOnly = true)` for reads  | Enables query optimizations            |
-| Default propagation is `REQUIRED`                | Reuses existing transaction            |
-| Use `REQUIRES_NEW` sparingly                     | Creates independent tx — deadlock risk |
-| Never call external APIs inside `@Transactional` | Prevents long-held locks               |
-
----
-
-## 3. JPA Entity Conventions
+## JPA Entity Conventions
 
 ```kotlin
 @Entity
@@ -92,7 +51,7 @@ class User(
 }
 ```
 
-### Entity Design Rules
+## Entity Design Rules
 
 - Use `val` for immutable fields (id, createdAt), `var` for mutable fields
 - Always use `EnumType.STRING` for enums (not `ORDINAL`)
@@ -100,9 +59,7 @@ class User(
 - Put business logic in entity methods, not in service layer
 - Avoid bidirectional relationships unless necessary — prefer unidirectional
 
----
-
-## 4. Spring Data Repository Patterns
+## Spring Data Repository Patterns
 
 ```kotlin
 interface UserRepository : JpaRepository<User, Long> {
@@ -119,7 +76,7 @@ fun UserRepository.findByIdOrThrow(id: Long): User =
     findByIdOrNull(id) ?: throw EntityNotFoundException("User", id)
 ```
 
-### Repository Rules
+## Repository Rules
 
 - Use Spring Data derived query methods for simple queries
 - Use `@Query` with JPQL for complex queries

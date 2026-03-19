@@ -109,6 +109,27 @@ description: >-
 - Trusting client-side validation without server-side checks
 - Exposing detailed error internals in API responses
 
+---
+
+## 9. OWASP Top 10 Awareness
+
+[OWASP](https://owasp.org/) (Open Worldwide Application Security Project) publishes the industry-standard list of the most critical web application security risks. The OWASP Top 10 is updated every 3-4 years (latest: 2021) and serves as the de facto security baseline for code reviews, audits, and compliance.
+
+When writing code, be vigilant against all 10 categories:
+
+| #   | Vulnerability                              | Prevention                                              |
+| --- | ------------------------------------------ | ------------------------------------------------------- |
+| A01 | Broken Access Control                      | Check authorization at service layer; deny by default   |
+| A02 | Cryptographic Failures                     | Encrypt at rest and in transit; use strong algorithms   |
+| A03 | Injection (SQL, Cmd, LDAP, XSS)            | Use parameterized queries; never concatenate user input |
+| A04 | Insecure Design                            | Apply threat modeling; use secure design patterns       |
+| A05 | Security Misconfiguration                  | No default credentials; disable debug in production     |
+| A06 | Vulnerable and Outdated Components         | Keep dependencies updated; monitor CVE databases        |
+| A07 | Identification and Authentication Failures | Use established auth libraries; enforce MFA             |
+| A08 | Software and Data Integrity Failures       | Verify integrity of updates; use digital signatures     |
+| A09 | Security Logging and Monitoring Failures   | Log security events; ensure logs are tamper-resistant   |
+| A10 | Server-Side Request Forgery (SSRF)         | Validate and whitelist outbound URLs                    |
+
 ## Additional References
 
 - For Spring Boot implementation patterns (SecurityFilterChain, Bean Validation), see `spring-framework` skill — [references/security.md](../spring-framework/references/security.md)

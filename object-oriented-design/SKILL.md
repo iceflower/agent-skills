@@ -648,12 +648,12 @@ fun sendEmail(to: Email) { ... }  // Always valid
 
 ## 10. Related Rules
 
-- **Code quality fundamentals**: `code-quality` 스킬
-- **Java conventions and patterns**: `java-convention` 스킬
-- **Kotlin conventions and patterns**: `kotlin-convention` 스킬
-- **Spring Framework patterns**: `spring-framework` 스킬
-- **Error handling design**: `error-handling` 스킬
-- **BDD test rules (testing behavior, not implementation)**: `testing-unit` 스킬
+- **Code quality fundamentals**: `code-quality` skill
+- **Java conventions and patterns**: `java-convention` skill
+- **Kotlin conventions and patterns**: `kotlin-convention` skill
+- **Spring Framework patterns**: `spring-framework` skill
+- **Error handling design**: `error-handling` skill
+- **BDD test rules (testing behavior, not implementation)**: `testing-unit` skill
 
 ---
 

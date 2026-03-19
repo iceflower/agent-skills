@@ -226,9 +226,9 @@ Kubernetes releases a new minor version approximately every 4 months.
 
 For provider-specific managed Kubernetes services, see dedicated skills:
 
-- **AWS EKS**: `k8s-providers` 규칙의 EKS 섹션
-- **Azure AKS**: `k8s-providers` 규칙의 AKS 섹션
-- **GCP GKE**: `k8s-providers` 규칙의 GKE 섹션
+- **AWS EKS**: EKS section in `k8s-providers` rules
+- **Azure AKS**: AKS section in `k8s-providers` rules
+- **GCP GKE**: GKE section in `k8s-providers` rules
 
 ### Quick Comparison
 

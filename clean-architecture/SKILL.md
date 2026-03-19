@@ -394,16 +394,14 @@ class OrderTest {
     fun test_should_add_line_to_order() {
         val order = Order.create(customerId, product, quantity = 2)
 
-        assertThat(order.totalAmount()).isEqualTo(Money.of(2000))
+        // assert: order.totalAmount() equals Money.of(2000)
     }
 
     fun test_should_reject_more_than_10_items() {
         val order = Order.create(customerId, product, quantity = 1)
         repeat(9) { order.addLine(product, 1) }
 
-        assertThrows<IllegalArgumentException> {
-            order.addLine(product, 1)
-        }
+        // assert: order.addLine(product, 1) throws IllegalArgumentException
     }
 }
 ```
@@ -423,9 +421,8 @@ class CreateOrderServiceTest {
 
         val orderId = sut.execute(CreateOrderCommand(customerId, productId, quantity = 2))
 
-        val saved = orderRepository.findById(orderId)
-        assertThat(saved).isNotNull()
-        assertThat(eventPublisher.publishedEvents).hasSize(1)
+        // assert: orderRepository.findById(orderId) is not null
+        // assert: eventPublisher.publishedEvents has size 1
     }
 }
 
@@ -485,12 +482,13 @@ class FakeOrderRepository implements OrderRepository {
 
 ## 10. Related Rules
 
-| Related Skill          | When to Reference                                            |
-| ---------------------- | ------------------------------------------------------------ |
-| `ddd` skill            | Designing entities, aggregates, value objects, domain events |
-| `code-quality` skill   | Abstraction layers, modularity, single responsibility        |
-| `testing-unit` skill   | Writing tests for use cases and domain logic                 |
-| `error-handling` skill | Exception hierarchy, business vs system exceptions           |
+| Related Skill            | When to Reference                                            |
+| ------------------------ | ------------------------------------------------------------ |
+| `ddd` skill              | Designing entities, aggregates, value objects, domain events |
+| `code-quality` skill     | Abstraction layers, modularity, single responsibility        |
+| `testing-unit` skill     | Writing tests for use cases and domain logic                 |
+| `error-handling` skill   | Exception hierarchy, business vs system exceptions           |
+| `spring-framework` skill | Spring DI wiring, `@Transactional`, JPA repository patterns  |
 
 ---
 

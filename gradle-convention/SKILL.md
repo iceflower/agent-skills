@@ -230,7 +230,16 @@ org.gradle.daemon=false
 
 ---
 
-## 7. Anti-Patterns
+## 7. Framework-Specific Build Patterns
+
+Examples in this skill use framework-agnostic Kotlin/JVM libraries. For Spring Boot projects, see:
+
+- **Spring Boot plugins, starters, convention plugins**: `spring-framework` skill
+- **Spring Boot + Kotlin build setup** (allopen, noarg, JPA plugins): `spring-framework` skill — [references/kotlin-interop.md](../spring-framework/references/kotlin-interop.md)
+
+---
+
+## 8. Anti-Patterns
 
 - Hardcoding dependency versions in `build.gradle.kts`
 - Using `compile` (deprecated) instead of `implementation`

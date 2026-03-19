@@ -574,18 +574,18 @@ fun notificationSender(
 
 ## 11. Related Rule References
 
-| Topic                 | 관련 스킬                  | Relevance                                          |
-| --------------------- | -------------------------- | -------------------------------------------------- |
-| Messaging patterns    | `messaging` 스킬           | Broker selection, producer/consumer patterns       |
-| API client resilience | `http-client` 스킬          | Timeout, retry, circuit breaker configuration      |
-| Error handling        | `error-handling` 스킬      | Exception hierarchy, error response format         |
-| Monitoring            | `monitoring` 스킬          | Metrics, tracing, alerting for distributed systems |
-| Caching               | `caching` 스킬             | Cache strategy, TTL, invalidation patterns         |
-| Database              | `database` 스킬            | Migration, transaction management, query patterns  |
-| API design            | `api-design` 스킬          | REST conventions, versioning, pagination           |
-| Security              | `security` 스킬            | Authentication, authorization, rate limiting       |
-| Logging               | `logging` 스킬             | Structured logging, traceId correlation            |
-| Spring implementation | `spring-framework` 스킬    | RestClient, error handling, monitoring, Resilience4j |
+| Topic                 | Related Skill            | Relevance                                          |
+| --------------------- | ------------------------ | -------------------------------------------------- |
+| Messaging patterns    | `messaging` skill        | Broker selection, producer/consumer patterns       |
+| API client resilience | `http-client` skill      | Timeout, retry, circuit breaker configuration      |
+| Error handling        | `error-handling` skill   | Exception hierarchy, error response format         |
+| Monitoring            | `monitoring` skill       | Metrics, tracing, alerting for distributed systems |
+| Caching               | `caching` skill          | Cache strategy, TTL, invalidation patterns         |
+| Database              | `database` skill         | Migration, transaction management, query patterns  |
+| API design            | `api-design` skill       | REST conventions, versioning, pagination           |
+| Security              | `security` skill         | Authentication, authorization, rate limiting       |
+| Logging               | `logging` skill          | Structured logging, traceId correlation            |
+| Spring implementation | `spring-framework` skill | RestClient, error handling, monitoring, Resilience4j |
 
 ---
 

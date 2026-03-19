@@ -113,7 +113,7 @@ description: >-
 
 ## 9. OWASP Top 10 Awareness
 
-[OWASP](https://owasp.org/) (Open Worldwide Application Security Project) publishes the industry-standard list of the most critical web application security risks. The OWASP Top 10 is updated every 3-4 years (latest: 2021) and serves as the de facto security baseline for code reviews, audits, and compliance.
+[OWASP](https://owasp.org/) (Open Worldwide Application Security Project) publishes the industry-standard list of the most critical web application security risks. The [OWASP Top 10](https://owasp.org/www-project-top-ten/) is updated every 3-4 years (latest: 2021) and serves as the de facto security baseline for code reviews, audits, and compliance.
 
 When writing code, be vigilant against all 10 categories:
 

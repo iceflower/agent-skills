@@ -395,13 +395,14 @@ Orchestrate use cases by coordinating domain objects.
 
 ### Application Service Example
 
-```kotlin
+```
+// Application service — orchestrates use cases
 class OrderApplicationService(
-    private val orderRepository: OrderRepository,
-    private val productRepository: ProductRepository,
-    private val eventPublisher: EventPublisher
+    private orderRepository: OrderRepository,
+    private productRepository: ProductRepository,
+    private eventPublisher: EventPublisher
 ) {
-    @Transactional
+    // Transaction boundary
     fun createOrder(command: CreateOrderCommand): OrderId {
         val product = productRepository.findById(command.productId)
             ?: throw ProductNotFoundException(command.productId)
@@ -419,7 +420,7 @@ class OrderApplicationService(
         return order.id
     }
 
-    @Transactional
+    // Transaction boundary
     fun confirmOrder(command: ConfirmOrderCommand) {
         val order = orderRepository.findById(command.orderId)
             ?: throw OrderNotFoundException(command.orderId)

@@ -72,9 +72,11 @@ fun User.toResponse() = UserResponse(id = id, name = name, email = email)
 // Adding domain-specific utility
 fun String.toSlug() = lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-')
 
-// Scoping to specific contexts
-fun RestClient.ResponseSpec.orThrow(message: String): RestClient.ResponseSpec =
-    onStatus(HttpStatusCode::isError) { _, _ -> throw ExternalApiException(message) }
+// Scoping to specific contexts (e.g., HTTP client response handling)
+fun HttpResponse.orThrow(message: String): HttpResponse {
+    if (status.isError()) throw ExternalApiException(message)
+    return this
+}
 ```
 
 ### Extension Anti-Patterns

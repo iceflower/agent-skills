@@ -1,6 +1,6 @@
 # dockerfile
 
-Dockerfile 작성 규칙 (멀티스테이지 빌드, JVM/Spring Boot 패턴)
+Dockerfile 작성 규칙 (멀티스테이지 빌드, JVM 컨테이너화 패턴)
 
 ## 사용 방법
 

@@ -525,8 +525,7 @@ native-image -jar app.jar
 
 ## Related Skills
 
-- **spring-monitoring**: Actuator, Micrometer setup
-- **spring-troubleshooting**: Spring-specific debugging
+- **spring-framework**: Actuator, Micrometer setup, Spring-specific debugging
 - **k8s-workflow**: Container resource management
 - **dockerfile**: JVM containerization patterns
 

@@ -416,7 +416,8 @@ class PaymentService(
 ```
 
 ```yaml
-# Resilience4j configuration
+# Resilience4j configuration (Spring Boot application.yml format shown;
+# standalone usage configures via code or resilience4j.yml)
 resilience4j:
   circuitbreaker:
     instances:

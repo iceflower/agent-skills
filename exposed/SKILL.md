@@ -220,8 +220,8 @@ transaction {
 
 | Tool      | Integration           | Use Case                           |
 | --------- | --------------------- | ---------------------------------- |
-| Flyway    | Framework integration | SQL-based migrations (recommended) |
-| Liquibase | Framework integration | XML/YAML/SQL migrations            |
+| Flyway    | Standalone / framework plugin | SQL-based migrations (recommended) |
+| Liquibase | Standalone / framework plugin | XML/YAML/SQL migrations            |
 | Exposed   | `SchemaUtils.create`  | Development/testing only           |
 
 ### Migration Rules

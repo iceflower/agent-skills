@@ -72,9 +72,9 @@ fun User.toResponse() = UserResponse(id = id, name = name, email = email)
 // Adding domain-specific utility
 fun String.toSlug() = lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-')
 
-// Scoping to specific contexts
-fun Result<User>.orThrow(message: String): User =
-    getOrElse { throw BusinessException(message, it) }
+// Scoping to specific contexts (narrowing extension to a domain type)
+fun ApiResponse<User>.orThrow(): User =
+    if (isSuccess) data else throw ApiException(errorCode, errorMessage)
 ```
 
 ### Extension Anti-Patterns

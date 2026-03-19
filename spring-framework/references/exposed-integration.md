@@ -4,7 +4,7 @@ Exposed ORM의 일반 규칙(DSL vs DAO, 테이블 정의, 쿼리 패턴, 트랜
 
 이 문서는 Spring Boot와 Exposed의 통합 패턴만 다룹니다.
 
-### Dependency Setup
+## Dependency Setup
 
 ```kotlin
 // build.gradle.kts
@@ -17,7 +17,7 @@ dependencies {
 }
 ```
 
-### Spring Configuration
+## Spring Configuration
 
 ```yaml
 # application.yml
@@ -32,7 +32,7 @@ exposed:
   show-sql: ${EXPOSED_SHOW_SQL:false}
 ```
 
-### Spring Transaction Integration
+## Spring Transaction Integration
 
 ```kotlin
 @Service
@@ -57,7 +57,7 @@ class UserService(
 }
 ```
 
-### Spring Integration Rules
+## Spring Integration Rules
 
 - Use `exposed-spring-boot-starter` for auto-configuration
 - Spring `@Transactional` and Exposed `transaction` can coexist — Spring manages the outer transaction

@@ -8,6 +8,8 @@ description: >-
 
 # Clean Architecture / Hexagonal Architecture Rules
 
+> **Note**: Code examples in this document use framework-agnostic pseudocode (a mix of common OOP syntax). They are not tied to any specific language or framework.
+
 ## 1. Architecture Principles
 
 ### Dependency Rule

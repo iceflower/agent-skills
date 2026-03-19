@@ -349,6 +349,6 @@ kotlin {
 - Relying on Kotlin `internal` visibility for encapsulation from Java — it is `public` in bytecode
 - Mixing `javax` and `jakarta` annotations in the same project
 - Not adding `@JvmStatic` / `@JvmOverloads` / `@Throws` on Kotlin code called from Java
-- Using `data class` for JPA entities without understanding `equals`/`hashCode` implications
+- Using `data class` for ORM entities without understanding `equals`/`hashCode` implications
 - Not using `@JvmExposeBoxed` for value classes consumed from Java
 - Ignoring platform types — always determine proper nullability at interop boundaries

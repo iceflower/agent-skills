@@ -3,7 +3,6 @@ name: security
 description: >-
   Framework-agnostic security rules including input validation, auth principles,
   CORS, API headers, rate limiting, and secret management.
-  Includes Spring Boot implementation (SecurityFilterChain, Bean Validation).
   Use when implementing security-related code.
 ---
 # Security Rules
@@ -112,4 +111,4 @@ description: >-
 
 ## Additional References
 
-- For Spring Boot implementation patterns, see [references/spring.md](references/spring.md)
+- For Spring Boot implementation patterns (SecurityFilterChain, Bean Validation), see `spring-framework` skill — [references/security.md](../spring-framework/references/security.md)

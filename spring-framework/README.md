@@ -1,6 +1,6 @@
 # spring-framework
 
-Spring Framework 핵심 + Framework/Boot 버전 마이그레이션 가이드
+Spring Framework 핵심 규칙 + Spring Boot 구현 패턴 + Framework/Boot 버전 마이그레이션 가이드
 
 ## 사용 방법
 
@@ -26,7 +26,19 @@ spring-framework/
 ├── README.md
 └── references/
     ├── boot-migration.md
-    └── framework-migration.md
+    ├── caching.md
+    ├── configuration-properties.md
+    ├── error-handling.md
+    ├── exposed-integration.md
+    ├── framework-migration.md
+    ├── http-client.md
+    ├── jpa-patterns.md
+    ├── kotlin-interop.md
+    ├── monitoring.md
+    ├── security.md
+    ├── troubleshooting.md
+    ├── webflux.md
+    └── webmvc.md
 ```
 
 ## 호환 도구

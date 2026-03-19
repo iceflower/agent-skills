@@ -3,7 +3,6 @@ name: troubleshooting
 description: >-
   General debugging and troubleshooting patterns for slow APIs, deployment
   rollback, connection issues, and debugging principles.
-  Includes Spring Boot troubleshooting (startup failures, JVM OOM, HikariCP).
   Use when diagnosing errors or deployment issues.
 ---
 # Troubleshooting Rules
@@ -116,4 +115,4 @@ kubectl get pods -n <namespace> -l app=<app-name>
 
 ## Additional References
 
-- For Spring Boot implementation patterns, see [references/spring.md](references/spring.md)
+- For Spring Boot troubleshooting (startup failures, JVM OOM, HikariCP), see `spring-framework` skill — [references/troubleshooting.md](../spring-framework/references/troubleshooting.md)

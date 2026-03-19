@@ -1,6 +1,6 @@
 # error-handling
 
-에러 처리 패턴 + Spring Boot 구현 (@ControllerAdvice, ErrorCode enum)
+에러 처리 패턴 (예외 계층, 에러 분류, 응답 포맷, 처리 원칙)
 
 ## 사용 방법
 
@@ -16,16 +16,6 @@ cp -r error-handling/ ~/.agents/skills/error-handling/
 
 ```bash
 cp -r error-handling/ .agents/skills/error-handling/
-```
-
-## 디렉토리 구조
-
-```text
-error-handling/
-├── SKILL.md
-├── README.md
-└── references/
-    └── spring.md
 ```
 
 ## 호환 도구

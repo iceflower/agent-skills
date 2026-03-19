@@ -1,6 +1,6 @@
 # exposed
 
-JetBrains Exposed ORM (DSL, DAO, 테이블 정의, Spring Boot 통합)
+JetBrains Exposed ORM (DSL, DAO, 테이블 정의, 트랜잭션 관리, 스키마 마이그레이션)
 
 ## 사용 방법
 

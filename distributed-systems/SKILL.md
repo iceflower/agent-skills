@@ -429,7 +429,7 @@ Client                                    Server
 ## Related Skills
 
 - **messaging**: Message broker patterns (Kafka, RabbitMQ)
-- **spring-webflux**: Reactive distributed clients
+- **spring-framework**: Reactive distributed clients (WebFlux)
 - **caching**: Distributed cache patterns
 - **k8s-workflow**: Container orchestration patterns
 

@@ -1,7 +1,7 @@
 ---
 name: java-convention
 description: >-
-  Java coding conventions and modern idioms with Spring Boot integration.
+  Java coding conventions and modern idioms.
   Includes version migration guide (8 → 11 → 17 → 21 → 25).
   Use when writing or reviewing Java code.
 ---
@@ -321,25 +321,7 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 ### Spring Boot Integration
 
-```yaml
-# application.yml — enable virtual threads
-spring:
-  threads:
-    virtual:
-      enabled: true
-```
-
-```java
-// Spring Boot 3.2+ with virtual threads
-// No code changes needed — Tomcat/Jetty use virtual threads automatically
-// when spring.threads.virtual.enabled=true
-
-// Custom executor with virtual threads
-@Bean
-public AsyncTaskExecutor applicationTaskExecutor() {
-    return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
-}
-```
+- For Spring Boot virtual thread configuration, see `spring-framework` skill
 
 ### Virtual Thread Rules
 

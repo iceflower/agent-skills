@@ -3,7 +3,7 @@ name: java-kotlin-interop
 description: >-
   Java-Kotlin interoperability guide covering platform types, null safety with JSpecify,
   JVM annotations (@JvmStatic, @JvmOverloads, @JvmExposeBoxed, @Throws), collection interop,
-  coroutine-Java bridging, SAM conversion, and Spring-specific patterns for mixed projects.
+  coroutine-Java bridging, SAM conversion, and build configuration for mixed projects.
 ---
 
 # Java-Kotlin Interoperability Rules
@@ -52,31 +52,15 @@ val maybeUser: User? = userService.findByEmail(email)  // Nullable
 | 6        | Eclipse                  | `org.eclipse.jdt.annotation`         |
 | 7        | Lombok                   | `lombok`                             |
 
-### Spring Framework 7 / Spring Boot 4: JSpecify Integration
+### Framework JSpecify Integration
 
-Spring Framework 7+ uses JSpecify annotations throughout the entire codebase with `@NullMarked` on all packages.
-
-```kotlin
-// Before (Spring 6 / Boot 3): platform types everywhere
-val user = userRepository.findById(id)  // User! — platform type
-user.name                                // May NPE
-
-// After (Spring 7 / Boot 4 + Kotlin 2.1+): proper null safety
-val user = userRepository.findById(id)  // User — non-null
-val maybe = userRepository.findByEmail(email)  // User? — nullable
-maybe?.name                              // Compiler-enforced safety
-```
-
-- Kotlin 2.2+ automatically translates JSpecify annotations to Kotlin nullability
-- Platform types (`T!`) are eliminated for Spring APIs
-- Generic types and arrays also carry nullability: `List<String>` not `List<String!>!`
+- For Spring Framework 7 / Boot 4 JSpecify integration details, see `spring-framework` skill — [references/kotlin-interop.md](../spring-framework/references/kotlin-interop.md)
 
 ### Rules
 
 - **Java side**: Always annotate public APIs with `@NullMarked` (class/package level) and `@Nullable` (specific fields/returns)
 - **Kotlin side**: Never use `!!` on platform types — assign to explicitly typed variable first
 - **Mixed project**: Use JSpecify over JSR-305 for new code (better Kotlin integration)
-- **Spring Boot 4**: No extra work needed — Spring APIs are already fully annotated
 
 ---
 
@@ -284,67 +268,12 @@ internal fun processInternal() { ... }
 
 ---
 
-## 8. Spring-Specific Interop Patterns
+## 8. Framework-Specific Interop Patterns
 
-### Kotlin Extensions Used from Java
-
-```kotlin
-// Kotlin extension function
-fun User.toResponse(): UserResponse = UserResponse(id, name, email)
-
-// Java — called as static method on the generated Kt class
-UserResponse response = UserMappingsKt.toResponse(user);
-```
-
-- Extension functions compile to static methods with receiver as first parameter
-- Use `@file:JvmName("UserMappings")` for cleaner Java access
-
-### Spring Configuration in Mixed Projects
-
-```kotlin
-// Kotlin @Configuration is open by default (allopen plugin)
-@Configuration
-class AppConfig {
-    @Bean
-    fun userService(repo: UserRepository): UserService = UserService(repo)
-}
-
-// Java @Configuration must use CGLIB proxying
-@Configuration
-public class JavaConfig {
-    @Bean
-    public PaymentService paymentService() { return new PaymentService(); }
-}
-```
-
-- Kotlin's `allopen` plugin makes `@Configuration`, `@Service`, etc. automatically open
-- Java classes must be non-final for CGLIB proxying (or use `proxyBeanMethods = false`)
-
-### JPA Entities in Mixed Projects
-
-```kotlin
-// Kotlin entity — requires allopen + noarg plugins
-@Entity
-class User(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
-    var name: String,
-    var email: String
-)
-```
-
-```java
-// Java entity — works without plugins
-@Entity
-public class Order {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    // JPA requires no-arg constructor — Java generates implicitly with default visibility
-}
-```
-
-- Kotlin JPA entities need `kotlin-jpa` (noarg) plugin for no-arg constructor generation
-- Kotlin JPA entities need `kotlin-allopen` plugin to make classes non-final
+> **See `spring-framework` skill — [references/kotlin-interop.md](../spring-framework/references/kotlin-interop.md) for:**
+> - Spring `@Configuration` with Kotlin (allopen plugin)
+> - JPA entities in mixed Java/Kotlin projects
+> - Extension function usage from Java in Spring context
 
 ---
 
@@ -357,8 +286,7 @@ public class Order {
 plugins {
     java
     kotlin("jvm") version "2.3.0"
-    kotlin("plugin.spring") version "2.3.0"   // allopen for Spring
-    kotlin("plugin.jpa") version "2.3.0"       // noarg for JPA
+    // Add framework-specific plugins as needed (e.g., spring, jpa)
 }
 
 // Source directories
@@ -377,9 +305,6 @@ tasks.withType<JavaCompile> {
 
 kotlin {
     jvmToolchain(21)
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
 }
 ```
 
@@ -424,6 +349,6 @@ kotlin {
 - Relying on Kotlin `internal` visibility for encapsulation from Java — it is `public` in bytecode
 - Mixing `javax` and `jakarta` annotations in the same project
 - Not adding `@JvmStatic` / `@JvmOverloads` / `@Throws` on Kotlin code called from Java
-- Using `data class` for JPA entities without understanding `equals`/`hashCode` implications
+- Using `data class` for ORM entities without understanding `equals`/`hashCode` implications
 - Not using `@JvmExposeBoxed` for value classes consumed from Java
 - Ignoring platform types — always determine proper nullability at interop boundaries

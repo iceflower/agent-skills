@@ -395,13 +395,14 @@ Orchestrate use cases by coordinating domain objects.
 
 ### Application Service Example
 
-```kotlin
+```text
+// Application service — orchestrates use cases
 class OrderApplicationService(
-    private val orderRepository: OrderRepository,
-    private val productRepository: ProductRepository,
-    private val eventPublisher: EventPublisher
+    private orderRepository: OrderRepository,
+    private productRepository: ProductRepository,
+    private eventPublisher: EventPublisher
 ) {
-    @Transactional
+    // Transaction boundary
     fun createOrder(command: CreateOrderCommand): OrderId {
         val product = productRepository.findById(command.productId)
             ?: throw ProductNotFoundException(command.productId)
@@ -419,7 +420,7 @@ class OrderApplicationService(
         return order.id
     }
 
-    @Transactional
+    // Transaction boundary
     fun confirmOrder(command: ConfirmOrderCommand) {
         val order = orderRepository.findById(command.orderId)
             ?: throw OrderNotFoundException(command.orderId)
@@ -554,7 +555,7 @@ Shared vocabulary between developers and domain experts.
 ## Related Skills
 
 - **clean-architecture**: Architectural patterns complementing DDD
-- **spring-jpa**: Repository implementation patterns
+- **spring-framework**: Repository implementation patterns (JPA, Spring Data)
 - **testing-integration**: Testing domain logic
 
 ---

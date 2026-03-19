@@ -4,8 +4,10 @@ description: >-
   Spring Framework core conventions including IoC/DI, AOP, transaction management,
   event system, bean lifecycle, WebMVC, WebFlux, validation, scheduling,
   configuration management, and JPA/data access patterns.
+  Includes Spring Boot implementation patterns for caching, error handling, HTTP client,
+  monitoring, security, troubleshooting, and integration with Exposed ORM and Kotlin interop.
   Includes migration guides for Framework (5.x → 7.0) and Boot (2.7 → 4.0).
-  Use when working with Spring Framework core features.
+  Use when working with Spring Framework or Spring Boot features.
 ---
 
 # Spring Framework Core Rules
@@ -640,5 +642,23 @@ spring:
 
 ## Additional References
 
+### Migration Guides
+
 - For Spring Framework migration (5.x → 6.x → 7.0), see [references/framework-migration.md](references/framework-migration.md)
 - For Spring Boot migration (2.7 → 3.x → 4.0), see [references/boot-migration.md](references/boot-migration.md)
+
+### Spring Boot Implementation Patterns
+
+These references provide Spring Boot-specific implementation for cross-cutting concerns whose general principles are covered in dedicated framework-agnostic skills.
+
+- **Caching** (Caffeine, Redis, `@Cacheable`): [references/caching.md](references/caching.md) — general principles in `caching` skill
+- **Error Handling** (`@ControllerAdvice`, ErrorCode enum): [references/error-handling.md](references/error-handling.md) — general principles in `error-handling` skill
+- **HTTP Client** (RestClient, Spring Retry, Resilience4j): [references/http-client.md](references/http-client.md) — general principles in `http-client` skill
+- **Monitoring** (Actuator, Micrometer, distributed tracing): [references/monitoring.md](references/monitoring.md) — general principles in `monitoring` skill
+- **Security** (SecurityFilterChain, Bean Validation): [references/security.md](references/security.md) — general principles in `security` skill
+- **Troubleshooting** (startup failures, JVM OOM, HikariCP): [references/troubleshooting.md](references/troubleshooting.md) — general principles in `troubleshooting` skill
+
+### Integration Patterns
+
+- **Exposed ORM** integration: [references/exposed-integration.md](references/exposed-integration.md) — general Exposed rules in `exposed` skill
+- **Kotlin interop** (JSpecify, `@Configuration`, JPA entities): [references/kotlin-interop.md](references/kotlin-interop.md) — general interop rules in `java-kotlin-interop` skill

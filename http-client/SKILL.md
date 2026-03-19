@@ -3,7 +3,6 @@ name: http-client
 description: >-
   Framework-agnostic external API integration patterns including timeouts,
   error handling, retry strategy, circuit breaker, and response mapping.
-  Includes Spring Boot implementation (RestClient, Spring Retry, Resilience4j).
   Use when writing or reviewing HTTP client code.
 ---
 # External API Client Rules
@@ -123,4 +122,4 @@ email_address: String              →     email: String
 
 ## Additional References
 
-- For Spring Boot implementation patterns, see [references/spring.md](references/spring.md)
+- For Spring Boot implementation patterns (RestClient, Spring Retry, Resilience4j), see `spring-framework` skill — [references/http-client.md](../spring-framework/references/http-client.md)

@@ -72,9 +72,9 @@ fun User.toResponse() = UserResponse(id = id, name = name, email = email)
 // Adding domain-specific utility
 fun String.toSlug() = lowercase().replace(Regex("[^a-z0-9]+"), "-").trim('-')
 
-// Scoping to specific contexts
-fun RestClient.ResponseSpec.orThrow(message: String): RestClient.ResponseSpec =
-    onStatus(HttpStatusCode::isError) { _, _ -> throw ExternalApiException(message) }
+// Scoping to specific contexts (narrowing extension to a domain type)
+fun ApiResponse<User>.orThrow(): User =
+    if (isSuccess) data else throw ApiException(errorCode, errorMessage)
 ```
 
 ### Extension Anti-Patterns
@@ -127,10 +127,7 @@ suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
 
 ### Spring Integration
 
-- Use `suspend fun` in controllers for WebFlux/reactive endpoints
-- Use `@Async` with `CompletableFuture` for MVC-based projects
-- Never use `GlobalScope` — always use structured concurrency
-- Use `Dispatchers.IO` for blocking I/O operations
+- For Spring-specific coroutine and WebFlux patterns, see `spring-framework` skill
 
 ---
 

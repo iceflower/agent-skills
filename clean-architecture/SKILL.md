@@ -8,6 +8,8 @@ description: >-
 
 # Clean Architecture / Hexagonal Architecture Rules
 
+> **Note**: Code examples in this document use framework-agnostic pseudocode (a mix of common OOP syntax). They are not tied to any specific language or framework.
+
 ## 1. Architecture Principles
 
 ### Dependency Rule
@@ -74,7 +76,7 @@ description: >-
 
 #### Infrastructure Layer
 
-- Repository implementations (JPA, R2DBC, Exposed)
+- Repository implementations (ORM adapters, query builders, raw SQL)
 - External API clients
 - Message broker producers/consumers
 - File system access
@@ -101,64 +103,63 @@ description: >-
 
 ## 4. Package Structure
 
-### Recommended Layout (Kotlin + Spring Boot)
+### Recommended Layout
 
 ```text
-com.example.order/
-├── domain/                          # Domain layer
+order/
+├── domain/                              # Domain layer
 │   ├── model/
-│   │   ├── Order.kt                # Aggregate root
-│   │   ├── OrderLine.kt            # Entity within aggregate
-│   │   ├── OrderId.kt              # Value object (ID)
-│   │   ├── OrderStatus.kt          # Enum
-│   │   └── Money.kt                # Value object
+│   │   ├── Order                        # Aggregate root
+│   │   ├── OrderLine                    # Entity within aggregate
+│   │   ├── OrderId                      # Value object (ID)
+│   │   ├── OrderStatus                  # Enum
+│   │   └── Money                        # Value object
 │   ├── event/
-│   │   ├── DomainEvent.kt          # Event marker interface
-│   │   └── OrderConfirmedEvent.kt  # Domain event
+│   │   ├── DomainEvent                  # Event marker interface
+│   │   └── OrderConfirmedEvent          # Domain event
 │   ├── service/
-│   │   └── OrderPricingService.kt  # Domain service
+│   │   └── OrderPricingService          # Domain service
 │   └── repository/
-│       └── OrderRepository.kt      # Outbound port (interface)
+│       └── OrderRepository              # Outbound port (interface)
 │
-├── application/                     # Application layer
+├── application/                         # Application layer
 │   ├── port/
 │   │   ├── inbound/
-│   │   │   ├── CreateOrderUseCase.kt
-│   │   │   └── GetOrderQuery.kt
+│   │   │   ├── CreateOrderUseCase
+│   │   │   └── GetOrderQuery
 │   │   └── outbound/
-│   │       ├── PaymentGateway.kt
-│   │       └── NotificationSender.kt
+│   │       ├── PaymentGateway
+│   │       └── NotificationSender
 │   ├── service/
-│   │   ├── CreateOrderService.kt   # Use case implementation
-│   │   └── OrderQueryService.kt    # Query implementation
+│   │   ├── CreateOrderService           # Use case implementation
+│   │   └── OrderQueryService            # Query implementation
 │   └── dto/
-│       ├── CreateOrderCommand.kt   # Input command
-│       └── OrderDetailResult.kt    # Output result
+│       ├── CreateOrderCommand           # Input command
+│       └── OrderDetailResult            # Output result
 │
-├── infrastructure/                  # Infrastructure layer
+├── infrastructure/                      # Infrastructure layer
 │   ├── persistence/
 │   │   ├── entity/
-│   │   │   └── OrderJpaEntity.kt   # JPA entity
+│   │   │   └── OrderPersistenceEntity   # ORM / persistence entity
 │   │   ├── repository/
-│   │   │   ├── OrderJpaRepository.kt   # Spring Data interface
-│   │   │   └── JpaOrderRepository.kt   # Outbound adapter
+│   │   │   └── OrderRepositoryImpl      # Outbound adapter
 │   │   └── mapper/
-│   │       └── OrderEntityMapper.kt    # Entity ↔ Domain mapper
+│   │       └── OrderEntityMapper        # Persistence ↔ Domain mapper
 │   ├── external/
-│   │   └── StripePaymentGateway.kt # External API adapter
+│   │   └── StripePaymentGateway         # External API adapter
 │   ├── messaging/
-│   │   └── KafkaNotificationSender.kt # Messaging adapter
+│   │   └── KafkaNotificationSender      # Messaging adapter
 │   └── config/
-│       └── PersistenceConfig.kt    # Infrastructure config
+│       └── PersistenceConfig            # Infrastructure config
 │
-└── presentation/                    # Presentation layer
+└── presentation/                        # Presentation layer
     ├── controller/
-    │   └── OrderController.kt      # REST inbound adapter
+    │   └── OrderController              # REST inbound adapter
     ├── dto/
-    │   ├── CreateOrderRequest.kt   # API request DTO
-    │   └── OrderDetailResponse.kt  # API response DTO
+    │   ├── CreateOrderRequest           # API request DTO
+    │   └── OrderDetailResponse          # API response DTO
     └── mapper/
-        └── OrderResponseMapper.kt  # Request/Response ↔ Command/Result
+        └── OrderResponseMapper          # Request/Response ↔ Command/Result
 ```
 
 ### Package Dependency Rules
@@ -174,7 +175,7 @@ domain        → (nothing)    (no outward dependencies)
 - `domain` package must not import from `application`, `infrastructure`, or `presentation`
 - `application` package must not import from `infrastructure` or `presentation`
 - `presentation` must not import from `infrastructure` directly
-- Cross-cutting via dependency injection only (Spring wires adapters to ports)
+- Cross-cutting via dependency injection only (DI framework wires adapters to ports)
 
 ---
 
@@ -183,41 +184,45 @@ domain        → (nothing)    (no outward dependencies)
 ### Transformation Flow
 
 ```text
-Request DTO → Command → Domain Entity → JPA Entity → Database
-Database → JPA Entity → Domain Entity → Result DTO → Response DTO
+Request DTO → Command → Domain Entity → Persistence Entity → Database
+Database → Persistence Entity → Domain Entity → Result DTO → Response DTO
 ```
 
 ### Layer-Specific Data Objects
 
-| Layer          | Data Object           | Purpose               | Framework Annotations |
-| -------------- | --------------------- | --------------------- | --------------------- |
-| Presentation   | Request / Response    | API contract          | `@Valid`, Jackson     |
-| Application    | Command / Result      | Use case input/output | None                  |
-| Domain         | Entity / Value Object | Business model        | None                  |
-| Infrastructure | JPA Entity / Row      | Persistence mapping   | `@Entity`, `@Table`   |
+| Layer          | Data Object           | Purpose               | Framework Coupling     |
+| -------------- | --------------------- | --------------------- | ---------------------- |
+| Presentation   | Request / Response    | API contract          | Validation, serializer |
+| Application    | Command / Result      | Use case input/output | None                   |
+| Domain         | Entity / Value Object | Business model        | None                   |
+| Infrastructure | Persistence Entity    | Persistence mapping   | ORM annotations        |
 
 ### Mapping Examples
 
-```kotlin
+```text
 // Presentation → Application
-fun CreateOrderRequest.toCommand() = CreateOrderCommand(
-    customerId = CustomerId(this.customerId),
-    productId = ProductId(this.productId),
-    quantity = this.quantity
-)
+fun toCommand(request: CreateOrderRequest): CreateOrderCommand {
+    return CreateOrderCommand(
+        customerId = CustomerId(request.customerId),
+        productId = ProductId(request.productId),
+        quantity = request.quantity
+    )
+}
 
 // Application → Presentation
-fun OrderDetailResult.toResponse() = OrderDetailResponse(
-    id = this.orderId.value,
-    status = this.status.name,
-    totalAmount = this.totalAmount.value,
-    createdAt = this.createdAt
-)
+fun toResponse(result: OrderDetailResult): OrderDetailResponse {
+    return OrderDetailResponse(
+        id = result.orderId.value,
+        status = result.status.name,
+        totalAmount = result.totalAmount.value,
+        createdAt = result.createdAt
+    )
+}
 
-// Infrastructure: JPA Entity ↔ Domain
-@Component
+// Infrastructure: Persistence Entity ↔ Domain
+// Mapper (infrastructure layer)
 class OrderEntityMapper {
-    fun toDomain(entity: OrderJpaEntity): Order {
+    fun toDomain(entity: OrderPersistenceEntity): Order {
         return Order(
             id = OrderId(entity.id),
             customerId = CustomerId(entity.customerId),
@@ -226,24 +231,23 @@ class OrderEntityMapper {
         )
     }
 
-    fun toEntity(domain: Order): OrderJpaEntity {
-        return OrderJpaEntity(
+    fun toEntity(domain: Order): OrderPersistenceEntity {
+        return OrderPersistenceEntity(
             id = domain.id.value,
             customerId = domain.customerId.value,
-            status = domain.status
-        ).also { entity ->
-            entity.lines = domain.lines.map { toLineEntity(it, entity) }
-        }
+            status = domain.status,
+            lines = domain.lines.map { toLineEntity(it) }
+        )
     }
 }
 ```
 
 ### Mapping Rules
 
-- Each layer boundary has its own data objects -- never pass JPA entities to controllers
+- Each layer boundary has its own data objects -- never pass persistence entities to controllers
 - Mapping logic lives at the boundary of the outer layer (adapter side)
-- Domain objects never depend on DTO or JPA entity classes
-- Use extension functions or dedicated mapper classes for conversions
+- Domain objects never depend on DTO or persistence entity classes
+- Use dedicated mapper classes or mapping functions for conversions
 - Avoid deep nested mapping in a single function -- compose small mapping functions
 
 ---
@@ -252,9 +256,9 @@ class OrderEntityMapper {
 
 ### Core Mechanism
 
-The domain and application layers define interfaces (ports) that the infrastructure layer implements. Spring's dependency injection wires the concrete implementations at runtime.
+The domain and application layers define interfaces (ports) that the infrastructure layer implements. A dependency injection framework wires the concrete implementations at runtime.
 
-```kotlin
+```text
 // Domain layer defines the interface
 interface OrderRepository {
     fun findById(id: OrderId): Order?
@@ -262,39 +266,39 @@ interface OrderRepository {
 }
 
 // Infrastructure layer implements it
-@Repository
-class JpaOrderRepository(
-    private val jpaRepository: OrderJpaRepository
-) : OrderRepository {
-    override fun findById(id: OrderId): Order? = ...
-    override fun save(order: Order) = ...
+// Repository implementation (infrastructure layer)
+class OrderRepositoryImpl implements OrderRepository {
+    private persistenceRepository: OrderPersistenceRepository
+
+    fun findById(id: OrderId): Order? { ... }
+    fun save(order: Order) { ... }
 }
 
 // Application layer depends only on the interface
-@Service
-class CreateOrderService(
-    private val orderRepository: OrderRepository,  // Port, not adapter
-    private val paymentGateway: PaymentGateway      // Port, not adapter
-) : CreateOrderUseCase {
-    override fun execute(command: CreateOrderCommand): OrderId { ... }
+// Application service
+class CreateOrderService implements CreateOrderUseCase {
+    private orderRepository: OrderRepository      // Port, not adapter
+    private paymentGateway: PaymentGateway        // Port, not adapter
+
+    fun execute(command: CreateOrderCommand): OrderId { ... }
 }
 ```
 
 ### DIP Benefits
 
-| Without DIP                                | With DIP                                    |
-| ------------------------------------------ | ------------------------------------------- |
-| Service depends on `JpaOrderRepository`    | Service depends on `OrderRepository` (port) |
-| Changing DB requires changing service code | Changing DB only requires new adapter       |
-| Testing requires real DB or mock framework | Testing uses simple fake implementation     |
-| Domain coupled to framework                | Domain is framework-free                    |
+| Without DIP                                      | With DIP                                    |
+| ------------------------------------------------ | ------------------------------------------- |
+| Service depends on `OrderRepositoryImpl`         | Service depends on `OrderRepository` (port) |
+| Changing DB requires changing service code       | Changing DB only requires new adapter       |
+| Testing requires real DB or mock framework       | Testing uses simple fake implementation     |
+| Domain coupled to framework                      | Domain is framework-free                    |
 
 ### DIP Application Rules
 
 - Define interfaces in the layer that needs the capability (domain or application)
 - Implement interfaces in the outer layer that provides the capability (infrastructure)
 - Never create an interface just to have an interface -- use DIP only when the boundary is meaningful
-- Spring `@Service`, `@Repository`, `@Component` annotations belong on implementations, not on ports
+- Framework annotations belong on implementations, not on port interfaces
 
 ---
 
@@ -302,7 +306,7 @@ class CreateOrderService(
 
 ### Use Case Interface (Inbound Port)
 
-```kotlin
+```text
 // One interface per use case — clear, focused, independently testable
 interface CreateOrderUseCase {
     fun execute(command: CreateOrderCommand): OrderId
@@ -319,16 +323,15 @@ interface GetOrderDetailQuery {
 
 ### Use Case Implementation
 
-```kotlin
-@Service
-class CreateOrderService(
-    private val orderRepository: OrderRepository,
-    private val productRepository: ProductRepository,
-    private val eventPublisher: ApplicationEventPublisher
-) : CreateOrderUseCase {
+```text
+// Application service
+class CreateOrderService implements CreateOrderUseCase {
+    private orderRepository: OrderRepository
+    private productRepository: ProductRepository
+    private eventPublisher: EventPublisher
 
-    @Transactional
-    override fun execute(command: CreateOrderCommand): OrderId {
+    // Transaction boundary
+    fun execute(command: CreateOrderCommand): OrderId {
         // 1. Load domain objects
         val product = productRepository.findById(command.productId)
             ?: throw EntityNotFoundException("Product", command.productId)
@@ -344,7 +347,7 @@ class CreateOrderService(
         orderRepository.save(order)
 
         // 4. Publish domain events
-        order.pullEvents().forEach { eventPublisher.publishEvent(it) }
+        order.pullEvents().forEach { eventPublisher.publish(it) }
 
         // 5. Return result
         return order.id
@@ -363,13 +366,13 @@ class CreateOrderService(
 
 ### Command vs Query Separation (CQS)
 
-| Aspect  | Command              | Query                             |
-| ------- | -------------------- | --------------------------------- |
-| Purpose | Change state         | Read state                        |
-| Return  | Void or created ID   | Result DTO                        |
-| Side    | Write side           | Read side                         |
-| Tx      | `@Transactional`     | `@Transactional(readOnly = true)` |
-| Example | `CreateOrderUseCase` | `GetOrderDetailQuery`             |
+| Aspect  | Command              | Query                      |
+| ------- | -------------------- | -------------------------- |
+| Purpose | Change state         | Read state                 |
+| Return  | Void or created ID   | Result DTO                 |
+| Side    | Write side           | Read side                  |
+| Tx      | Read-write tx        | Read-only tx               |
+| Example | `CreateOrderUseCase` | `GetOrderDetailQuery`      |
 
 ---
 
@@ -377,65 +380,59 @@ class CreateOrderService(
 
 ### Testing Strategy Per Layer
 
-| Layer          | Test Type        | Dependencies             | Speed  |
-| -------------- | ---------------- | ------------------------ | ------ |
-| Domain         | Unit test        | None (pure logic)        | Fast   |
-| Application    | Unit test        | Fake ports (in-memory)   | Fast   |
-| Infrastructure | Integration test | Testcontainers, WireMock | Slow   |
-| Presentation   | Slice test       | MockMvc, WebTestClient   | Medium |
+| Layer          | Test Type        | Dependencies                       | Speed  |
+| -------------- | ---------------- | ---------------------------------- | ------ |
+| Domain         | Unit test        | None (pure logic)                  | Fast   |
+| Application    | Unit test        | Fake ports (in-memory)             | Fast   |
+| Infrastructure | Integration test | Test containers, HTTP mock servers | Slow   |
+| Presentation   | API test         | HTTP test client, mock services    | Medium |
 
 ### Domain Layer Test (No Dependencies)
 
-```kotlin
+```text
 class OrderTest {
-    @Test
-    fun `should add line to order`() {
+    fun test_should_add_line_to_order() {
         val order = Order.create(customerId, product, quantity = 2)
 
-        assertThat(order.totalAmount()).isEqualTo(Money.of(2000))
+        // assert: order.totalAmount() equals Money.of(2000)
     }
 
-    @Test
-    fun `should reject more than 10 items`() {
+    fun test_should_reject_more_than_10_items() {
         val order = Order.create(customerId, product, quantity = 1)
         repeat(9) { order.addLine(product, 1) }
 
-        assertThrows<IllegalArgumentException> {
-            order.addLine(product, 1)
-        }
+        // assert: order.addLine(product, 1) throws IllegalArgumentException
     }
 }
 ```
 
 ### Application Layer Test (Fake Ports)
 
-```kotlin
+```text
 class CreateOrderServiceTest {
-    private val orderRepository = FakeOrderRepository()
-    private val productRepository = FakeProductRepository()
-    private val eventPublisher = FakeEventPublisher()
+    private orderRepository = FakeOrderRepository()
+    private productRepository = FakeProductRepository()
+    private eventPublisher = FakeEventPublisher()
 
-    private val sut = CreateOrderService(orderRepository, productRepository, eventPublisher)
+    private sut = CreateOrderService(orderRepository, productRepository, eventPublisher)
 
-    @Test
-    fun `should create order and publish event`() {
+    fun test_should_create_order_and_publish_event() {
         productRepository.save(product)
 
         val orderId = sut.execute(CreateOrderCommand(customerId, productId, quantity = 2))
 
-        val saved = orderRepository.findById(orderId)
-        assertThat(saved).isNotNull
-        assertThat(eventPublisher.publishedEvents).hasSize(1)
+        // assert: orderRepository.findById(orderId) is not null
+        // assert: eventPublisher.publishedEvents has size 1
     }
 }
 
 // Fake implementation for testing
-class FakeOrderRepository : OrderRepository {
-    private val store = mutableMapOf<OrderId, Order>()
+class FakeOrderRepository implements OrderRepository {
+    private store = Map<OrderId, Order>()
 
-    override fun findById(id: OrderId): Order? = store[id]
-    override fun save(order: Order) { store[order.id] = order }
-    override fun delete(id: OrderId) { store.remove(id) }
+    fun findById(id: OrderId): Order? = store.get(id)
+    fun save(order: Order) { store.put(order.id, order) }
+    fun delete(id: OrderId) { store.remove(id) }
 }
 ```
 
@@ -444,7 +441,7 @@ class FakeOrderRepository : OrderRepository {
 - Domain layer tests require zero mocking -- if mocking is needed, the domain has external dependencies (violation)
 - Application layer tests use fake implementations of ports, not mocks
 - Infrastructure tests verify that adapters correctly translate between domain and technology
-- Presentation tests verify HTTP contract (status codes, JSON structure), not business logic
+- Presentation tests verify HTTP contract (status codes, response structure), not business logic
 - If a class is hard to test, it likely violates separation of concerns -- fix the design, not the test
 
 ---
@@ -453,47 +450,45 @@ class FakeOrderRepository : OrderRepository {
 
 ### Domain Layer Violations
 
-- **Framework annotations in domain**: `@Entity`, `@Component`, `@Transactional` on domain classes couples domain to framework
-- **Infrastructure imports in domain**: Domain classes importing JPA, Spring, or HTTP client packages
+- **Framework annotations in domain**: ORM annotations, DI annotations, transaction annotations on domain classes couples domain to framework
+- **Infrastructure imports in domain**: Domain classes importing framework or infrastructure packages
 - **Anemic domain model**: Domain objects with only getters/setters and all logic in services
-- **Domain returning infrastructure types**: Domain methods returning `Page<T>`, `ResponseEntity`, or JPA entities
+- **Domain returning infrastructure types**: Domain methods returning paginated wrappers, HTTP response objects, or persistence entities
 
 ### Dependency Violations
 
 - **Bidirectional dependencies**: Application layer depending on infrastructure and infrastructure depending back on application
 - **Skipping layers**: Controller directly calling repository without going through use case
-- **Shared mutable state**: Passing JPA entities across layer boundaries (lazy loading failures, unintended mutations)
+- **Shared mutable state**: Passing persistence entities across layer boundaries (lazy loading failures, unintended mutations)
 
 ### Structural Violations
 
 - **God use case**: Single application service handling dozens of unrelated operations
-- **Leaky abstraction**: Outbound port method signatures exposing infrastructure details (e.g., `fun findByJpql(query: String)`)
+- **Leaky abstraction**: Outbound port method signatures exposing infrastructure details (e.g., `fun findByRawQuery(query: String)`)
 - **DTO explosion**: Creating separate DTOs for every minor variation instead of reusing where appropriate
 - **Premature abstraction**: Creating ports and adapters for internal modules that will never have multiple implementations
 
 ### Common Mistakes
 
-| Mistake                              | Why It Hurts                                | Fix                                                     |
-| ------------------------------------ | ------------------------------------------- | ------------------------------------------------------- |
-| JPA entity as domain entity          | Domain coupled to persistence framework     | Separate domain model and JPA entity                    |
-| Business logic in controller         | Untestable without HTTP context             | Move to domain or application layer                     |
-| Repository returning DTOs            | Mixes persistence and presentation concerns | Return domain objects, map at boundary                  |
-| `@Transactional` on domain service   | Domain depends on Spring                    | Put `@Transactional` on application service             |
-| Using Spring events as domain events | Domain coupled to Spring event system       | Domain defines events, application publishes via Spring |
+| Mistake                                  | Why It Hurts                              | Fix                                                          |
+| ---------------------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
+| Persistence entity as domain entity      | Domain coupled to persistence framework   | Separate domain model and persistence entity                 |
+| Business logic in controller             | Untestable without HTTP context           | Move to domain or application layer                          |
+| Repository returning DTOs                | Mixes persistence and presentation        | Return domain objects, map at boundary                       |
+| Transaction annotations on domain service | Domain depends on framework              | Put transaction management on application service            |
+| Using framework events as domain events  | Domain coupled to framework event system  | Domain defines events, application publishes via framework   |
 
 ---
 
 ## 10. Related Rules
 
-| 관련 스킬                  | When to Reference                                             |
-| -------------------------- | ------------------------------------------------------------- |
-| `ddd` 스킬                | Designing entities, aggregates, value objects, domain events  |
-| `code-quality` 스킬       | Abstraction layers, modularity, single responsibility         |
-| `spring-framework` 스킬   | IoC, DI, `@Transactional`, event publishing, JPA patterns    |
-| `kotlin-convention` 스킬  | Sealed classes, extension functions, naming conventions       |
-| `testing-unit` 스킬       | Writing tests for use cases and domain logic                  |
-| `error-handling` 스킬     | Exception hierarchy, business vs system exceptions            |
-| `spring-error-handling` 스킬 | `@ControllerAdvice`, `ErrorCode` enum, error response format  |
+| Related Skill            | When to Reference                                            |
+| ------------------------ | ------------------------------------------------------------ |
+| `ddd` skill              | Designing entities, aggregates, value objects, domain events |
+| `code-quality` skill     | Abstraction layers, modularity, single responsibility        |
+| `testing-unit` skill     | Writing tests for use cases and domain logic                 |
+| `error-handling` skill   | Exception hierarchy, business vs system exceptions           |
+| `spring-framework` skill | Spring DI wiring, `@Transactional`, JPA repository patterns  |
 
 ---
 
@@ -504,6 +499,4 @@ class FakeOrderRepository : OrderRepository {
 - Vaughn Vernon, "Implementing Domain-Driven Design" (architecture patterns chapter)
 - Netflix Tech Blog, "Ready for changes with Hexagonal Architecture"
 - Herberto Graca, "DDD, Hexagonal, Onion, Clean, CQRS, How I put it all together" (blog series)
-- Tom Hombergs, "Get Your Hands Dirty on Clean Architecture" (Spring Boot examples)
-- Baeldung, "Hexagonal Architecture in Java" (tutorial series)
-- JetBrains, "Kotlin + Spring Boot project structure" (official guide)
+- Tom Hombergs, "Get Your Hands Dirty on Clean Architecture"

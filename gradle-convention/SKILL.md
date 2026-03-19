@@ -1,6 +1,6 @@
 ---
 name: gradle-convention
-description: Gradle build conventions for Kotlin/Spring Boot multi-module projects.
+description: Gradle build conventions for Kotlin/JVM multi-module projects.
   Use when writing or reviewing build.gradle.kts, settings.gradle.kts, or version
   catalog files.
 ---
@@ -22,7 +22,7 @@ project-root/
 ├── gradle/
 │   └── libs.versions.toml        # Version catalog
 └── modules/
-    ├── app/                      # Spring Boot application
+    ├── app/                      # Application entry point
     │   ├── build.gradle.kts
     │   └── src/
     ├── domain/                   # Domain logic
@@ -40,7 +40,7 @@ app → domain ← infrastructure
 ```
 
 - `domain`: Pure business logic, no framework dependencies
-- `app`: Spring Boot application, controllers, configuration
+- `app`: Application entry point, routing, configuration
 - `infrastructure`: Database, external APIs, messaging
 - `domain` should never depend on `app` or `infrastructure`
 
@@ -52,35 +52,38 @@ app → domain ← infrastructure
 
 ```toml
 [versions]
-spring-boot = "4.0.3"
 kotlin = "2.3.10"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.8.1"
+ktor = "3.1.2"
+exposed = "0.61.0"
 kotest = "5.9.0"
 mockk = "1.13.13"
 
 [libraries]
-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
-spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
-kotest-spring = { module = "io.kotest.extensions:kotest-extensions-spring", version = "1.3.0" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [bundles]
-kotest = ["kotest-runner", "kotest-spring", "mockk"]
+kotest = ["kotest-runner", "mockk"]
 
 [plugins]
-spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
-kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ```
 
 ### Usage in build.gradle.kts
 
 ```kotlin
 dependencies {
-    implementation(libs.spring.boot.starter.web)
-    implementation(libs.spring.boot.starter.data.jpa)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.bundles.kotest)
 }
 ```
@@ -111,20 +114,19 @@ dependencies {
 ```kotlin
 dependencies {
     // Use implementation by default
-    implementation(libs.spring.boot.starter.web)
+    implementation(libs.ktor.server.core)
 
     // Use api only in library modules when the type is part of the public API
     api(libs.some.shared.model)
 
     // Use compileOnly for annotation processors
-    compileOnly(libs.lombok)
+    compileOnly(libs.some.annotation.processor)
 
     // Use runtimeOnly for runtime-only dependencies
     runtimeOnly(libs.postgresql)
 
     // Test dependencies
     testImplementation(libs.bundles.kotest)
-    testImplementation(libs.spring.boot.starter.test)
 }
 ```
 
@@ -155,21 +157,18 @@ tasks.withType<Test> {
 }
 ```
 
-### Spring Boot Module Convention
+### Application Module Convention
 
 ```kotlin
-// buildSrc/src/main/kotlin/spring-boot-conventions.gradle.kts
+// buildSrc/src/main/kotlin/app-conventions.gradle.kts
 plugins {
     id("kotlin-conventions")
-    id("org.springframework.boot")
-    kotlin("plugin.spring")
+    application
 }
 
-// Spring Boot plugin applies BOM — no version needed for starters
-dependencies {
-    implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
-    implementation("org.springframework.boot:spring-boot-starter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+// Configure the main class for the application plugin
+application {
+    mainClass.set("com.example.MainKt")
 }
 ```
 
@@ -177,7 +176,7 @@ dependencies {
 
 - Extract common build logic into `buildSrc` convention plugins
 - Apply convention plugins in module `build.gradle.kts` instead of repeating config
-- Keep convention plugins focused — one per concern (kotlin, spring, jpa)
+- Keep convention plugins focused — one per concern (kotlin, application, serialization)
 
 ---
 
@@ -224,14 +223,23 @@ org.gradle.daemon=false
 | Task | Purpose |
 | --- | --- |
 | `./gradlew build` | Compile + test + assemble |
-| `./gradlew bootJar` | Build Spring Boot executable JAR |
+| `./gradlew jar` | Build JAR artifact |
 | `./gradlew test` | Run all tests |
 | `./gradlew dependencies` | Show dependency tree |
 | `./gradlew dependencyUpdates` | Check for dependency updates |
 
 ---
 
-## 7. Anti-Patterns
+## 7. Framework-Specific Build Patterns
+
+Examples in this skill use framework-agnostic Kotlin/JVM libraries. For Spring Boot projects, see:
+
+- **Spring Boot plugins, starters, convention plugins**: `spring-framework` skill
+- **Spring Boot + Kotlin build setup** (allopen, noarg, JPA plugins): `spring-framework` skill — [references/kotlin-interop.md](../spring-framework/references/kotlin-interop.md)
+
+---
+
+## 8. Anti-Patterns
 
 - Hardcoding dependency versions in `build.gradle.kts`
 - Using `compile` (deprecated) instead of `implementation`

@@ -457,9 +457,9 @@ spec:
 
 For provider-specific configurations, see dedicated skills:
 
-- **AWS EKS**: `karpenter-providers` 규칙의 EKS 섹션
-- **Azure AKS**: `karpenter-providers` 규칙의 AKS 섹션
-- **GCP GKE**: `karpenter-providers` 규칙의 GKE 섹션
+- **AWS EKS**: EKS section in `karpenter-providers` rules
+- **Azure AKS**: AKS section in `karpenter-providers` rules
+- **GCP GKE**: GKE section in `karpenter-providers` rules
 
 ---
 

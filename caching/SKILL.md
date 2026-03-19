@@ -3,7 +3,6 @@ name: caching
 description: >-
   Framework-agnostic caching strategies including cache selection, TTL design,
   invalidation patterns, stampede prevention, and anti-patterns.
-  Includes Spring Boot implementation (Caffeine, Redis, @Cacheable).
   Use when designing or reviewing cache logic.
 ---
 
@@ -192,4 +191,4 @@ A cache stampede occurs when many requests simultaneously miss the cache and hit
 
 ## Additional References
 
-- For Spring Boot implementation patterns, see [references/spring.md](references/spring.md)
+- For Spring Boot implementation patterns (Caffeine, Redis, `@Cacheable`), see `spring-framework` skill — [references/caching.md](../spring-framework/references/caching.md)

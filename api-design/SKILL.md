@@ -245,9 +245,9 @@ GET /users?fields=id,name,email
 
 ## 10. References
 
-- [Semantic Versioning Specification](https://semver.org/) — 버전 번호 체계의 업계 표준
-- [RFC 7231 (HTTP/1.1 Semantics and Content)](https://datatracker.ietf.org/doc/html/rfc7231) — HTTP 메서드 및 콘텐츠 협상
-- [RFC 8594 (The Sunset HTTP Header Field)](https://datatracker.ietf.org/doc/html/rfc8594) — API 지원 종료 알림 표준
-- [Microsoft REST API Guidelines - Versioning](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md) — 대규모 API 버저닝 사례
-- [Google Cloud API Design Guide](https://cloud.google.com/apis/design) — API 호환성 및 버저닝 가이드
-- [Pact Contract Testing](https://docs.pact.io/) — Consumer-Driven Contract Testing 프레임워크
+- [Semantic Versioning Specification](https://semver.org/) — Industry standard for version numbering
+- [RFC 7231 (HTTP/1.1 Semantics and Content)](https://datatracker.ietf.org/doc/html/rfc7231) — HTTP methods and content negotiation
+- [RFC 8594 (The Sunset HTTP Header Field)](https://datatracker.ietf.org/doc/html/rfc8594) — API deprecation notification standard
+- [Microsoft REST API Guidelines - Versioning](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md) — Large-scale API versioning practices
+- [Google Cloud API Design Guide](https://cloud.google.com/apis/design) — API compatibility and versioning guide
+- [Pact Contract Testing](https://docs.pact.io/) — Consumer-Driven Contract Testing framework

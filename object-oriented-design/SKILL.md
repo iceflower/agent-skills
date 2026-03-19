@@ -378,7 +378,7 @@ Infrastructure Layer (low-level)
 
 ### Dependency Injection
 
-```
+```text
 // DI container: constructor injection wires adapters to ports
 // Configuration class (framework-specific)
 class InfraConfig {

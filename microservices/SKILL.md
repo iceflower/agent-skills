@@ -345,7 +345,7 @@ Cache Service   → Cache Store (Redis)
 ### Transactional Outbox Pattern
 
 ```kotlin
-// Write to DB and outbox table in same transaction
+// Write to DB and outbox table in same transaction (transaction boundary)
 fun createOrder(request: CreateOrderRequest): Order {
     val order = orderRepository.save(Order.from(request))
 
@@ -401,13 +401,12 @@ HALF_OPEN → (test calls fail) → OPEN
 class PaymentService(
     private val paymentClient: PaymentClient
 ) {
-    @CircuitBreaker(name = "paymentApi", fallbackMethod = "paymentFallback")
-    @Retry(name = "paymentApi")
-    @Bulkhead(name = "paymentApi")
+    // Apply: circuit breaker → retry → bulkhead (via framework or library config)
     fun processPayment(request: PaymentRequest): PaymentResponse {
         return paymentClient.charge(request)
     }
 
+    // Fallback when circuit breaker is open
     fun paymentFallback(request: PaymentRequest, e: Exception): PaymentResponse {
         log.warn("Payment service unavailable, queuing for retry", e)
         pendingPaymentQueue.enqueue(request)

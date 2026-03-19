@@ -197,7 +197,7 @@ Database → Persistence Entity → Domain Entity → Result DTO → Response DT
 
 ### Mapping Examples
 
-```
+```text
 // Presentation → Application
 fun toCommand(request: CreateOrderRequest): CreateOrderCommand {
     return CreateOrderCommand(
@@ -256,7 +256,7 @@ class OrderEntityMapper {
 
 The domain and application layers define interfaces (ports) that the infrastructure layer implements. A dependency injection framework wires the concrete implementations at runtime.
 
-```
+```text
 // Domain layer defines the interface
 interface OrderRepository {
     fun findById(id: OrderId): Order?
@@ -304,7 +304,7 @@ class CreateOrderService implements CreateOrderUseCase {
 
 ### Use Case Interface (Inbound Port)
 
-```
+```text
 // One interface per use case — clear, focused, independently testable
 interface CreateOrderUseCase {
     fun execute(command: CreateOrderCommand): OrderId
@@ -321,7 +321,7 @@ interface GetOrderDetailQuery {
 
 ### Use Case Implementation
 
-```
+```text
 // Application service
 class CreateOrderService implements CreateOrderUseCase {
     private orderRepository: OrderRepository
@@ -387,7 +387,7 @@ class CreateOrderService implements CreateOrderUseCase {
 
 ### Domain Layer Test (No Dependencies)
 
-```
+```text
 class OrderTest {
     fun test_should_add_line_to_order() {
         val order = Order.create(customerId, product, quantity = 2)
@@ -408,7 +408,7 @@ class OrderTest {
 
 ### Application Layer Test (Fake Ports)
 
-```
+```text
 class CreateOrderServiceTest {
     private orderRepository = FakeOrderRepository()
     private productRepository = FakeProductRepository()

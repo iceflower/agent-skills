@@ -395,7 +395,7 @@ Orchestrate use cases by coordinating domain objects.
 
 ### Application Service Example
 
-```
+```text
 // Application service — orchestrates use cases
 class OrderApplicationService(
     private orderRepository: OrderRepository,

@@ -50,7 +50,11 @@ python3 scripts/weather.py air-hourly [--city CITY]
 
 ### Supported Cities
 
+About 100 locations are registered including sub-districts. Major cities:
+
 `seoul`, `busan`, `daegu`, `incheon`, `gwangju`, `daejeon`, `ulsan`, `sejong`, `gangneung`, `chuncheon`, `jeonju`, `cheongju`, `jeju`, `seogwipo`, `gumi`, `suwon`, `changwon`, `pohang`, `gimhae`, `yeosu`, `wonju`, `gyeongju`, `andong`, `gimcheon`, `sangju`, `yeongju`, `mungyeong`
+
+Sub-districts use `{city}-{district}` format (e.g., `seoul-gangnam`, `busan-haeundae`, `suwon-yeongtong`). See `references/cities.json` for the full list.
 
 ### Examples
 
@@ -165,7 +169,7 @@ https://www.accuweather.com/ko/kr/{city}/{location-key}/air-quality-index/{locat
 https://www.accuweather.com/ko/kr/{city}/{location-key}/weather-today/{location-key}
 ```
 
-AccuWeather location keys are stored in `references/cities.json` under the `key` field.
+AccuWeather location keys are stored in `references/cities.json` under the `accuweatherKey` field.
 
 ## 9. Sunrise/Sunset
 

@@ -23,7 +23,9 @@ import os
 import re
 import sys
 import warnings
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 warnings.filterwarnings("ignore")
 
@@ -32,6 +34,7 @@ from bs4 import BeautifulSoup
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _CITIES_FILE = os.path.join(_SCRIPT_DIR, "..", "references", "cities.json")
+_KST = ZoneInfo("Asia/Seoul")
 
 
 def _load_cities() -> dict:
@@ -42,7 +45,7 @@ def _load_cities() -> dict:
     except (FileNotFoundError, json.JSONDecodeError):
         return {
             "seoul": {
-                "key": "226081", "name": "서울특별시", "region": "서울",
+                "accuweatherKey": "226081", "name": "서울특별시", "region": "서울",
                 "station": "종로구", "asos": 108, "nx": 60, "ny": 127,
                 "midTa": "11B10101", "midLand": "11B00000",
             },
@@ -83,6 +86,11 @@ _SKY_MAP = {1: "맑음", 3: "구름많음", 4: "흐림"}
 _PTY_MAP = {0: "", 1: "비", 2: "비/눈", 3: "눈", 4: "소나기", 5: "빗방울", 6: "빗방울눈날림", 7: "눈날림"}
 
 
+def _now_kst() -> datetime:
+    """Return current datetime in KST."""
+    return datetime.now(_KST)
+
+
 def _vec_to_dir(vec: float) -> str:
     """Convert wind direction in degrees to Korean 16-direction."""
     dirs = ["북", "북북동", "북동", "동북동", "동", "동남동", "남동", "남남동",
@@ -119,7 +127,7 @@ def _kma_fcst_get(service: str, operation: str, params: dict) -> dict | None:
 def fetch_now(city: str) -> None:
     """Fetch current weather using KMA ultra-short-term observation."""
     c = CITIES[city]
-    now = datetime.now()
+    now = _now_kst()
     # 실황은 매시 정각 발표, 약 10분 후 제공 → 현재시각-40분의 정시 사용
     base = now - timedelta(minutes=40)
     base_date = base.strftime("%Y%m%d")
@@ -180,7 +188,7 @@ def _get_latest_base_time(now: datetime) -> tuple[str, str]:
 def fetch_hourly(city: str, day: int) -> None:
     """Fetch hourly forecast using KMA short-term forecast API."""
     c = CITIES[city]
-    now = datetime.now()
+    now = _now_kst()
     base_date, base_time = _get_latest_base_time(now)
 
     data = _kma_fcst_get("VilageFcstInfoService_2.0", "getVilageFcst", {
@@ -255,85 +263,66 @@ def fetch_hourly(city: str, day: int) -> None:
 
 # --- daily (단기예보 + 중기예보) ---
 
-def fetch_daily(city: str) -> None:
-    """Fetch daily forecast using KMA short-term + mid-term APIs."""
-    c = CITIES[city]
-    now = datetime.now()
+def _parse_short_term_daily(items: list) -> dict:
+    """Parse short-term forecast items into daily aggregated data."""
+    daily = {}
+    for item in items:
+        d = item["fcstDate"]
+        cat = item["category"]
+        val = item["fcstValue"]
+        if d not in daily:
+            daily[d] = {"tmn": None, "tmx": None, "pops": [], "skys": [], "ptys": []}
+        if cat == "TMN":
+            daily[d]["tmn"] = val
+        elif cat == "TMX":
+            daily[d]["tmx"] = val
+        elif cat == "POP":
+            daily[d]["pops"].append(int(val))
+        elif cat == "SKY":
+            daily[d]["skys"].append(int(val))
+        elif cat == "PTY":
+            daily[d]["ptys"].append(int(val))
+    return daily
 
-    # 1) 단기예보에서 오늘~2일 최고/최저기온 + 하늘/강수
-    base_date, base_time = _get_latest_base_time(now)
-    short_data = _kma_fcst_get("VilageFcstInfoService_2.0", "getVilageFcst", {
-        "pageNo": 1, "numOfRows": 1000,
-        "base_date": base_date, "base_time": base_time,
-        "nx": c["nx"], "ny": c["ny"],
-    })
 
-    # 단기예보 → 날짜별 집계
-    short_daily = {}
-    if short_data:
-        items = short_data["response"]["body"]["items"]["item"]
-        for item in items:
-            d = item["fcstDate"]
-            cat = item["category"]
-            val = item["fcstValue"]
-            if d not in short_daily:
-                short_daily[d] = {"tmn": None, "tmx": None, "pops": [], "skys": [], "ptys": []}
-            if cat == "TMN":
-                short_daily[d]["tmn"] = val
-            elif cat == "TMX":
-                short_daily[d]["tmx"] = val
-            elif cat == "POP":
-                short_daily[d]["pops"].append(int(val))
-            elif cat == "SKY":
-                short_daily[d]["skys"].append(int(val))
-            elif cat == "PTY":
-                short_daily[d]["ptys"].append(int(val))
+def _fetch_mid_term(c: dict, tmfc: str) -> tuple[dict, dict]:
+    """Fetch mid-term temperature and land forecasts in parallel."""
+    ta_params = {"pageNo": 1, "numOfRows": 10, "regId": c.get("midTa", ""), "tmFc": tmfc}
+    land_params = {"pageNo": 1, "numOfRows": 10, "regId": c.get("midLand", ""), "tmFc": tmfc}
 
-    # 2) 중기예보 (4~10일)
-    # 중기예보는 06시, 18시에 발표
-    mid_hour = 18 if now.hour >= 18 else 6
-    mid_base = now.replace(hour=mid_hour, minute=0, second=0, microsecond=0)
-    if now.hour < 6:
-        mid_base = (now - timedelta(days=1)).replace(hour=18, minute=0, second=0, microsecond=0)
-    tmfc = mid_base.strftime("%Y%m%d%H%M")
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        ta_future = executor.submit(_kma_fcst_get, "MidFcstInfoService", "getMidTa", ta_params)
+        land_future = executor.submit(_kma_fcst_get, "MidFcstInfoService", "getMidLandFcst", land_params)
+        ta_data = ta_future.result()
+        land_data = land_future.result()
 
     mid_ta = {}
-    mid_land = {}
-
-    ta_data = _kma_fcst_get("MidFcstInfoService", "getMidTa", {
-        "pageNo": 1, "numOfRows": 10, "regId": c.get("midTa", ""), "tmFc": tmfc,
-    })
     if ta_data:
         items = ta_data["response"]["body"]["items"]["item"]
         if items:
             item = items[0]
             for d in range(4, 11):
-                mid_ta[d] = {
-                    "min": item.get(f"taMin{d}"),
-                    "max": item.get(f"taMax{d}"),
-                }
+                mid_ta[d] = {"min": item.get(f"taMin{d}"), "max": item.get(f"taMax{d}")}
 
-    land_data = _kma_fcst_get("MidFcstInfoService", "getMidLandFcst", {
-        "pageNo": 1, "numOfRows": 10, "regId": c.get("midLand", ""), "tmFc": tmfc,
-    })
+    mid_land = {}
     if land_data:
         items = land_data["response"]["body"]["items"]["item"]
         if items:
             item = items[0]
             for d in range(4, 8):
                 mid_land[d] = {
-                    "wfAm": item.get(f"wf{d}Am", "-"),
-                    "wfPm": item.get(f"wf{d}Pm", "-"),
-                    "rnAm": item.get(f"rnSt{d}Am", "-"),
-                    "rnPm": item.get(f"rnSt{d}Pm", "-"),
+                    "wfAm": item.get(f"wf{d}Am", "-"), "wfPm": item.get(f"wf{d}Pm", "-"),
+                    "rnAm": item.get(f"rnSt{d}Am", "-"), "rnPm": item.get(f"rnSt{d}Pm", "-"),
                 }
             for d in range(8, 11):
-                mid_land[d] = {
-                    "wf": item.get(f"wf{d}", "-"),
-                    "rn": item.get(f"rnSt{d}", "-"),
-                }
+                mid_land[d] = {"wf": item.get(f"wf{d}", "-"), "rn": item.get(f"rnSt{d}", "-")}
 
-    # 3) 출력
+    return mid_ta, mid_land
+
+
+def _format_daily_output(c: dict, now: datetime, short_daily: dict,
+                         mid_ta: dict, mid_land: dict) -> None:
+    """Format and print daily forecast output."""
     print(f"## {c['name']} 일별 예보\n")
     print("| 날짜 | 최저 | 최고 | 강수확률 | 날씨 |")
     print("| --- | --- | --- | --- | --- |")
@@ -344,20 +333,18 @@ def fetch_daily(city: str) -> None:
         target = now + timedelta(days=offset)
         date_str = target.strftime("%Y%m%d")
         date_disp = f"{target.month}/{target.day}({weekdays[target.weekday()]})"
-        days_ahead = offset + 1  # 중기예보 기준 일수
+        days_ahead = offset + 1
 
         if date_str in short_daily:
             sd = short_daily[date_str]
             tmn = sd["tmn"] or "-"
             tmx = sd["tmx"] or "-"
             max_pop = max(sd["pops"]) if sd["pops"] else "-"
-            # 하늘상태: 가장 빈번한 값
             if sd["skys"]:
                 most_sky = max(set(sd["skys"]), key=sd["skys"].count)
                 sky = _SKY_MAP.get(most_sky, "-")
             else:
                 sky = "-"
-            # 강수형태가 있으면 우선
             if sd["ptys"] and any(p > 0 for p in sd["ptys"]):
                 most_pty = max((p for p in sd["ptys"] if p > 0), key=sd["ptys"].count)
                 sky = _PTY_MAP.get(most_pty, sky)
@@ -380,6 +367,38 @@ def fetch_daily(city: str) -> None:
     print("\n출처: 기상청")
 
 
+def fetch_daily(city: str) -> None:
+    """Fetch daily forecast using KMA short-term + mid-term APIs."""
+    c = CITIES[city]
+    now = _now_kst()
+
+    # 1) 단기예보
+    base_date, base_time = _get_latest_base_time(now)
+    short_data = _kma_fcst_get("VilageFcstInfoService_2.0", "getVilageFcst", {
+        "pageNo": 1, "numOfRows": 1000,
+        "base_date": base_date, "base_time": base_time,
+        "nx": c["nx"], "ny": c["ny"],
+    })
+
+    short_daily = {}
+    if short_data:
+        short_daily = _parse_short_term_daily(short_data["response"]["body"]["items"]["item"])
+    else:
+        print("단기예보 조회 실패, 중기예보만 표시합니다.", file=sys.stderr)
+
+    # 2) 중기예보 (4~10일) — 병렬 호출
+    mid_hour = 18 if now.hour >= 18 else 6
+    mid_base = now.replace(hour=mid_hour, minute=0, second=0, microsecond=0)
+    if now.hour < 6:
+        mid_base = (now - timedelta(days=1)).replace(hour=18, minute=0, second=0, microsecond=0)
+    tmfc = mid_base.strftime("%Y%m%d%H%M")
+
+    mid_ta, mid_land = _fetch_mid_term(c, tmfc)
+
+    # 3) 출력
+    _format_daily_output(c, now, short_daily, mid_ta, mid_land)
+
+
 # --- past (ASOS 과거 관측) ---
 
 def _wd36_to_ko(code: int) -> str:
@@ -400,7 +419,7 @@ def _parse_sfctm2_line(line: str) -> dict | None:
     if not line or line.startswith("#"):
         return None
     parts = line.split()
-    if len(parts) < 16:
+    if len(parts) < 17:
         return None
     try:
         tm = parts[0]
@@ -513,7 +532,7 @@ def _fetch_airkorea_forecast(target_date: str, region: str) -> dict:
     """에어코리아 일별 예보 등급을 조회한다."""
     if not _AIRKOREA_API_KEY:
         return {}
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = _now_kst().strftime("%Y-%m-%d")
     result = {}
     for code in ("PM25", "PM10"):
         url = (
@@ -580,14 +599,14 @@ def _fetch(session: requests.Session, url: str) -> BeautifulSoup:
 
 
 def _accu_base_url(city: str) -> str:
-    key = CITIES[city]["key"]
+    key = CITIES[city]["accuweatherKey"]
     return f"https://www.accuweather.com/ko/kr/{city}/{key}"
 
 
 def fetch_air_quality(city: str) -> None:
     session = _create_session()
     c = CITIES[city]
-    key = c["key"]
+    key = c["accuweatherKey"]
     url = f"{_accu_base_url(city)}/air-quality-index/{key}"
     soup = _fetch(session, url)
 
@@ -632,7 +651,7 @@ def fetch_air_quality(city: str) -> None:
 def fetch_air_hourly(city: str) -> None:
     session = _create_session()
     c = CITIES[city]
-    key = c["key"]
+    key = c["accuweatherKey"]
     url = f"{_accu_base_url(city)}/air-quality-index/{key}"
     soup = _fetch(session, url)
 
@@ -646,7 +665,7 @@ def fetch_air_hourly(city: str) -> None:
         print("시간별 대기질 데이터가 비어 있습니다.")
         return
 
-    now = datetime.now()
+    now = _now_kst()
     start_hour = now.hour
     hours = []
     for i in range(len(points)):
@@ -726,7 +745,7 @@ def main():
         elif args.type == "air-hourly":
             fetch_air_hourly(args.city)
         elif args.type == "past":
-            date = args.date or datetime.now().strftime("%Y%m%d")
+            date = args.date or _now_kst().strftime("%Y%m%d")
             fetch_past(args.city, date)
     except requests.RequestException as e:
         print(f"네트워크 오류: {e}", file=sys.stderr)

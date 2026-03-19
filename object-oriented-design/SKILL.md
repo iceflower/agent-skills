@@ -378,15 +378,13 @@ Infrastructure Layer (low-level)
 
 ### Dependency Injection
 
-```kotlin
-// Spring Boot: constructor injection wires adapters to ports
-@Configuration
+```
+// DI container: constructor injection wires adapters to ports
+// Configuration class (framework-specific)
 class InfraConfig {
-    @Bean
-    fun orderRepository(jpaRepository: JpaOrderJpaRepository): OrderRepository =
-        JpaOrderRepository(jpaRepository)
+    fun orderRepository(persistenceRepository: OrderPersistenceRepository): OrderRepository =
+        OrderRepositoryImpl(persistenceRepository)
 
-    @Bean
     fun orderNotifier(emailSender: EmailSender): OrderNotifier =
         EmailOrderNotifier(emailSender)
 }

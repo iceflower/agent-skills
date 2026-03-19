@@ -554,7 +554,7 @@ Shared vocabulary between developers and domain experts.
 ## Related Skills
 
 - **clean-architecture**: Architectural patterns complementing DDD
-- **spring-jpa**: Repository implementation patterns
+- **spring-framework**: Repository implementation patterns (JPA, Spring Data)
 - **testing-integration**: Testing domain logic
 
 ---

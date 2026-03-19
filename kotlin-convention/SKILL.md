@@ -127,10 +127,7 @@ suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
 
 ### Spring Integration
 
-- Use `suspend fun` in controllers for WebFlux/reactive endpoints
-- Use `@Async` with `CompletableFuture` for MVC-based projects
-- Never use `GlobalScope` — always use structured concurrency
-- Use `Dispatchers.IO` for blocking I/O operations
+- For Spring-specific coroutine and WebFlux patterns, see `spring-framework` skill
 
 ---
 

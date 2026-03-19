@@ -75,7 +75,7 @@ description: >-
 - Always set timeouts on synchronous calls
 - Design messages to be self-contained — consumers should not need to call back to the producer
 
-### Spring Boot Example: Event Publishing
+### Event Publishing Example
 
 ```kotlin
 // Domain event
@@ -88,12 +88,10 @@ data class OrderCreatedEvent(
 )
 
 // Publishing service
-@Service
 class OrderService(
     private val orderRepository: OrderRepository,
     private val eventPublisher: OrderEventPublisher
 ) {
-    @Transactional
     fun createOrder(request: CreateOrderRequest): Order {
         val order = orderRepository.save(Order.from(request))
         eventPublisher.publish(order.toCreatedEvent())
@@ -210,7 +208,6 @@ Payment Service → [PaymentRefunded] → Order Service (cancel)
 ### Orchestration Example
 
 ```kotlin
-@Service
 class OrderSagaOrchestrator(
     private val paymentClient: PaymentClient,
     private val inventoryClient: InventoryClient,
@@ -349,7 +346,6 @@ Cache Service   → Cache Store (Redis)
 
 ```kotlin
 // Write to DB and outbox table in same transaction
-@Transactional
 fun createOrder(request: CreateOrderRequest): Order {
     val order = orderRepository.save(Order.from(request))
 
@@ -402,7 +398,6 @@ HALF_OPEN → (test calls fail) → OPEN
 ### Resilience Configuration Example
 
 ```kotlin
-@Service
 class PaymentService(
     private val paymentClient: PaymentClient
 ) {
@@ -422,7 +417,7 @@ class PaymentService(
 ```
 
 ```yaml
-# application.yml
+# Resilience4j configuration
 resilience4j:
   circuitbreaker:
     instances:
@@ -505,9 +500,9 @@ class MicroserviceNotificationSender(
 }
 
 // Step 4: Feature toggle to switch implementations
-@Bean
+// Wired via dependency injection with feature toggle
 fun notificationSender(
-    @Value("\${feature.notification-service.enabled}") enabled: Boolean,
+    enabled: Boolean,  // from configuration: feature.notification-service.enabled
     notificationClient: NotificationClient
 ): NotificationSender =
     if (enabled) MicroserviceNotificationSender(notificationClient)
@@ -583,16 +578,14 @@ fun notificationSender(
 | --------------------- | -------------------------- | -------------------------------------------------- |
 | Messaging patterns    | `messaging` 스킬           | Broker selection, producer/consumer patterns       |
 | API client resilience | `http-client` 스킬          | Timeout, retry, circuit breaker configuration      |
-| Spring API client     | `spring-http-client` 스킬   | RestClient, Spring Retry, Resilience4j setup       |
 | Error handling        | `error-handling` 스킬      | Exception hierarchy, error response format         |
-| Spring error handling | `spring-error-handling` 스킬 | @ControllerAdvice, ErrorCode enum                  |
 | Monitoring            | `monitoring` 스킬          | Metrics, tracing, alerting for distributed systems |
-| Spring monitoring     | `spring-monitoring` 스킬   | Actuator, Micrometer, distributed tracing          |
 | Caching               | `caching` 스킬             | Cache strategy, TTL, invalidation patterns         |
 | Database              | `database` 스킬            | Migration, transaction management, query patterns  |
 | API design            | `api-design` 스킬          | REST conventions, versioning, pagination           |
 | Security              | `security` 스킬            | Authentication, authorization, rate limiting       |
 | Logging               | `logging` 스킬             | Structured logging, traceId correlation            |
+| Spring implementation | `spring-framework` 스킬    | RestClient, error handling, monitoring, Resilience4j |
 
 ---
 

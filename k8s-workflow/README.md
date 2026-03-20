@@ -32,7 +32,7 @@ k8s-workflow/
 ## 호환 도구
 
 | 도구 | 전역 경로 | 프로젝트 경로 |
-|------|-----------|---------------|
+| ---- | --------- | ------------- |
 | OpenCode | `~/.agents/skills/` | `.agents/skills/` |
 | Codex | `~/.agents/skills/` | `.agents/skills/` |
 | Claude Code | `~/.claude/skills/` | `.claude/skills/` |

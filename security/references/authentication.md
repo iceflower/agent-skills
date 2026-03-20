@@ -178,7 +178,7 @@ Set-Cookie: session_id=<value>;
 
 ## 6. API Authentication
 
-### Method Comparison
+### API Auth Method Comparison
 
 | Method | Security | Complexity | Use Case |
 | --- | --- | --- | --- |

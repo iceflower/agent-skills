@@ -139,7 +139,7 @@ Users.selectAll().where { Users.email eq email }
 
 ## 4. SSRF Prevention
 
-### Attack Mechanism
+### SSRF Attack Mechanism
 
 ```text
 1. Application accepts URL as input (e.g., webhook URL, image URL)
@@ -147,7 +147,7 @@ Users.selectAll().where { Users.email eq email }
 3. Server fetches the URL, exposing internal resources
 ```
 
-### Defense Strategies
+### SSRF Defense Strategies
 
 | Strategy | Implementation |
 | --- | --- |

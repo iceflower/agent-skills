@@ -194,66 +194,7 @@ Partner API → Partner BFF → Internal Services
 - Two-phase commit (2PC) has high latency, tight coupling, and poor availability — avoid it
 - Saga pattern achieves eventual consistency through a sequence of local transactions
 
-### Choreography vs Orchestration
-
-| Aspect                  | Choreography                      | Orchestration                     |
-| ----------------------- | --------------------------------- | --------------------------------- |
-| Coordination            | Each service listens and reacts   | Central orchestrator directs flow |
-| Coupling                | Low (event-driven)                | Medium (orchestrator knows steps) |
-| Complexity              | Grows with number of participants | Centralized, easier to trace      |
-| Debugging               | Hard to follow event chain        | Single point to observe flow      |
-| Single point of failure | None                              | Orchestrator                      |
-| Best for                | Simple flows (2-4 services)       | Complex flows (5+ services)       |
-
-### Choreography Example
-
-```text
-Order Service → [OrderCreated] → Payment Service
-Payment Service → [PaymentCompleted] → Inventory Service
-Inventory Service → [InventoryReserved] → Shipping Service
-
-On failure:
-Inventory Service → [ReservationFailed] → Payment Service (refund)
-Payment Service → [PaymentRefunded] → Order Service (cancel)
-```
-
-### Orchestration Example
-
-```kotlin
-class OrderSagaOrchestrator(
-    private val paymentClient: PaymentClient,
-    private val inventoryClient: InventoryClient,
-    private val shippingClient: ShippingClient,
-    private val orderRepository: OrderRepository
-) {
-    suspend fun execute(order: Order) {
-        try {
-            val payment = paymentClient.charge(order.toPaymentRequest())
-            val reservation = inventoryClient.reserve(order.toReservationRequest())
-            shippingClient.schedule(order.toShippingRequest())
-            orderRepository.updateStatus(order.id, OrderStatus.CONFIRMED)
-        } catch (e: PaymentException) {
-            orderRepository.updateStatus(order.id, OrderStatus.CANCELLED)
-        } catch (e: InventoryException) {
-            paymentClient.refund(order.paymentId)
-            orderRepository.updateStatus(order.id, OrderStatus.CANCELLED)
-        } catch (e: ShippingException) {
-            inventoryClient.release(order.reservationId)
-            paymentClient.refund(order.paymentId)
-            orderRepository.updateStatus(order.id, OrderStatus.CANCELLED)
-        }
-    }
-}
-```
-
-### Compensating Transactions
-
-| Forward Action    | Compensating Action |
-| ----------------- | ------------------- |
-| Charge payment    | Refund payment      |
-| Reserve inventory | Release inventory   |
-| Schedule shipment | Cancel shipment     |
-| Create order      | Cancel order        |
+> See [references/saga-patterns.md](references/saga-patterns.md) for detailed choreography vs orchestration comparison, examples, and compensating transaction table.
 
 ### Saga Rules
 
@@ -268,54 +209,7 @@ class OrderSagaOrchestrator(
 
 ## 6. CQRS and Event Sourcing
 
-### CQRS (Command Query Responsibility Segregation)
-
-```text
-Client → Command API → Write Model → Event Store
-Client → Query API  → Read Model  ← Projection (from events)
-```
-
-### When to Use CQRS
-
-| Use CQRS                                      | Avoid CQRS                         |
-| --------------------------------------------- | ---------------------------------- |
-| Read and write workloads differ significantly | Simple CRUD with uniform access    |
-| Complex domain with rich business rules       | Small team or early-stage project  |
-| Need different read models for different UIs  | Data consistency must be immediate |
-| High read-to-write ratio                      | Domain model is straightforward    |
-
-### Event Sourcing
-
-```kotlin
-// Event as the source of truth
-sealed class OrderEvent {
-    data class Created(val orderId: String, val items: List<Item>) : OrderEvent()
-    data class ItemAdded(val orderId: String, val item: Item) : OrderEvent()
-    data class Confirmed(val orderId: String, val confirmedAt: Instant) : OrderEvent()
-    data class Cancelled(val orderId: String, val reason: String) : OrderEvent()
-}
-
-// Rebuild state from events
-fun Order.Companion.fromEvents(events: List<OrderEvent>): Order {
-    return events.fold(Order.empty()) { state, event ->
-        when (event) {
-            is OrderEvent.Created -> state.copy(id = event.orderId, items = event.items)
-            is OrderEvent.ItemAdded -> state.copy(items = state.items + event.item)
-            is OrderEvent.Confirmed -> state.copy(status = OrderStatus.CONFIRMED)
-            is OrderEvent.Cancelled -> state.copy(status = OrderStatus.CANCELLED)
-        }
-    }
-}
-```
-
-### Event Sourcing Trade-Offs
-
-| Advantage                            | Disadvantage                        |
-| ------------------------------------ | ----------------------------------- |
-| Complete audit trail                 | Increased storage requirements      |
-| Temporal queries (state at any time) | Complex event schema evolution      |
-| Natural fit for event-driven arch    | Eventually consistent read models   |
-| Debugging via event replay           | Learning curve for development team |
+> See [references/cqrs-event-sourcing.md](references/cqrs-event-sourcing.md) for detailed CQRS architecture, event sourcing examples, and trade-offs.
 
 ### CQRS and Event Sourcing Rules
 

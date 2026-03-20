@@ -306,3 +306,8 @@ Every piece of code should satisfy these six qualities:
 ## Additional References
 
 - For refactoring techniques and code smells, see [references/refactoring.md](references/refactoring.md)
+
+## Related Skills
+
+- For TypeScript-specific coding conventions, see `typescript-convention` skill
+- For React-specific coding conventions, see `react-convention` skill

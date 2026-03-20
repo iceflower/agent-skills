@@ -147,3 +147,7 @@ suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
 ## Additional References
 
 - For Kotlin version migration (1.4 → 2.3), see [references/migration.md](references/migration.md)
+
+## Related Skills
+
+- For TypeScript coding conventions, see `typescript-convention` skill

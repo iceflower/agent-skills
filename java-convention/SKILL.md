@@ -452,3 +452,7 @@ try (inputStream) {
 ## Additional References
 
 - For Java version migration (8 → 25), see [references/migration.md](references/migration.md)
+
+## Related Skills
+
+- For TypeScript coding conventions, see `typescript-convention` skill

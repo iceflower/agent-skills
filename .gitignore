@@ -18,3 +18,7 @@ node_modules/
 package-lock.json
 yarn.lock
 bun.lock
+
+# Generated reports
+COMPLIANCE_REPORT.md
+*_REPORT.md

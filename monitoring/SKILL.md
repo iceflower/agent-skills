@@ -143,14 +143,14 @@ Dashboard: {dashboard_url}
 
 ## 7. Related Skills
 
-- `logging`: 구조화된 로깅과 모니터링 연계
-- `incident-response`: 알림 기반 장애 대응 프로세스
-- `troubleshooting`: 모니터링 데이터 기반 문제 진단
-- `spring-framework`: Spring Boot Actuator 및 Micrometer 메트릭
+- `logging`: Structured logging and monitoring integration
+- `incident-response`: Alert-driven incident response processes
+- `troubleshooting`: Monitoring data-driven problem diagnosis
+- `spring-framework`: Spring Boot Actuator and Micrometer metrics
 
 ## Additional References
 
-- [Prometheus Documentation](https://prometheus.io/docs/) - Prometheus 공식 문서
-- [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - OpenTelemetry 공식 문서
-- [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/) - 분산 시스템 모니터링
+- [Prometheus Documentation](https://prometheus.io/docs/) - Official Prometheus documentation
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - Official OpenTelemetry documentation
+- [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/) - Monitoring distributed systems
 - For Spring Boot implementation patterns (Actuator, Micrometer, distributed tracing), see `spring-framework` skill — [references/monitoring.md](../spring-framework/references/monitoring.md)

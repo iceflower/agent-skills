@@ -127,12 +127,12 @@ description: >-
 - Missing error codes (only HTTP status, no application code)
 - Logging errors without stack traces
 - Retrying on non-idempotent failures without safeguards
-- **Pokemon Exception Handling**: 모든 예외를 잡는 catch-all 패턴. 구체적인 예외 타입으로 처리
-- **에러 무시(Swallowing)**: 빈 catch 블록으로 에러를 삼키면 디버깅 불가능
-- **에러를 흐름 제어로 사용**: 예외를 정상적인 프로그램 흐름 제어에 사용하면 성능 저하 및 가독성 하락
+- **Pokemon Exception Handling**: Catching all exceptions with a generic catch-all. Use specific exception types instead
+- **Error Swallowing**: Empty catch blocks make debugging impossible. Always log or propagate errors
+- **Exceptions as Flow Control**: Using exceptions for normal program flow degrades performance and readability
 
 ## Additional References
 
-- [Microsoft Error Handling Best Practices](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions) - .NET 예외 처리 모범 사례
-- [Effective Java - Exceptions](https://www.oreilly.com/library/view/effective-java/9780134686097/) - Java 예외 처리 가이드
+- [Microsoft Error Handling Best Practices](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions) - .NET exception handling best practices
+- [Effective Java - Exceptions](https://www.oreilly.com/library/view/effective-java/9780134686097/) - Java exception handling guide
 - For Spring Boot implementation patterns (`@ControllerAdvice`, ErrorCode enum), see `spring-framework` skill — [references/error-handling.md](../spring-framework/references/error-handling.md)

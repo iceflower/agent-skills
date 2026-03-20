@@ -122,10 +122,10 @@ email_address: String              →     email: String
 
 ## 7. Related Skills
 
-- `error-handling`: HTTP 에러 응답 처리 전략
-- `monitoring`: HTTP 클라이언트 메트릭 수집 및 모니터링
-- `security`: API 인증, TLS, 헤더 보안
-- `caching`: HTTP 응답 캐싱 전략
+- `error-handling`: HTTP error response handling strategies
+- `monitoring`: HTTP client metrics collection and monitoring
+- `security`: API authentication, TLS, header security
+- `caching`: HTTP response caching strategies
 
 ## Additional References
 

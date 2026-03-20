@@ -116,12 +116,12 @@ kubectl get pods -n <namespace> -l app=<app-name>
 
 ## 6. Related Skills
 
-- `monitoring`: 시스템 모니터링 및 알림 설정
-- `logging`: 로그 기반 문제 진단
-- `incident-response`: 장애 대응 프로세스
+- `monitoring`: System monitoring and alerting setup
+- `logging`: Log-based problem diagnosis
+- `incident-response`: Incident response processes
 
 ## Additional References
 
-- [Google SRE Book - Debugging](https://sre.google/sre-book/effective-troubleshooting/) - 효과적인 트러블슈팅 방법론
-- [Brendan Gregg's Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) - 시스템 성능 분석
+- [Google SRE Book - Debugging](https://sre.google/sre-book/effective-troubleshooting/) - Effective troubleshooting methodology
+- [Brendan Gregg's Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) - Systems performance analysis
 - For Spring Boot troubleshooting (startup failures, JVM OOM, HikariCP), see `spring-framework` skill — [references/troubleshooting.md](../spring-framework/references/troubleshooting.md)

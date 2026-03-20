@@ -137,15 +137,15 @@ instead of throwing — which means the caller needs to handle null."
 
 ## 6. Anti-Patterns
 
-- **Rubber Stamping**: 코드를 제대로 읽지 않고 승인하는 패턴. 모든 변경사항을 꼼꼼히 검토
-- **Nitpicking**: 사소한 스타일 이슈에 과도하게 집중하여 핵심 로직 리뷰를 놓침. 린터에 위임 가능한 것은 자동화
-- **지연된 리뷰**: PR 리뷰를 오래 방치하면 컨텍스트 손실 및 병합 충돌 증가. 24시간 이내 리뷰 권장
-- **대규모 PR**: 한 번에 너무 많은 변경을 포함하면 리뷰 품질 저하. 400줄 이하로 분할 권장
-- **감정적 피드백**: "이건 왜 이렇게 했어요?" 대신 "이 부분을 X 방식으로 변경하면 Y 이점이 있을 것 같습니다" 형태로 건설적 피드백
+- **Rubber Stamping**: Approving code without thorough review. Always read and understand all changes before approving
+- **Nitpicking**: Over-focusing on minor style issues while missing core logic flaws. Delegate linter-fixable issues to automation
+- **Delayed Reviews**: Leaving PRs unreviewed causes context loss and merge conflicts. Review within 24 hours
+- **Oversized PRs**: Too many changes in one PR degrades review quality. Keep PRs under 400 lines
+- **Emotional Feedback**: Use constructive suggestions like "Changing X to Y would improve Z" instead of accusatory questions
 
 ## 7. Related Skills
 
-- `code-quality`: 코드 품질 원칙 및 리팩토링 기법
-- `git-workflow`: Git 커밋 컨벤션 및 브랜치 전략
-- `testing`: 테스트 코드 리뷰 관점
-- `security`: 보안 취약점 리뷰 체크리스트
+- `code-quality`: Code quality principles and refactoring techniques
+- `git-workflow`: Git commit conventions and branch strategies
+- `testing`: Test code review perspectives
+- `security`: Security vulnerability review checklist

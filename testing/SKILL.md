@@ -116,12 +116,12 @@ Every test must satisfy all five criteria:
 
 ## 11. Anti-Patterns
 
-- **테스트 없는 배포**: 테스트 커버리지 없이 프로덕션 배포하는 것은 위험. 최소한 핵심 비즈니스 로직은 테스트 필수
-- **구현 세부사항 테스트**: 내부 구현에 의존하는 테스트는 리팩토링 시 깨짐. 행위(behavior) 기반 테스트 작성
-- **테스트 간 의존성**: 테스트 실행 순서에 의존하면 불안정한 테스트 스위트 생성. 각 테스트는 독립적이어야 함
-- **과도한 모킹**: 모든 의존성을 모킹하면 실제 동작과 괴리 발생. 통합 테스트로 보완 필요
-- **매직 넘버 사용**: 테스트 데이터에 의미 없는 숫자/문자열 사용. 의도를 드러내는 상수나 팩토리 사용
-- **Flaky 테스트 방치**: 간헐적으로 실패하는 테스트를 무시하면 전체 테스트 신뢰도 하락. 즉시 수정 또는 격리
+- **Deploying Without Tests**: Deploying to production without test coverage is risky. At minimum, test core business logic
+- **Testing Implementation Details**: Tests coupled to internal implementation break on refactoring. Write behavior-based tests
+- **Inter-test Dependencies**: Tests that depend on execution order create unstable test suites. Each test must be independent
+- **Excessive Mocking**: Mocking all dependencies diverges from real behavior. Supplement with integration tests
+- **Magic Numbers**: Using meaningless numbers/strings in test data. Use intention-revealing constants or factories
+- **Ignoring Flaky Tests**: Tolerating intermittently failing tests erodes overall test suite reliability. Fix or quarantine immediately
 
 ## Additional References
 

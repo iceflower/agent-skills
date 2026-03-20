@@ -2,7 +2,8 @@
 name: security
 description: >-
   Framework-agnostic security rules including input validation, auth principles,
-  CORS, API headers, rate limiting, and secret management.
+  CORS, API headers, rate limiting, secret management, authentication patterns
+  (JWT, OAuth2, session, MFA), and web protection (CSRF, XSS, injection defense, TLS).
   Use when implementing security-related code.
 ---
 # Security Rules
@@ -130,6 +131,13 @@ When writing code, be vigilant against all 10 categories:
 | A09 | Security Logging and Monitoring Failures   | Log security events; ensure logs are tamper-resistant   |
 | A10 | Server-Side Request Forgery (SSRF)         | Validate and whitelist outbound URLs                    |
 
+## Related Skills
+
+- For secret lifecycle management (rotation, storage, detection), see [secrets-management](../secrets-management/) skill
+- For Kubernetes security (RBAC, NetworkPolicy, Pod Security), see [k8s-workflow](../k8s-workflow/) skill
+
 ## Additional References
 
+- For authentication and authorization implementation patterns, see [references/authentication.md](references/authentication.md)
+- For web protection (CSRF, XSS, injection defense, TLS), see [references/web-protection.md](references/web-protection.md)
 - For Spring Boot implementation patterns (SecurityFilterChain, Bean Validation), see `spring-framework` skill — [references/security.md](../spring-framework/references/security.md)

@@ -2,7 +2,9 @@
 name: dockerfile
 description: >-
   Dockerfile best practices including multi-stage builds, layer caching,
-  security, and JVM/Spring Boot containerization patterns.
+  security, JVM/Spring Boot containerization patterns, BuildKit features
+  (cache/secret mounts), multi-architecture builds, signal handling,
+  and image provenance (cosign, SBOM).
   Use when writing or reviewing Dockerfiles.
 ---
 
@@ -230,3 +232,7 @@ ENTRYPOINT ["java", \
 - Skipping `.dockerignore`
 - Single-stage build including build tools in final image
 - Using `ADD` when `COPY` suffices (`ADD` has extra behavior: URL fetch, tar extraction)
+
+## Additional References
+
+- For BuildKit, multi-arch builds, signal handling, and image provenance, see [references/advanced-patterns.md](references/advanced-patterns.md)

@@ -2,8 +2,10 @@
 name: k8s-workflow
 description: >-
   Kubernetes core workflow rules, manifest conventions, security best practices,
-  and version considerations. Includes managed K8s providers (EKS, AKS, GKE)
-  and autoscaling (KEDA, Knative, event-driven scaling).
+  and version considerations. Includes managed K8s providers (EKS, AKS, GKE),
+  autoscaling (KEDA, Knative, event-driven scaling), networking (Ingress,
+  Gateway API, NetworkPolicy, Service Mesh), storage (PV/PVC, StatefulSet),
+  RBAC, and deployment strategies (Rolling, Blue-Green, Canary).
   Use for Kubernetes operations and manifest authoring.
 ---
 
@@ -254,7 +256,15 @@ For provider-specific managed Kubernetes services, see dedicated skills:
 - Ignoring deprecation warnings before upgrades
 - Not testing upgrades in non-production first
 
+## Related Skills
+
+- For GitOps deployment with Argo CD, see [gitops-argocd](../gitops-argocd/) skill
+- For Helm chart management, see [helm-workflow](../helm-workflow/) skill
+- For Karpenter node provisioning, see [karpenter-workflow](../karpenter-workflow/) skill
+
 ## Additional References
 
 - For managed Kubernetes providers (EKS, AKS, GKE), see [references/providers.md](references/providers.md)
 - For autoscaling (KEDA, Knative, event-driven), see [references/autoscaling.md](references/autoscaling.md)
+- For networking (Ingress, Gateway API, Network Policies, Service Mesh), see [references/networking.md](references/networking.md)
+- For storage, RBAC, and deployment strategies, see [references/storage-and-rbac.md](references/storage-and-rbac.md)

@@ -1,9 +1,10 @@
 ---
 name: monitoring
 description: >-
-  Framework-agnostic observability patterns including metrics, logging,
-  tracing, alerting rules, and health check concepts.
-  Use when implementing monitoring or alerting.
+  Framework-agnostic observability patterns including metrics (Prometheus,
+  Micrometer), logging, distributed tracing (OpenTelemetry, traceId),
+  alerting rules, and health check concepts (liveness, readiness, startup).
+  Use when implementing monitoring, alerting, or observability.
 ---
 # Monitoring and Observability Rules
 

@@ -5,9 +5,11 @@ description: >-
   event system, bean lifecycle, WebMVC, WebFlux, validation, scheduling,
   configuration management, and JPA/data access patterns.
   Includes Spring Boot implementation patterns for caching, error handling, HTTP client,
-  monitoring, security, troubleshooting, and integration with Exposed ORM and Kotlin interop.
+  monitoring (Actuator, Micrometer), security (SecurityFilterChain), troubleshooting
+  (HikariCP, connection pool, OOM), and integration with Exposed ORM and Kotlin interop.
   Includes migration guides for Framework (5.x → 7.0) and Boot (2.7 → 4.0).
-  Use when working with Spring Framework or Spring Boot features.
+  Use when working with Spring Framework or Spring Boot features, Actuator health probes,
+  Bean Validation, @Transactional, RestClient, WebClient, or Spring Security.
 ---
 
 # Spring Framework Core Rules

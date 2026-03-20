@@ -256,6 +256,12 @@ For provider-specific managed Kubernetes services, see dedicated skills:
 - Ignoring deprecation warnings before upgrades
 - Not testing upgrades in non-production first
 
+## Related Skills
+
+- For GitOps deployment with Argo CD, see [gitops-argocd](../gitops-argocd/) skill
+- For Helm chart management, see [helm-workflow](../helm-workflow/) skill
+- For Karpenter node provisioning, see [karpenter-workflow](../karpenter-workflow/) skill
+
 ## Additional References
 
 - For managed Kubernetes providers (EKS, AKS, GKE), see [references/providers.md](references/providers.md)

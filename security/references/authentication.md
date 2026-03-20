@@ -208,3 +208,8 @@ Set-Cookie: session_id=<value>;
 - Use in service mesh (Istio, Linkerd) for automatic mTLS
 - For manual mTLS: use internal CA, rotate certificates regularly
 - Validate certificate chain, check revocation (CRL/OCSP)
+
+## Related Skills
+
+- For secret storage, rotation, and key management, see [secrets-management](../../secrets-management/) skill
+- For TLS certificate automation with cert-manager, see [secrets-management](../../secrets-management/) skill — Certificate Management section

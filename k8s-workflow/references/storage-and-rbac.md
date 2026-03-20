@@ -148,6 +148,19 @@ spec:
 | Ordered termination | Pods deleted in reverse order (2 → 1 → 0) |
 | Stable storage | Each pod gets its own PVC, retained on reschedule |
 
+### Production Database Consideration
+
+For production database workloads on Kubernetes, prefer database-specific Operators over raw StatefulSets:
+
+| Database | Operator | Benefit |
+| --- | --- | --- |
+| PostgreSQL | CloudNativePG, CrunchyData PGO | Automated failover, backup, monitoring |
+| MySQL | MySQL Operator, Percona XtraDB | Cluster management, automated recovery |
+| MongoDB | MongoDB Community Operator | ReplicaSet management, scaling |
+| Redis | Redis Operator | Sentinel/Cluster mode, auto-failover |
+
+Operators handle complex lifecycle tasks (failover, backup, restore, scaling) that raw StatefulSets do not provide.
+
 ---
 
 ## 4. RBAC

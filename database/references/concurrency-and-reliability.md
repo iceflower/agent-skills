@@ -64,7 +64,8 @@ fun updateWithRetry(orderId: Int, action: (Order) -> Unit, maxRetries: Int = 3) 
             return
         } catch (e: OptimisticLockException) {
             if (attempt == maxRetries - 1) throw e
-            // Optionally add backoff delay
+            // Exponential backoff to reduce contention under high load
+            Thread.sleep(50L * (1L shl attempt))  // 50ms, 100ms, 200ms...
         }
     }
 }

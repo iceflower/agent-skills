@@ -131,6 +131,11 @@ When writing code, be vigilant against all 10 categories:
 | A09 | Security Logging and Monitoring Failures   | Log security events; ensure logs are tamper-resistant   |
 | A10 | Server-Side Request Forgery (SSRF)         | Validate and whitelist outbound URLs                    |
 
+## Related Skills
+
+- For secret lifecycle management (rotation, storage, detection), see [secrets-management](../secrets-management/) skill
+- For Kubernetes security (RBAC, NetworkPolicy, Pod Security), see [k8s-workflow](../k8s-workflow/) skill
+
 ## Additional References
 
 - For authentication and authorization implementation patterns, see [references/authentication.md](references/authentication.md)

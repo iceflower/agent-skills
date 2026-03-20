@@ -100,3 +100,9 @@ The actual PDF page number and the printed page number in the document may diffe
 - Not cleaning up temporary PNG files after extraction
 - Converting pages without verifying the page number offset
 - Using image conversion when direct text extraction (`pdftotext`) is sufficient
+
+## Related Skills
+
+- `error-handling`: PDF 파싱 실패 시 에러 처리 패턴
+- `logging`: PDF 처리 과정 로깅
+- `testing`: PDF 처리 로직 테스트 전략

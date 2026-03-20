@@ -109,6 +109,10 @@ description: >-
 - Logging sensitive data (passwords, tokens, PII)
 - Trusting client-side validation without server-side checks
 - Exposing detailed error internals in API responses
+- **Security by Obscurity**: 보안을 숨김에만 의존. 공개되어도 안전한 설계 필요
+- **자체 암호화 구현**: 검증되지 않은 자체 암호화 알고리즘 사용. 표준 라이브러리(AES, RSA, bcrypt) 사용
+- **과도한 권한 부여**: 최소 권한 원칙 위반. 필요한 최소한의 권한만 부여
+- **보안 업데이트 지연**: 알려진 취약점(CVE) 패치를 미루면 공격 노출. 즉시 패치 적용
 
 ---
 

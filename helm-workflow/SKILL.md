@@ -233,7 +233,7 @@ To access the application:
 
 ## 4. Release Management
 
-### Naming Conventions
+### Release Naming
 
 | Element | Convention | Example |
 | --- | --- | --- |

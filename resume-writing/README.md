@@ -1,4 +1,4 @@
-# resume
+# resume-writing
 
 개발자 이력서 작성 가이드 (STAR 메서드, 스킬 정리, 프로젝트 기술)
 
@@ -9,13 +9,13 @@
 ### 전역 설치
 
 ```bash
-cp -r resume/ ~/.agents/skills/resume/
+cp -r resume-writing/ ~/.agents/skills/resume-writing/
 ```
 
 ### 프로젝트 설치
 
 ```bash
-cp -r resume/ .agents/skills/resume/
+cp -r resume-writing/ .agents/skills/resume-writing/
 ```
 
 ## 호환 도구

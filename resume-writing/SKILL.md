@@ -1,5 +1,5 @@
 ---
-name: resume
+name: resume-writing
 description: >-
   Developer resume writing guide including structure, experience description
   with STAR method, technical skills organization, and project description.

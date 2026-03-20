@@ -2,8 +2,9 @@
 name: troubleshooting
 description: >-
   General debugging and troubleshooting patterns for slow APIs, deployment
-  rollback, connection issues, and debugging principles.
-  Use when diagnosing errors or deployment issues.
+  rollback, connection issues, OOMKilled pods, CrashLoopBackOff, and
+  debugging principles.
+  Use when diagnosing errors, deployment issues, or production problems.
 ---
 # Troubleshooting Rules
 

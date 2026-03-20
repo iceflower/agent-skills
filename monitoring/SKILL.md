@@ -160,6 +160,7 @@ Dashboard: {dashboard_url}
 
 ## Additional References
 
+- For PromQL examples, recording rules, and common query patterns, see [references/prometheus-queries.md](references/prometheus-queries.md)
 - [Prometheus Documentation](https://prometheus.io/docs/) - Official Prometheus documentation
 - [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - Official OpenTelemetry documentation
 - [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/) - Monitoring distributed systems

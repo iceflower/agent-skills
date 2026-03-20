@@ -601,6 +601,11 @@ fun notificationSender(
 
 ---
 
+## Additional References
+
+- For saga pattern implementation details and compensation strategies, see [references/saga-pattern.md](references/saga-pattern.md)
+- For CQRS implementation patterns and event sourcing integration, see [references/cqrs.md](references/cqrs.md)
+
 ## Further Reading
 
 - Sam Newman, *Building Microservices* (2nd Edition, O'Reilly)

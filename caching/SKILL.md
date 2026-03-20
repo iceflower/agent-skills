@@ -201,4 +201,5 @@ A cache stampede occurs when many requests simultaneously miss the cache and hit
 
 ## Additional References
 
+- For Redis caching strategies, cache-aside, write-through, TTL management, and eviction policies, see [references/redis-patterns.md](references/redis-patterns.md)
 - For Spring Boot implementation patterns (Caffeine, Redis, `@Cacheable`), see `spring-framework` skill — [references/caching.md](../spring-framework/references/caching.md)

@@ -507,6 +507,10 @@ bfg --replace-text passwords.txt repo.git
 - Using root/admin credentials in applications — violates least privilege
 - Embedding secrets in Docker images — exposed via `docker history` or image scanning
 
+## Additional References
+
+- For HashiCorp Vault integration, setup, policies, and dynamic secrets, see [references/vault-integration.md](references/vault-integration.md)
+
 ## Related Skills
 
 - For incident response procedures when secrets are leaked, see [incident-response](../incident-response/) skill

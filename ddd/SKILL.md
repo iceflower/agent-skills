@@ -570,6 +570,12 @@ Shared vocabulary between developers and domain experts.
 
 ---
 
+## Additional References
+
+- For aggregate design patterns and sizing guidelines, see [references/aggregate-design.md](references/aggregate-design.md)
+- For domain event patterns and implementation strategies, see [references/domain-events.md](references/domain-events.md)
+- For bounded context mapping and integration patterns, see [references/bounded-context.md](references/bounded-context.md)
+
 ## References
 
 - Domain-Driven Design by Eric Evans

@@ -417,6 +417,11 @@ Level 4: Engineering manager (after 45 min no-ack)
 - Deploying during active incidents — adds more variables to troubleshoot
 - No regular gameday drills — team discovers process gaps during real incidents
 
+## Additional References
+
+- For detailed severity classification criteria and escalation guidelines, see [references/severity-classification.md](references/severity-classification.md)
+- For structured postmortem template and blameless review guidelines, see [references/postmortem-template.md](references/postmortem-template.md)
+
 ## Related Skills
 
 - For secret leakage incidents and credential rotation procedures, see [secrets-management](../secrets-management/) skill

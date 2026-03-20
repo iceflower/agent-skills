@@ -261,3 +261,7 @@ GET /users?fields=id,name,email
 - [Microsoft REST API Guidelines - Versioning](https://github.com/microsoft/api-guidelines/blob/vNext/Guidelines.md) — Large-scale API versioning practices
 - [Google Cloud API Design Guide](https://cloud.google.com/apis/design) — API compatibility and versioning guide
 - [Pact Contract Testing](https://docs.pact.io/) — Consumer-Driven Contract Testing framework
+
+## Related Skills
+
+- For OpenAPI specification writing and schema design, see `openapi-spec` skill

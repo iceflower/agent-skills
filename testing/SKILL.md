@@ -138,3 +138,7 @@ Every test must satisfy all five criteria:
 - For integration testing patterns, see [references/integration.md](references/integration.md)
 - For contract testing patterns, see [references/contract.md](references/contract.md)
 - For performance testing strategies, see [references/performance.md](references/performance.md)
+
+## Related Skills
+
+- For load testing with k6 and Gatling, see `load-testing` skill

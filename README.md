@@ -9,7 +9,7 @@
 ## 호환 도구
 
 | 도구 | 전역 경로 | 프로젝트 경로 |
-|------|-----------|---------------|
+| ---- | --------- | ------------- |
 | **OpenCode** | `~/.agents/skills/` | `.agents/skills/` |
 | **Codex** | `~/.agents/skills/` | `.agents/skills/` |
 | **Claude Code** | `~/.claude/skills/` | `.claude/skills/` |
@@ -43,13 +43,13 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ### Spring & Spring Boot
 
 | 스킬 | 설명 |
-|------|------|
-| [spring-framework](./spring-framework/) | Spring Framework 핵심 (IoC, MVC, WebFlux, JPA, Config) + Spring Boot 구현 패턴 (캐싱, 에러 처리, HTTP 클라이언트, 모니터링, 보안, 트러블슈팅) + 버전 마이그레이션 가이드 |
+| ---- | ---- |
+| [spring-framework](./spring-framework/) | Spring Framework 핵심 (IoC, MVC, WebFlux, JPA, Config) + Spring Boot 구현 패턴 + 버전 마이그레이션 가이드 |
 
 ### Java & Kotlin
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [java-convention](./java-convention/) | Java 코딩 컨벤션 + 버전 마이그레이션 가이드 (8 → 25) |
 | [kotlin-convention](./kotlin-convention/) | Kotlin 코딩 컨벤션 + 버전 마이그레이션 가이드 (1.4 → 2.3) |
 | [java-kotlin-interop](./java-kotlin-interop/) | Java-Kotlin 상호 운용 가이드 (JSpecify, JVM 어노테이션) |
@@ -59,14 +59,14 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ### 데이터베이스
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [database](./database/) | 데이터베이스 공통 규칙 + MySQL/PostgreSQL 특화 가이드 + 동시성 제어/백업/복제/CDC |
 | [exposed](./exposed/) | JetBrains Exposed ORM (DSL, DAO, 트랜잭션 관리) |
 
 ### 인프라 & 배포
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [terraform-workflow](./terraform-workflow/) | Terraform 워크플로우 + AWS/Azure/GCP 프로바이더 가이드 |
 | [k8s-workflow](./k8s-workflow/) | Kubernetes 매니페스트 + 관리형 K8s + 오토스케일링 + 네트워킹/스토리지/RBAC/배포 전략 |
 | [karpenter-workflow](./karpenter-workflow/) | Karpenter 워크플로우 + 클라우드 프로바이더별 설정 |
@@ -78,7 +78,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ### 아키텍처 & 설계
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [clean-architecture](./clean-architecture/) | 클린 아키텍처 / 헥사고날 아키텍처 (포트 & 어댑터) |
 | [microservices](./microservices/) | 마이크로서비스 (서비스 분해, Saga, CQRS, API Gateway, Circuit Breaker) |
 | [ddd](./ddd/) | 도메인 주도 설계 (엔티티, 애그리거트, 바운디드 컨텍스트) |
@@ -89,7 +89,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ### 코드 품질 & 테스트
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [code-quality](./code-quality/) | 코드 품질 6대 원칙 + 리팩토링 기법 |
 | [code-review](./code-review/) | 코드 리뷰 체크리스트 및 코멘트 가이드 |
 | [testing](./testing/) | BDD 단위 테스트 + 통합 테스트 (Testcontainers) + 계약 테스트 + 성능 테스트 |
@@ -98,14 +98,14 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ### 보안
 
 | 스킬 | 설명 |
-|------|------|
-| [security](./security/) | 보안 규칙 (입력 검증, OWASP Top 10, CORS, Rate Limiting) + 인증/인가 (JWT, OAuth2, MFA) + 웹 보호 (CSRF, XSS, TLS) |
+| ---- | ---- |
+| [security](./security/) | 보안 규칙 (입력 검증, OWASP Top 10, CORS) + 인증/인가 (JWT, OAuth2, MFA) + 웹 보호 (CSRF, XSS, TLS) |
 | [secrets-management](./secrets-management/) | 시크릿 관리 (Vault, ESO, Sealed Secrets, 인증서, 탐지/방지) |
 
 ### 운영 & 모니터링
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [logging](./logging/) | 로깅 표준 (로그 레벨, 구조화 로깅, 민감 데이터 마스킹) |
 | [monitoring](./monitoring/) | 옵저버빌리티 패턴 (메트릭, 트레이싱, 알림 규칙) |
 | [caching](./caching/) | 캐시 전략 (TTL, 무효화, Stampede 방지) |
@@ -117,7 +117,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ### 기타
 
 | 스킬 | 설명 |
-|------|------|
+| ---- | ---- |
 | [git-workflow](./git-workflow/) | Git 커밋 컨벤션 및 브랜치 전략 |
 | [gradle-convention](./gradle-convention/) | Gradle 빌드 컨벤션 (멀티모듈, 버전 카탈로그) |
 | [http-client](./http-client/) | 외부 API 클라이언트 (타임아웃, 재시도, Circuit Breaker) |

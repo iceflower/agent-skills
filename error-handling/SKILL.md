@@ -143,6 +143,7 @@ compatibility:
 
 ## Additional References
 
+- For standardized error response formats, RFC 7807 Problem Details, and error code design, see [references/response-schema.md](references/response-schema.md)
 - [Microsoft Error Handling Best Practices](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions) - .NET exception handling best practices
 - [Effective Java - Exceptions](https://www.oreilly.com/library/view/effective-java/9780134686097/) - Java exception handling guide
 - For Spring Boot implementation patterns (`@ControllerAdvice`, ErrorCode enum), see `spring-framework` skill — [references/error-handling.md](../spring-framework/references/error-handling.md)

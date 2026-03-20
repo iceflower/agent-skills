@@ -139,4 +139,5 @@ email_address: String              →     email: String
 
 ## Additional References
 
+- For circuit breaker, retry, timeout, and bulkhead resilience patterns, see [references/resilience-patterns.md](references/resilience-patterns.md)
 - For Spring Boot implementation patterns (RestClient, Spring Retry, Resilience4j), see `spring-framework` skill — [references/http-client.md](../spring-framework/references/http-client.md)

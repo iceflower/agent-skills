@@ -226,3 +226,7 @@ compatibility:
 - Unbounded retry without backoff or max attempts
 - Large message payloads (> 1MB) — use claim check pattern instead
 - No schema versioning for message contracts
+
+## Additional References
+
+- For Kafka topic design, partitioning, consumer groups, and delivery guarantees, see [references/kafka-patterns.md](references/kafka-patterns.md)

@@ -320,6 +320,11 @@ Before starting chaos experiments:
 
 ---
 
+## Additional References
+
+- For Chaos Mesh and LitmusChaos tool comparison and experiment examples, see [references/chaos-mesh-litmus.md](references/chaos-mesh-litmus.md)
+- For gameday planning, execution, and analysis guide, see [references/gameday-guide.md](references/gameday-guide.md)
+
 ## References
 
 - Release It! Second Edition, Michael Nygard, Chapter 17

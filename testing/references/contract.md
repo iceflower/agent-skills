@@ -316,6 +316,22 @@ paths:
 | Schemathesis | Property-based API testing | `schemathesis run openapi.yaml --base-url http://localhost:8080` |
 | openapi-diff | Detect breaking changes | `openapi-diff old.yaml new.yaml` |
 
+### When to Use Schema-Based vs Consumer-Driven
+
+| Criteria | Consumer-Driven (Pact) | Schema-Based (OpenAPI) |
+| --- | --- | --- |
+| API ownership | Multiple consumers with different needs | Single authoritative API definition |
+| Design approach | Consumer-first, bottom-up | API-first, top-down |
+| Contract scope | Only what each consumer uses | Entire API surface |
+| Breaking change detection | Consumer tests fail | openapi-diff detects |
+| Tooling maturity | Pact Broker ecosystem | OpenAPI ecosystem (Prism, Spectral) |
+| Best for | Microservices with many consumers | Public APIs, API-first teams |
+| Overhead | Per-consumer test maintenance | Schema maintenance + validation |
+
+- **Choose Consumer-Driven** when consumers have diverse needs and you want to guarantee no consumer breaks
+- **Choose Schema-Based** when you have a well-defined API-first workflow and want a single source of truth
+- **Combine both** when you need API-first design (OpenAPI) plus consumer-specific contract verification (Pact)
+
 ---
 
 ## 6. Testing Patterns

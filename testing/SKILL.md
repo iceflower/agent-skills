@@ -2,8 +2,8 @@
 name: testing
 description: >-
   BDD-style test writing rules including unit testing patterns, integration
-  testing with Testcontainers, contract testing for microservices, and
-  performance testing strategies.
+  testing with Testcontainers, contract testing for microservices (Pact,
+  Spring Cloud Contract), and performance testing strategies (k6, Gatling).
   Use when writing or modifying test code.
 ---
 # BDD-Style Unit Test Rules

@@ -290,82 +290,15 @@ if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
 
 ## 5. CompletableFuture Patterns
 
-### Composition
+> See [references/completable-future.md](references/completable-future.md) for detailed patterns including composition, error handling, and timeout.
 
-```java
-// Sequential: thenApply, thenCompose
-CompletableFuture<UserProfile> profile = fetchUser(userId)
-    .thenCompose(user -> fetchProfile(user.getProfileId()))
-    .thenApply(this::enrichProfile);
-
-// Parallel: allOf, anyOf
-CompletableFuture<UserProfile> profileFuture = fetchProfile(userId);
-CompletableFuture<List<Order>> ordersFuture = fetchOrders(userId);
-CompletableFuture<Notifications> notifsFuture = fetchNotifications(userId);
-
-CompletableFuture<Dashboard> dashboard = CompletableFuture
-    .allOf(profileFuture, ordersFuture, notifsFuture)
-    .thenApply(v -> new Dashboard(
-        profileFuture.join(),
-        ordersFuture.join(),
-        notifsFuture.join()
-    ));
-
-// Combine two futures
-CompletableFuture<Summary> summary = profileFuture
-    .thenCombine(ordersFuture, (profile, orders) -> new Summary(profile, orders));
-```
-
-### Error Handling
-
-```java
-// exceptionally — recover from errors
-CompletableFuture<User> user = fetchUser(userId)
-    .exceptionally(ex -> {
-        log.warn("Failed to fetch user, using fallback", ex);
-        return User.fallback(userId);
-    });
-
-// handle — process both success and failure
-CompletableFuture<Result> result = fetchData()
-    .handle((data, ex) -> {
-        if (ex != null) return Result.failure(ex);
-        return Result.success(data);
-    });
-
-// whenComplete — side effect without changing result
-fetchData()
-    .whenComplete((data, ex) -> {
-        if (ex != null) log.error("Fetch failed", ex);
-        else log.info("Fetched: {}", data);
-    });
-```
-
-### Timeout (Java 9+)
-
-```java
-CompletableFuture<Response> response = callExternalApi()
-    .orTimeout(5, TimeUnit.SECONDS)                    // Fails with TimeoutException
-    .exceptionally(ex -> Response.timeout());
-
-CompletableFuture<Response> response = callExternalApi()
-    .completeOnTimeout(Response.fallback(), 5, TimeUnit.SECONDS);  // Returns default
-```
-
-### CompletableFuture Rules
+### Key Rules
 
 - Always specify executor for async stages — default `ForkJoinPool.commonPool()` is shared globally
 - Never call `join()` or `get()` on event loop or request-handling threads — causes blocking
 - Use `thenCompose` (not `thenApply`) when the mapping function returns a `CompletableFuture`
 - Handle exceptions at every stage that can fail — unhandled exceptions are silently swallowed
 - Use `orTimeout` or `completeOnTimeout` — never wait indefinitely
-
-```java
-// Always provide executor for async operations
-CompletableFuture<Data> data = CompletableFuture
-    .supplyAsync(() -> fetchData(), ioExecutor)        // Explicit executor
-    .thenApplyAsync(this::transform, computeExecutor); // Different pool for CPU work
-```
 
 ---
 
@@ -381,73 +314,15 @@ CompletableFuture<Data> data = CompletableFuture
 
 ## 7. Virtual Threads (Java 21+)
 
-### When to Use Virtual Threads
+> See [references/virtual-threads.md](references/virtual-threads.md) for detailed patterns including usage examples, caveats, and pinning issues.
 
-| Scenario                         | Virtual Threads | Platform Threads |
-| -------------------------------- | --------------- | ---------------- |
-| I/O-bound (HTTP calls, DB, file) | Yes             |                  |
-| CPU-bound computation            |                 | Yes              |
-| High concurrency (10K+ tasks)    | Yes             |                  |
-| Legacy code with `synchronized`  | Caution         | Yes              |
-| Thread-per-request web server    | Yes             |                  |
-
-### Basic Usage
-
-```java
-// Create virtual thread
-Thread.startVirtualThread(() -> handleRequest(request));
-
-// Executor for virtual threads — one thread per task, no pooling
-try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-    for (Request req : requests) {
-        executor.submit(() -> handleRequest(req));
-    }
-}
-
-// For framework-specific virtual thread integration (e.g., Spring Boot),
-// see the relevant framework skill
-```
-
-### Virtual Thread Caveats
-
-```java
-// Caveat 1: synchronized pins the carrier thread (Java 21-23)
-// Fixed in Java 24+ (JEP 491)
-synchronized (lock) {
-    blockingIoCall();  // Pins carrier thread — avoid on Java 21-23
-}
-
-// Fix: use ReentrantLock instead (Java 21-23)
-ReentrantLock lock = new ReentrantLock();
-lock.lock();
-try {
-    blockingIoCall();  // Does NOT pin carrier thread
-} finally {
-    lock.unlock();
-}
-
-// Caveat 2: Do NOT pool virtual threads — they are cheap, create per task
-// Bad: pooling virtual threads defeats their purpose
-ExecutorService pool = Executors.newFixedThreadPool(10,
-    Thread.ofVirtual().factory());  // Wrong — do not pool
-
-// Good: one virtual thread per task
-ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-
-// Caveat 3: ThreadLocal overhead — each virtual thread has its own copy
-// Millions of virtual threads = millions of ThreadLocal copies
-// Use ScopedValue (preview) instead for large-scale virtual thread workloads
-```
-
-### Virtual Thread Rules
+### Key Rules
 
 - Virtual threads are cheap — create per task, never pool them
 - Blocking operations (JDBC, `Thread.sleep`, file I/O) are fine on virtual threads
 - Avoid `synchronized` on Java 21-23 — use `ReentrantLock` (fixed in Java 24+)
 - Avoid `ThreadLocal` with large objects — prefer `ScopedValue` (preview)
 - Virtual threads do NOT speed up CPU-bound work — they optimize I/O concurrency
-- Do not set thread priority on virtual threads — it has no effect
-- Do not use `Thread.yield()` — virtual threads yield automatically on blocking
 
 ---
 

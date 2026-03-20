@@ -26,158 +26,21 @@ compatibility:
 
 ## 1. IoC and Dependency Injection
 
-### Constructor Injection (Preferred)
+> See [references/ioc-di-patterns.md](references/ioc-di-patterns.md) for detailed patterns including constructor injection, anti-patterns, bean scopes, and conditional registration.
 
-```java
-@Service
-public class OrderService {
-    private final UserRepository userRepository;
-    private final PaymentGateway paymentGateway;
-    private final ApplicationEventPublisher eventPublisher;
+### Key Rules
 
-    // Single constructor — no @Autowired needed
-    public OrderService(UserRepository userRepository,
-                        PaymentGateway paymentGateway,
-                        ApplicationEventPublisher eventPublisher) {
-        this.userRepository = userRepository;
-        this.paymentGateway = paymentGateway;
-        this.eventPublisher = eventPublisher;
-    }
-}
-```
-
-```kotlin
-// Kotlin — primary constructor injection
-@Service
-class OrderService(
-    private val userRepository: UserRepository,
-    private val paymentGateway: PaymentGateway,
-    private val eventPublisher: ApplicationEventPublisher
-)
-```
-
-### Injection Anti-Patterns
-
-```java
-// Bad: field injection — hides dependencies, untestable without reflection
-@Autowired
-private UserRepository userRepository;
-
-// Bad: setter injection — mutable dependency, easy to forget
-@Autowired
-public void setUserRepository(UserRepository repo) { ... }
-
-// Bad: multiple constructors without @Autowired — ambiguous
-public OrderService(UserRepository repo) { ... }
-public OrderService(UserRepository repo, PaymentGateway gw) { ... }
-```
-
-### Bean Scope
-
-| Scope       | Lifecycle                        | Use Case                         |
-| ----------- | -------------------------------- | -------------------------------- |
-| `singleton` | One instance per ApplicationContext (default) | Stateless services, repositories |
-| `prototype` | New instance per injection/request | Stateful, short-lived objects    |
-| `request`   | One per HTTP request             | Request-scoped data              |
-| `session`   | One per HTTP session             | Session-scoped data              |
-
-- Default is `singleton` — do not store mutable state in singleton beans
+- Use constructor injection exclusively — field injection and setter injection are anti-patterns
+- Default scope is `singleton` — do not store mutable state in singleton beans
 - Injecting `prototype` into `singleton` does NOT create new instances — use `ObjectProvider<T>` or `@Lookup`
-
-### Conditional Bean Registration
-
-```java
-@Configuration
-public class InfraConfig {
-    @Bean
-    @Profile("production")
-    public DataSource productionDataSource() { ... }
-
-    @Bean
-    @Profile("local")
-    public DataSource localDataSource() { ... }
-
-    @Bean
-    @ConditionalOnProperty(name = "app.cache.enabled", havingValue = "true")
-    public CacheManager cacheManager() { ... }
-}
-```
 
 ---
 
 ## 2. AOP (Aspect-Oriented Programming)
 
-### Aspect Definition
+> See [references/aop-patterns.md](references/aop-patterns.md) for detailed patterns including aspect definition, pointcut expressions, and proxy mechanism.
 
-```java
-@Aspect
-@Component
-public class LoggingAspect {
-
-    @Around("@annotation(Loggable)")
-    public Object logExecution(ProceedingJoinPoint joinPoint) throws Throwable {
-        String method = joinPoint.getSignature().toShortString();
-        log.info("Entering: {}", method);
-
-        long start = System.currentTimeMillis();
-        try {
-            Object result = joinPoint.proceed();
-            log.info("Exiting: {} ({}ms)", method, System.currentTimeMillis() - start);
-            return result;
-        } catch (Exception e) {
-            log.error("Exception in: {}", method, e);
-            throw e;
-        }
-    }
-}
-
-// Custom annotation for marking methods
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Loggable {}
-```
-
-### Pointcut Expressions
-
-| Expression                                      | Matches                                 |
-| ----------------------------------------------- | --------------------------------------- |
-| `execution(* com.example.service.*.*(..))`      | All methods in service package          |
-| `@annotation(com.example.Loggable)`             | Methods annotated with @Loggable        |
-| `@within(org.springframework.stereotype.Service)` | All methods in @Service classes       |
-| `bean(userService)`                             | All methods on bean named userService   |
-
-### Proxy Mechanism Rules
-
-- Spring AOP uses **JDK dynamic proxy** (interface-based) or **CGLIB proxy** (class-based)
-- **Self-invocation does NOT trigger AOP** — calling `this.method()` bypasses the proxy
-
-```java
-@Service
-public class UserService {
-    @Transactional
-    public void createUser(User user) {
-        userRepository.save(user);
-        this.sendWelcomeEmail(user); // AOP NOT applied — self-invocation
-    }
-
-    @Async
-    public void sendWelcomeEmail(User user) { ... } // Will NOT run async
-}
-
-// Fix: extract to separate bean or use self-injection
-@Service
-public class UserService {
-    private final EmailService emailService; // Separate bean
-
-    @Transactional
-    public void createUser(User user) {
-        userRepository.save(user);
-        emailService.sendWelcomeEmail(user); // AOP applied correctly
-    }
-}
-```
-
-### AOP Rules
+### Key Rules
 
 - Use `@Around` for timing, logging, retry — use `@Before`/`@After` for simpler cross-cutting
 - Never put business logic in aspects — only cross-cutting concerns
@@ -188,148 +51,23 @@ public class UserService {
 
 ## 3. Transaction Management
 
-### @Transactional Behavior
+> See [references/transaction-management.md](references/transaction-management.md) for detailed patterns including propagation levels, rollback rules, and pitfall examples.
 
-```java
-@Service
-public class OrderService {
-    private final OrderRepository orderRepository;
-    private final PaymentService paymentService;
+### Key Rules
 
-    // Read-write transaction (default)
-    @Transactional
-    public Order createOrder(CreateOrderRequest request) {
-        Order order = Order.from(request);
-        return orderRepository.save(order);
-    }
-
-    // Read-only transaction — enables optimizations
-    @Transactional(readOnly = true)
-    public Order findById(Long id) {
-        return orderRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Order", id));
-    }
-}
-```
-
-### Propagation Levels
-
-| Propagation      | Behavior                                          | Use Case                         |
-| ---------------- | ------------------------------------------------- | -------------------------------- |
-| `REQUIRED`       | Join existing or create new (default)             | Most business operations         |
-| `REQUIRES_NEW`   | Always create new, suspend existing               | Audit logging, independent ops   |
-| `SUPPORTS`       | Join existing or run non-transactional             | Read-only queries                |
-| `NOT_SUPPORTED`  | Suspend existing, run non-transactional            | Non-critical operations          |
-| `MANDATORY`      | Must run in existing transaction, else exception   | Operations requiring caller tx   |
-| `NEVER`          | Must NOT run in transaction, else exception        | Operations that must not be tx   |
-| `NESTED`         | Nested transaction with savepoint                  | Partial rollback scenarios       |
-
-### Rollback Rules
-
-```java
-// Default: rollback on unchecked exceptions (RuntimeException), NOT on checked
-@Transactional
-public void process() {
-    // RuntimeException → rollback
-    // IOException (checked) → commit (NOT rolled back)
-}
-
-// Explicit rollback for checked exceptions
-@Transactional(rollbackFor = IOException.class)
-public void processFile() throws IOException { ... }
-
-// No rollback for specific runtime exceptions
-@Transactional(noRollbackFor = BusinessValidationException.class)
-public void validate() { ... }
-```
-
-### Transaction Pitfalls
-
-- **Self-invocation**: `@Transactional` on method B called from method A in the same class does NOT create transaction (proxy bypass)
-- **Private methods**: `@Transactional` on private methods is silently ignored
-- **Exception swallowed**: Catching exception inside `@Transactional` prevents rollback
-- **Long transactions**: Never call external APIs inside `@Transactional` — hold locks too long
-
-```java
-// Bad: exception caught inside transaction — no rollback
-@Transactional
-public void riskyOperation() {
-    try {
-        repository.save(entity);
-        externalApi.call(); // Fails
-    } catch (Exception e) {
-        log.error("Failed", e); // Transaction commits despite failure
-    }
-}
-
-// Good: let exception propagate
-@Transactional
-public void riskyOperation() {
-    repository.save(entity);
-    // External API call should be outside @Transactional
-}
-```
+- Use `@Transactional(readOnly = true)` for read operations
+- Default rollback: unchecked exceptions only — use `rollbackFor` for checked exceptions
+- Self-invocation bypasses `@Transactional` — same proxy limitation as AOP
+- Never call external APIs inside `@Transactional` — holds DB locks too long
+- Never catch exceptions inside `@Transactional` — prevents rollback
 
 ---
 
 ## 4. Event System
 
-### Publishing Events
+> See [references/event-system.md](references/event-system.md) for detailed patterns including publishing, consuming, and listener types.
 
-```java
-// Event class (record preferred for immutability)
-public record OrderCreatedEvent(Long orderId, Long userId, BigDecimal amount) {}
-
-// Publishing
-@Service
-public class OrderService {
-    private final ApplicationEventPublisher eventPublisher;
-
-    @Transactional
-    public Order createOrder(CreateOrderRequest request) {
-        Order order = orderRepository.save(Order.from(request));
-        eventPublisher.publishEvent(new OrderCreatedEvent(
-            order.getId(), order.getUserId(), order.getAmount()
-        ));
-        return order;
-    }
-}
-```
-
-### Consuming Events
-
-```java
-@Component
-public class OrderEventHandler {
-
-    // Synchronous listener — runs in publisher's thread and transaction
-    @EventListener
-    public void onOrderCreated(OrderCreatedEvent event) {
-        log.info("Order created: {}", event.orderId());
-    }
-
-    // Async listener — runs in separate thread
-    @Async
-    @EventListener
-    public void sendOrderNotification(OrderCreatedEvent event) {
-        notificationService.send(event.userId(), "Order confirmed");
-    }
-
-    // Runs AFTER transaction commits — safe for side effects
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void afterOrderCommitted(OrderCreatedEvent event) {
-        externalApi.notifyPartner(event.orderId());
-    }
-}
-```
-
-### Event Rules
-
-| Listener Type                 | Transaction Context              | Use Case                        |
-| ----------------------------- | -------------------------------- | ------------------------------- |
-| `@EventListener`             | Same transaction as publisher    | In-process sync processing      |
-| `@Async @EventListener`      | No transaction (new thread)      | Fire-and-forget side effects    |
-| `@TransactionalEventListener` | Runs after tx phase (e.g., commit) | External calls after commit   |
+### Key Rules
 
 - Use `@TransactionalEventListener(AFTER_COMMIT)` for operations that must not execute if transaction rolls back
 - `@TransactionalEventListener` events are NOT delivered if no transaction is active

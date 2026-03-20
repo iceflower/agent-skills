@@ -4,6 +4,16 @@ description: >-
   Java coding conventions and modern idioms.
   Includes version migration guide (8 → 11 → 17 → 21 → 25).
   Use when writing or reviewing Java code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Java Convention Rules

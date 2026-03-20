@@ -4,6 +4,16 @@ description: >-
   Weather and air quality information lookup using KMA (기상청), AirKorea, and AccuWeather.
   Use when users ask for current weather, weather forecasts, hourly forecasts, weather conditions,
   sunrise/sunset times, UV index, air quality (미세먼지/초미세먼지), or past/historical weather observations.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Weather Information Rules

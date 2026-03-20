@@ -4,6 +4,16 @@ description: >-
   Framework-agnostic caching strategies including cache selection, TTL design,
   invalidation patterns, stampede prevention, and anti-patterns.
   Use when designing or reviewing cache logic.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Caching Rules

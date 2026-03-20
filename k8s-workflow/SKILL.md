@@ -7,6 +7,16 @@ description: >-
   Gateway API, NetworkPolicy, Service Mesh), storage (PV/PVC, StatefulSet),
   RBAC, and deployment strategies (Rolling, Blue-Green, Canary).
   Use for Kubernetes operations and manifest authoring.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Kubernetes Workflow Rules

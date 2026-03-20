@@ -4,6 +4,16 @@ description: >-
   Async messaging patterns including broker selection, message design,
   producer/consumer patterns, schema evolution, and monitoring.
   Use when implementing Kafka, RabbitMQ, or event-driven architecture.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Messaging Rules
 

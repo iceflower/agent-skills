@@ -5,6 +5,16 @@ description: >-
   CDN, stateless design, message queues, consistent hashing, and rate limiting.
   Includes system stability patterns (circuit breaker, bulkhead, backpressure).
   Use when designing scalable system architectures.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # System Design Interview Patterns

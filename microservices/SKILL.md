@@ -6,6 +6,16 @@ description: >-
   data management, and fault isolation (Circuit Breaker, Bulkhead).
   Use when designing or reviewing microservice architectures, or implementing
   distributed transactions, service discovery, or strangler fig migration.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Microservices Architecture Pattern Rules

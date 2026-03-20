@@ -4,6 +4,16 @@ description: >-
   Domain-Driven Design patterns including entities, value objects, aggregates,
   repositories, domain services, domain events, and bounded contexts.
   Use when designing domain models or implementing business logic.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Domain-Driven Design (DDD) Skill

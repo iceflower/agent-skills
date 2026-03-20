@@ -4,6 +4,16 @@ description: >-
   Framework-agnostic external API integration patterns including timeouts,
   error handling, retry strategy, circuit breaker, and response mapping.
   Use when writing or reviewing HTTP client code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # External API Client Rules
 

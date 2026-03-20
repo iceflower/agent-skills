@@ -4,6 +4,16 @@ description: >-
   Object-oriented design principles (SOLID) with practical examples.
   Use when designing class hierarchies, applying SOLID principles,
   or reviewing object-oriented design.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Object-Oriented Design Principles (SOLID Advanced)

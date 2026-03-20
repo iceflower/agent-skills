@@ -2,6 +2,16 @@
 name: logging
 description: Logging standards and sensitive data handling. Use when writing logging
   code or reviewing logs.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Logging Rules

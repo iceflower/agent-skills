@@ -5,6 +5,16 @@ description: >-
   and version considerations. Includes provider-specific guides for AWS (v6.x),
   Azure (v4.x), and GCP (v6.x).
   Use for Terraform operations and best practices.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Terraform Workflow Rules
 

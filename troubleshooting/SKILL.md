@@ -5,6 +5,16 @@ description: >-
   rollback, connection issues, OOMKilled pods, CrashLoopBackOff, and
   debugging principles.
   Use when diagnosing errors, deployment issues, or production problems.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Troubleshooting Rules
 

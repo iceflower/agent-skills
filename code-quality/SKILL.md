@@ -4,6 +4,16 @@ description: >-
   Code quality and design principles. Includes refactoring techniques,
   code smell identification, and safe refactoring workflows.
   Use when writing, reviewing, or refactoring code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Code Quality and Design Principles
 

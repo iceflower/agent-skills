@@ -4,6 +4,16 @@ description: >-
   Java-Kotlin interoperability guide covering platform types, null safety with JSpecify,
   JVM annotations (@JvmStatic, @JvmOverloads, @JvmExposeBoxed, @Throws), collection interop,
   coroutine-Java bridging, SAM conversion, and build configuration for mixed projects.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Java-Kotlin Interoperability Rules

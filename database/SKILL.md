@@ -2,8 +2,9 @@
 name: database
 description: >-
   Framework-agnostic database rules including migration conventions, query
-  performance, transaction management, and anti-patterns.
-  Includes MySQL and PostgreSQL specific guides.
+  performance, transaction management, concurrency control (optimistic/pessimistic
+  locking), backup strategies, replication patterns, connection pool tuning,
+  and CDC. Includes MySQL and PostgreSQL specific guides.
   Use when writing SQL or designing database access.
 ---
 
@@ -208,3 +209,4 @@ WHERE u.status = 'ACTIVE';
 
 - For MySQL-specific rules, see [references/mysql.md](references/mysql.md)
 - For PostgreSQL-specific rules, see [references/postgresql.md](references/postgresql.md)
+- For concurrency control and reliability patterns, see [references/concurrency-and-reliability.md](references/concurrency-and-reliability.md)

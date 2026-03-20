@@ -1,7 +1,8 @@
 ---
 name: ci-cd
-description: CI/CD pipeline patterns with GitHub Actions. Use when writing or
-  reviewing workflow files, deployment pipelines, or branch protection rules.
+description: >-
+  CI/CD pipeline patterns with GitHub Actions.
+  Use when writing or reviewing workflow files, deployment pipelines, or branch protection rules.
 ---
 
 # CI/CD Pipeline Rules

@@ -142,3 +142,20 @@ instead of throwing — which means the caller needs to handle null."
 - [ ] Commit messages follow convention
 - [ ] PR description explains what and why
 - [ ] Breaking changes documented
+
+---
+
+## 6. Anti-Patterns
+
+- **Rubber Stamping**: Approving code without thorough review. Always read and understand all changes before approving
+- **Nitpicking**: Over-focusing on minor style issues while missing core logic flaws. Delegate linter-fixable issues to automation
+- **Delayed Reviews**: Leaving PRs unreviewed causes context loss and merge conflicts. Review within 24 hours
+- **Oversized PRs**: Too many changes in one PR degrades review quality. Keep PRs under 400 lines
+- **Emotional Feedback**: Use constructive suggestions like "Changing X to Y would improve Z" instead of accusatory questions
+
+## 7. Related Skills
+
+- `code-quality`: Code quality principles and refactoring techniques
+- `git-workflow`: Git commit conventions and branch strategies
+- `testing`: Test code review perspectives
+- `security`: Security vulnerability review checklist

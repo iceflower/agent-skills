@@ -124,6 +124,15 @@ Every test must satisfy all five criteria:
 - Dependency injection improves not only testability but also modularity and flexibility
 - Combine static factory methods with constructor injection to maintain both production convenience and testability
 
+## 11. Anti-Patterns
+
+- **Deploying Without Tests**: Deploying to production without test coverage is risky. At minimum, test core business logic
+- **Testing Implementation Details**: Tests coupled to internal implementation break on refactoring. Write behavior-based tests
+- **Inter-test Dependencies**: Tests that depend on execution order create unstable test suites. Each test must be independent
+- **Excessive Mocking**: Mocking all dependencies diverges from real behavior. Supplement with integration tests
+- **Magic Numbers**: Using meaningless numbers/strings in test data. Use intention-revealing constants or factories
+- **Ignoring Flaky Tests**: Tolerating intermittently failing tests erodes overall test suite reliability. Fix or quarantine immediately
+
 ## Additional References
 
 - For integration testing patterns, see [references/integration.md](references/integration.md)

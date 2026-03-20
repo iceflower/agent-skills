@@ -151,6 +151,16 @@ Dashboard: {dashboard_url}
 - No baseline metrics (cannot detect regressions)
 - Monitoring only infrastructure, not business metrics
 
+## 7. Related Skills
+
+- `logging`: Structured logging and monitoring integration
+- `incident-response`: Alert-driven incident response processes
+- `troubleshooting`: Monitoring data-driven problem diagnosis
+- `spring-framework`: Spring Boot Actuator and Micrometer metrics
+
 ## Additional References
 
+- [Prometheus Documentation](https://prometheus.io/docs/) - Official Prometheus documentation
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - Official OpenTelemetry documentation
+- [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/) - Monitoring distributed systems
 - For Spring Boot implementation patterns (Actuator, Micrometer, distributed tracing), see `spring-framework` skill — [references/monitoring.md](../spring-framework/references/monitoring.md)

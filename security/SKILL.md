@@ -119,6 +119,10 @@ compatibility:
 - Logging sensitive data (passwords, tokens, PII)
 - Trusting client-side validation without server-side checks
 - Exposing detailed error internals in API responses
+- **Security by Obscurity**: Relying solely on hiding for security. Design systems to be secure even when exposed
+- **Rolling Your Own Crypto**: Using unverified custom encryption algorithms. Use standard libraries (AES, RSA, bcrypt)
+- **Excessive Permissions**: Violating the principle of least privilege. Grant only the minimum required permissions
+- **Delayed Security Updates**: Postponing known CVE patches increases attack exposure. Apply patches immediately
 
 ---
 

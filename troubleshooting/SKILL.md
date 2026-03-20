@@ -124,6 +124,14 @@ kubectl get pods -n <namespace> -l app=<app-name>
 - No baseline metrics to compare against during incidents
 - Skipping post-mortem after production incidents
 
+## 6. Related Skills
+
+- `monitoring`: System monitoring and alerting setup
+- `logging`: Log-based problem diagnosis
+- `incident-response`: Incident response processes
+
 ## Additional References
 
+- [Google SRE Book - Debugging](https://sre.google/sre-book/effective-troubleshooting/) - Effective troubleshooting methodology
+- [Brendan Gregg's Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) - Systems performance analysis
 - For Spring Boot troubleshooting (startup failures, JVM OOM, HikariCP), see `spring-framework` skill — [references/troubleshooting.md](../spring-framework/references/troubleshooting.md)

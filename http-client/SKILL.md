@@ -130,6 +130,13 @@ email_address: String              →     email: String
 - Ignoring rate limit headers from upstream APIs
 - No circuit breaker on critical external dependencies
 
+## 7. Related Skills
+
+- `error-handling`: HTTP error response handling strategies
+- `monitoring`: HTTP client metrics collection and monitoring
+- `security`: API authentication, TLS, header security
+- `caching`: HTTP response caching strategies
+
 ## Additional References
 
 - For Spring Boot implementation patterns (RestClient, Spring Retry, Resilience4j), see `spring-framework` skill — [references/http-client.md](../spring-framework/references/http-client.md)

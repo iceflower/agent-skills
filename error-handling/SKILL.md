@@ -137,7 +137,12 @@ compatibility:
 - Missing error codes (only HTTP status, no application code)
 - Logging errors without stack traces
 - Retrying on non-idempotent failures without safeguards
+- **Pokemon Exception Handling**: Catching all exceptions with a generic catch-all. Use specific exception types instead
+- **Error Swallowing**: Empty catch blocks make debugging impossible. Always log or propagate errors
+- **Exceptions as Flow Control**: Using exceptions for normal program flow degrades performance and readability
 
 ## Additional References
 
+- [Microsoft Error Handling Best Practices](https://learn.microsoft.com/en-us/dotnet/standard/exceptions/best-practices-for-exceptions) - .NET exception handling best practices
+- [Effective Java - Exceptions](https://www.oreilly.com/library/view/effective-java/9780134686097/) - Java exception handling guide
 - For Spring Boot implementation patterns (`@ControllerAdvice`, ErrorCode enum), see `spring-framework` skill — [references/error-handling.md](../spring-framework/references/error-handling.md)

@@ -5,6 +5,16 @@ description: >-
   Kubernetes patterns (ESO, Sealed Secrets, CSI), CI/CD pipeline secrets,
   certificate management, and secret detection/prevention.
   Use when managing secrets, credentials, or certificates in any environment.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Secrets Management Rules

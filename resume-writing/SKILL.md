@@ -4,6 +4,16 @@ description: >-
   Developer resume writing guide including structure, experience description
   with STAR method, technical skills organization, and project description.
   Use when writing or reviewing a developer resume.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Developer Resume Rules
 

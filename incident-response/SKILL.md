@@ -7,6 +7,16 @@ description: >-
   and SLO/SLI/SLA relationships.
   Use when handling production incidents, writing runbooks, or establishing
   incident response procedures.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Incident Response Rules

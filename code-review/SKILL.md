@@ -2,6 +2,16 @@
 name: code-review
 description: Code review checklist and comment guidelines. Use when reviewing pull
   requests or code changes.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Code Review Rules
 

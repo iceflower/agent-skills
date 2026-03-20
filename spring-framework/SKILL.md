@@ -10,6 +10,16 @@ description: >-
   Includes migration guides for Framework (5.x → 7.0) and Boot (2.7 → 4.0).
   Use when working with Spring Framework or Spring Boot features, Actuator health probes,
   Bean Validation, @Transactional, RestClient, WebClient, or Spring Security.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Spring Framework Core Rules

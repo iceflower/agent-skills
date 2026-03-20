@@ -5,6 +5,16 @@ description: >-
   testing with Testcontainers, contract testing for microservices (Pact,
   Spring Cloud Contract), and performance testing strategies (k6, Gatling).
   Use when writing or modifying test code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # BDD-Style Unit Test Rules
 

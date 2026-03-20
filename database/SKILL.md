@@ -6,6 +6,16 @@ description: >-
   locking), backup strategies, replication patterns, connection pool tuning,
   and CDC. Includes MySQL and PostgreSQL specific guides.
   Use when writing SQL or designing database access.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Database Rules

@@ -5,6 +5,16 @@ description: >-
   CORS, API headers, rate limiting, secret management, authentication patterns
   (JWT, OAuth2, session, MFA), and web protection (CSRF, XSS, injection defense, TLS).
   Use when implementing security-related code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Security Rules
 

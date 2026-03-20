@@ -5,6 +5,16 @@ description: >-
   Micrometer), logging, distributed tracing (OpenTelemetry, traceId),
   alerting rules, and health check concepts (liveness, readiness, startup).
   Use when implementing monitoring, alerting, or observability.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Monitoring and Observability Rules
 

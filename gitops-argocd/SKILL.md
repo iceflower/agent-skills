@@ -5,6 +5,16 @@ description: >-
   secret management, multi-cluster deployment, rollback, notifications, and
   CI/CD integration. Covers ApplicationSet patterns and progressive delivery.
   Use when implementing GitOps workflows or managing Argo CD configurations.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # GitOps with Argo CD Rules

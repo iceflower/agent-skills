@@ -4,6 +4,16 @@ description: >-
   JVM concurrency rules including thread safety, synchronization tools,
   Executor framework, CompletableFuture, Kotlin coroutines, and virtual threads.
   Use when writing concurrent or parallel code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # JVM Concurrency Rules

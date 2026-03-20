@@ -4,6 +4,16 @@ description: >-
   Framework-agnostic error handling patterns including exception hierarchy,
   error classification, response format, and handling principles.
   Use when designing error handling strategies.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 # Error Handling Rules
 

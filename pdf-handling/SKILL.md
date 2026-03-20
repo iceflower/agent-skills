@@ -3,6 +3,16 @@ name: pdf-handling
 description: >-
   PDF file reading and processing rules.
   Use when analyzing PDF files or extracting content from them.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # PDF File Handling Rules

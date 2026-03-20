@@ -3,6 +3,16 @@ name: ci-cd
 description: >-
   CI/CD pipeline patterns with GitHub Actions.
   Use when writing or reviewing workflow files, deployment pipelines, or branch protection rules.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # CI/CD Pipeline Rules

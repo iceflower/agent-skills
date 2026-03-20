@@ -3,6 +3,16 @@ name: chaos-engineering
 description: >-
   Chaos engineering principles and practices for building resilient systems.
   Use when designing reliability testing, failure injection experiments, or game days.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Skill: Chaos Engineering

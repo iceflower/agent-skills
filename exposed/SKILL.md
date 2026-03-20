@@ -4,6 +4,16 @@ description: >-
   Jetbrains Exposed ORM rules including DSL vs DAO, table definition,
   query patterns, transaction management, and schema migration.
   Use when writing Exposed ORM code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Exposed ORM Rules

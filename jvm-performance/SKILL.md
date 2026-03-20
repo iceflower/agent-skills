@@ -4,6 +4,16 @@ description: >-
   JVM performance tuning including garbage collection algorithms, GC selection,
   heap analysis, profiling tools, and cloud-native considerations.
   Use when diagnosing performance issues or tuning JVM parameters.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # JVM Performance Optimization

@@ -6,6 +6,16 @@ description: >-
   (cache/secret mounts), multi-architecture builds, signal handling,
   and image provenance (cosign, SBOM).
   Use when writing or reviewing Dockerfiles.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Dockerfile Rules

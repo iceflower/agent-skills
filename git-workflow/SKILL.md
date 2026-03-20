@@ -2,6 +2,16 @@
 name: git-workflow
 description: Git commit conventions and branch strategy rules. Use when committing
   code or managing branches.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Git Workflow Rules

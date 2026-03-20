@@ -4,6 +4,16 @@ description: >-
   Clean Architecture and Hexagonal Architecture (Ports & Adapters) patterns.
   Use when designing layered architecture, defining port/adapter boundaries,
   or structuring domain-centric applications.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Clean Architecture / Hexagonal Architecture Rules

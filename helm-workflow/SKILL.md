@@ -5,6 +5,16 @@ description: >-
   values design, template best practices, hooks, dependency management,
   testing, and repository management. Covers Helm vs Kustomize selection.
   Use when creating, reviewing, or managing Helm charts.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Helm Workflow Rules

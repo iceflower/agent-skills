@@ -4,6 +4,16 @@ description: >-
   Technical documentation guide covering writing principles, user research,
   deployment process, and quality measurement.
   Use when writing or reviewing technical documentation.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Technical Documentation Guide

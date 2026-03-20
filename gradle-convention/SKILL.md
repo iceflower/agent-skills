@@ -3,6 +3,16 @@ name: gradle-convention
 description: Gradle build conventions for Kotlin/JVM multi-module projects.
   Use when writing or reviewing build.gradle.kts, settings.gradle.kts, or version
   catalog files.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Gradle Convention Rules

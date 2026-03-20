@@ -4,6 +4,16 @@ description: >-
   Distributed systems design patterns including data replication, partitioning,
   distributed time, cluster management, and network communication.
   Use when designing or implementing distributed systems.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Distributed Systems Patterns

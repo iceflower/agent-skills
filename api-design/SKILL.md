@@ -4,6 +4,16 @@ description: >-
   REST API design principles including URL design, HTTP methods, status codes,
   pagination, versioning, security, and OpenAPI documentation.
   Use when designing or implementing REST APIs.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # REST API Design Rules

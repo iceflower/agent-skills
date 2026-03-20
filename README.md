@@ -4,7 +4,7 @@
 
 ## 개요
 
-이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **44개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있습니다.
+이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **47개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있습니다.
 
 ## 호환 도구
 
@@ -86,6 +86,13 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [system-design](./system-design/) | 대규모 시스템 설계 + 안정성 패턴 (Circuit Breaker, Bulkhead) |
 | [distributed-systems](./distributed-systems/) | 분산 시스템 (복제, 파티셔닝, 합의 알고리즘) |
 
+### 프론트엔드 & TypeScript
+
+| 스킬 | 설명 |
+| ---- | ---- |
+| [react-convention](./react-convention/) | React/Next.js 코딩 컨벤션 (컴포넌트 패턴, Hooks, 상태 관리, 성능 최적화) |
+| [typescript-convention](./typescript-convention/) | TypeScript 타입 시스템 (타입 가드, 제네릭, 유틸리티 타입, 코딩 컨벤션) |
+
 ### 코드 품질 & 테스트
 
 | 스킬 | 설명 |
@@ -93,6 +100,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [code-quality](./code-quality/) | 코드 품질 6대 원칙 + 리팩토링 기법 |
 | [code-review](./code-review/) | 코드 리뷰 체크리스트 및 코멘트 가이드 |
 | [testing](./testing/) | BDD 단위 테스트 + 통합 테스트 (Testcontainers) + 계약 테스트 + 성능 테스트 |
+| [load-testing](./load-testing/) | 부하 테스트 (k6, Gatling, CI 통합, 메트릭, 임계값 가이드) |
 | [error-handling](./error-handling/) | 에러 처리 패턴 (예외 계층, 에러 분류, 응답 포맷) |
 
 ### 보안
@@ -122,6 +130,8 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [gradle-convention](./gradle-convention/) | Gradle 빌드 컨벤션 (멀티모듈, 버전 카탈로그) |
 | [http-client](./http-client/) | 외부 API 클라이언트 (타임아웃, 재시도, Circuit Breaker) |
 | [api-design](./api-design/) | REST API 설계 원칙 (URL, 상태 코드, 버전 관리) |
+| [openapi-spec](./openapi-spec/) | OpenAPI 명세 작성 (스키마 설계, 코드 생성, 버전 관리) |
+| [prompt-engineering](./prompt-engineering/) | LLM 프롬프트 설계 패턴 (Zero-shot, Few-shot, CoT, 안전성 가이드) |
 | [resume-writing](./resume-writing/) | 개발자 이력서 작성 가이드 (STAR 메서드) |
 | [pdf-handling](./pdf-handling/) | PDF 파일 읽기 및 처리 규칙 |
 | [weather](./weather/) | 기상청/AccuWeather 기반 날씨 정보 조회 |
@@ -133,12 +143,15 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 <skill-name>/
 ├── SKILL.md           # 스킬 정의 (필수)
 ├── README.md          # 스킬 설명
-└── references/        # 관련 참조 문서 (선택)
-    ├── migration.md
+├── references/        # 관련 참조 문서 (선택)
+│   ├── migration.md
+│   └── ...
+└── scripts/           # 검증/린트 스크립트 (선택)
+    ├── lint_chart.py
     └── ...
 ```
 
-각 `SKILL.md`는 YAML frontmatter(`name`, `description`)와 마크다운 본문으로 구성됩니다. `references/` 디렉토리에는 관련된 세부 가이드가 포함됩니다.
+각 `SKILL.md`는 YAML frontmatter(`name`, `description`, `license`, `metadata`, `compatibility`)와 마크다운 본문으로 구성됩니다. `references/` 디렉토리에는 관련된 세부 가이드가, `scripts/` 디렉토리에는 검증 및 린트 자동화 스크립트가 포함됩니다.
 
 ## 라이선스
 

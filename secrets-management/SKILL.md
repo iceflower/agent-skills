@@ -96,6 +96,31 @@ Trigger immediate rotation when:
 - Unauthorized access detected in audit logs
 - Compliance audit finding
 
+### Emergency Rotation Procedure
+
+```text
+1. IMMEDIATE (0-15 min)
+   - Identify all systems using the compromised secret
+   - Generate new secret (Version N+1)
+   - Deploy new secret to all consumers
+
+2. CONTAIN (15-60 min)
+   - Revoke the compromised secret (Version N)
+   - Verify all consumers are using Version N+1
+   - Check audit logs for unauthorized usage during exposure window
+
+3. ASSESS (1-4 hours)
+   - Determine exposure timeline (when leaked, when detected)
+   - Identify blast radius (what data/systems were accessible)
+   - Document findings for incident report
+
+4. REMEDIATE (1-7 days)
+   - Conduct root cause analysis (how the secret was leaked)
+   - Implement prevention measures (pre-commit hooks, secret scanning)
+   - Update runbooks and rotation procedures
+   - File incident report per incident-response process
+```
+
 ---
 
 ## 4. Kubernetes Secret Patterns
@@ -471,3 +496,9 @@ bfg --replace-text passwords.txt repo.git
 - No audit logging for secret access — cannot detect unauthorized usage
 - Using root/admin credentials in applications — violates least privilege
 - Embedding secrets in Docker images — exposed via `docker history` or image scanning
+
+## Related Skills
+
+- For incident response procedures when secrets are leaked, see [incident-response](../incident-response/) skill
+- For Kubernetes secret handling in manifests, see [k8s-workflow](../k8s-workflow/) skill
+- For application-level security rules, see [security](../security/) skill

@@ -406,3 +406,9 @@ Level 4: Engineering manager (after 45 min no-ack)
 - No handoff documentation between on-call shifts — context is lost
 - Deploying during active incidents — adds more variables to troubleshoot
 - No regular gameday drills — team discovers process gaps during real incidents
+
+## Related Skills
+
+- For secret leakage incidents and credential rotation procedures, see [secrets-management](../secrets-management/) skill
+- For general debugging and diagnosis patterns, see [troubleshooting](../troubleshooting/) skill
+- For chaos engineering and gameday practices, see [chaos-engineering](../chaos-engineering/) skill

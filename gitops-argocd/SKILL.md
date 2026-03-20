@@ -523,6 +523,12 @@ spec:
 - Skipping diff review before manual sync — unexpected changes applied
 - Not backing up Argo CD configuration — makes disaster recovery harder
 
+## Related Skills
+
+- For Helm chart development and best practices, see [helm-workflow](../helm-workflow/) skill
+- For Kubernetes manifest conventions, see [k8s-workflow](../k8s-workflow/) skill
+- For secret management patterns (ESO, Sealed Secrets), see [secrets-management](../secrets-management/) skill
+
 ## Additional References
 
 - For ApplicationSet patterns and generators, see [references/applicationset-patterns.md](references/applicationset-patterns.md)

@@ -551,3 +551,9 @@ helm install myapp oci://ghcr.io/org/charts/mychart --version 1.2.0
 - Deeply nested values without documentation — users cannot discover options
 - Using `helm install` instead of `helm upgrade --install` — not idempotent
 - Ignoring `helm lint` and `helm template` in CI — catches errors too late
+
+## Related Skills
+
+- For GitOps deployment of Helm charts with Argo CD, see [gitops-argocd](../gitops-argocd/) skill
+- For Kubernetes manifest conventions and best practices, see [k8s-workflow](../k8s-workflow/) skill
+- For secret management in Helm charts, see [secrets-management](../secrets-management/) skill

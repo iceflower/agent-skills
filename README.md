@@ -4,7 +4,7 @@
 
 ## 개요
 
-이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **47개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있습니다.
+이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **53개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
 
 ## 호환 도구
 
@@ -45,6 +45,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | 스킬 | 설명 |
 | ---- | ---- |
 | [spring-framework](./spring-framework/) | Spring Framework 핵심 (IoC, MVC, WebFlux, JPA, Config) + Spring Boot 구현 패턴 + 버전 마이그레이션 가이드 |
+| [spring-ai](./spring-ai/) | Spring AI (ChatClient, Tool Calling, Prompt Template, Vector Store, RAG, MCP 통합) |
 
 ### Java & Kotlin
 
@@ -61,6 +62,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | 스킬 | 설명 |
 | ---- | ---- |
 | [database](./database/) | 데이터베이스 공통 규칙 + MySQL/PostgreSQL 특화 가이드 + 동시성 제어/백업/복제/CDC |
+| [data-migration](./data-migration/) | 데이터 마이그레이션 / ETL 패턴 (Zero-downtime, Dual-Write, gh-ost, CDC) |
 | [exposed](./exposed/) | JetBrains Exposed ORM (DSL, DAO, 트랜잭션 관리) |
 
 ### 인프라 & 배포
@@ -74,6 +76,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [gitops-argocd](./gitops-argocd/) | GitOps 워크플로우 (Argo CD, ApplicationSet, 동기화 전략, 프로그레시브 딜리버리) |
 | [dockerfile](./dockerfile/) | Dockerfile 작성 규칙 (멀티스테이지, JVM 패턴, BuildKit, 멀티아키텍처) |
 | [ci-cd](./ci-cd/) | GitHub Actions 기반 CI/CD 파이프라인 패턴 |
+| [feature-flag](./feature-flag/) | Feature Flag / Progressive Delivery (OpenFeature, Toggle 분류, Canary + Feature Flag) |
 
 ### 아키텍처 & 설계
 
@@ -85,6 +88,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [object-oriented-design](./object-oriented-design/) | 객체지향 설계 원칙 (SOLID, 합성 우선) |
 | [system-design](./system-design/) | 대규모 시스템 설계 + 안정성 패턴 (Circuit Breaker, Bulkhead) |
 | [distributed-systems](./distributed-systems/) | 분산 시스템 (복제, 파티셔닝, 합의 알고리즘) |
+| [cloud-native](./cloud-native/) | 12-Factor App / Cloud Native 패턴 (15-Factor, Well-Architected Framework) |
 
 ### 프론트엔드 & TypeScript
 
@@ -122,6 +126,12 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [chaos-engineering](./chaos-engineering/) | 카오스 엔지니어링 (장애 주입, Game Day) |
 | [incident-response](./incident-response/) | 인시던트 대응 (심각도 분류, 커뮤니케이션, 런북, 포스트모템) |
 
+### 메타 스킬
+
+| 스킬 | 설명 |
+| ---- | ---- |
+| [index](./index/) | 스킬 라우팅 인덱스 (카테고리별/도메인별/작업 유형별 스킬 탐색 가이드) |
+
 ### 기타
 
 | 스킬 | 설명 |
@@ -130,6 +140,8 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [gradle-convention](./gradle-convention/) | Gradle 빌드 컨벤션 (멀티모듈, 버전 카탈로그) |
 | [http-client](./http-client/) | 외부 API 클라이언트 (타임아웃, 재시도, Circuit Breaker) |
 | [api-design](./api-design/) | REST API 설계 원칙 (URL, 상태 코드, 버전 관리) |
+| [graphql](./graphql/) | GraphQL API 설계 (스키마, Resolver, DataLoader, Federation, 보안) |
+| [grpc](./grpc/) | gRPC 서비스 간 통신 (Proto3, Streaming, Interceptor, Service Mesh 통합) |
 | [openapi-spec](./openapi-spec/) | OpenAPI 명세 작성 (스키마 설계, 코드 생성, 버전 관리) |
 | [prompt-engineering](./prompt-engineering/) | LLM 프롬프트 설계 패턴 (Zero-shot, Few-shot, CoT, 안전성 가이드) |
 | [resume-writing](./resume-writing/) | 개발자 이력서 작성 가이드 (STAR 메서드) |

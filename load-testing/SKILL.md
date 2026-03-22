@@ -4,6 +4,16 @@ description: >-
   Load and performance testing best practices with k6 and Gatling including
   test design, metrics, thresholds, CI integration, and result analysis.
   Use when designing or implementing performance tests.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Load Testing Rules

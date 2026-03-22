@@ -1,7 +1,12 @@
 ---
 name: kotlin-convention
-description: Kotlin coding conventions and idioms. Use when writing or reviewing
-  Kotlin code.
+description: >-
+  Kotlin coding conventions, idioms, and language-specific best practices.
+  Covers null safety, data class, sealed class, enum class, extension functions,
+  coroutines, Flow, when expression, scope functions (let, run, apply, also),
+  collection operations, and Kotlin DSL patterns.
+  Use when writing or reviewing Kotlin code, designing domain models with
+  sealed hierarchies, or implementing asynchronous logic with coroutines and Flow.
 license: MIT
 metadata:
   author: iceflower

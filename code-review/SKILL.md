@@ -1,7 +1,12 @@
 ---
 name: code-review
-description: Code review checklist and comment guidelines. Use when reviewing pull
-  requests or code changes.
+description: >-
+  Code review checklist, comment guidelines, and PR review best practices.
+  Covers PR review workflows, code suggestions, nitpick vs blocking review
+  classification, LGTM criteria, review checklist (correctness, security,
+  performance, readability), and constructive feedback patterns.
+  Use when reviewing pull requests, providing code suggestions, or establishing
+  a team code review process and review comment conventions.
 license: MIT
 metadata:
   author: iceflower

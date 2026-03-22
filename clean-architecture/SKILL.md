@@ -2,8 +2,12 @@
 name: clean-architecture
 description: >-
   Clean Architecture and Hexagonal Architecture (Ports & Adapters) patterns.
+  Covers the dependency rule, domain layer isolation, use case (application service)
+  design, repository pattern, input/output port definitions, adapter implementation,
+  and onion architecture layering.
   Use when designing layered architecture, defining port/adapter boundaries,
-  or structuring domain-centric applications.
+  structuring domain-centric applications, or enforcing the dependency rule
+  between infrastructure and domain layers.
 license: MIT
 metadata:
   author: iceflower

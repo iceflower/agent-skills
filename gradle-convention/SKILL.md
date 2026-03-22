@@ -1,8 +1,12 @@
 ---
 name: gradle-convention
-description: Gradle build conventions for Kotlin/JVM multi-module projects.
-  Use when writing or reviewing build.gradle.kts, settings.gradle.kts, or version
-  catalog files.
+description: >-
+  Gradle build conventions for Kotlin/JVM multi-module projects.
+  Covers multi-module project structure, convention plugins, buildSrc setup,
+  dependency management with version catalogs, Gradle wrapper configuration,
+  build cache configuration, task optimization, and plugin publishing.
+  Use when writing or reviewing build.gradle.kts, settings.gradle.kts, version
+  catalog files, or configuring convention plugins for shared build logic.
 license: MIT
 metadata:
   author: iceflower

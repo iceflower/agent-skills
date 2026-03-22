@@ -1,7 +1,12 @@
 ---
 name: git-workflow
-description: Git commit conventions and branch strategy rules. Use when committing
-  code or managing branches.
+description: >-
+  Git commit conventions, branch strategy, and collaboration workflow rules.
+  Covers conventional commits, commit message formatting, squash merge, rebase,
+  interactive rebase, branch naming conventions, merge conflict resolution,
+  cherry-pick, git bisect, and pull request workflows.
+  Use when committing code, managing branches, resolving merge conflicts,
+  or defining a team Git branching strategy.
 license: MIT
 metadata:
   author: iceflower

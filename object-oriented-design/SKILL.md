@@ -1,9 +1,12 @@
 ---
 name: object-oriented-design
 description: >-
-  Object-oriented design principles (SOLID) with practical examples.
-  Use when designing class hierarchies, applying SOLID principles,
-  or reviewing object-oriented design.
+  Object-oriented design principles with practical examples covering all five
+  SOLID principles: Single Responsibility (SRP), Open/Closed (OCP), Liskov
+  Substitution (LSP), Interface Segregation (ISP), and Dependency Inversion (DIP).
+  Includes design patterns, class hierarchy design, and refactoring guidance.
+  Use when designing class hierarchies, applying SOLID principles, refactoring
+  toward better abstractions, or reviewing object-oriented design for violations.
 license: MIT
 metadata:
   author: iceflower

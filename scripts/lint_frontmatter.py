@@ -98,7 +98,10 @@ def main() -> int:
         print(f"Error: '{root}' is not a directory", file=sys.stderr)
         return 1
 
-    skill_files = sorted(root.rglob("SKILL.md"))
+    skill_files = sorted(
+        f for f in root.rglob("SKILL.md")
+        if ".claude" not in f.parts and not any(p.startswith(".") for p in f.parts)
+    )
     if not skill_files:
         print(f"No SKILL.md files found under '{root}'")
         return 0

@@ -5,6 +5,16 @@ description: >-
   prompt design patterns, structured output, evaluation, safety, and
   cost optimization.
   Use when building or reviewing AI-powered features that interact with LLMs.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # Prompt Engineering Rules

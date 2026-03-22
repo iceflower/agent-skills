@@ -4,6 +4,16 @@ description: >-
   React and Next.js coding conventions including component patterns, hooks,
   state management, performance optimization, and project structure.
   Use when writing, reviewing, or refactoring React/Next.js code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # React/Next.js Coding Conventions

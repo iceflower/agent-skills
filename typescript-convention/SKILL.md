@@ -5,6 +5,16 @@ description: >-
   strict mode configuration, utility types, error handling, and project
   organization patterns.
   Use when writing, reviewing, or refactoring TypeScript code.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # TypeScript Coding Conventions

@@ -5,6 +5,16 @@ description: >-
   documentation generation, validation, versioning, and code generation
   patterns.
   Use when writing, reviewing, or maintaining OpenAPI specifications.
+license: MIT
+metadata:
+  author: iceflower
+  version: "1.0"
+  last-reviewed: "2026-03"
+compatibility:
+  - OpenCode
+  - Claude Code
+  - Codex
+  - Antigravity
 ---
 
 # OpenAPI Specification Rules

@@ -3,8 +3,11 @@ name: troubleshooting
 description: >-
   General debugging and troubleshooting patterns for slow APIs, deployment
   rollback, connection issues, OOMKilled pods, CrashLoopBackOff, and
-  debugging principles.
-  Use when diagnosing errors, deployment issues, or production problems.
+  debugging principles. Covers root cause analysis, incident triage workflows,
+  error stack trace analysis, pod logs inspection, metrics anomaly detection,
+  alert investigation, and systematic debugging methodologies.
+  Use when diagnosing errors, performing root cause analysis on production
+  incidents, investigating alert anomalies, or triaging deployment failures.
 license: MIT
 metadata:
   author: iceflower

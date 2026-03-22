@@ -2,7 +2,12 @@
 name: chaos-engineering
 description: >-
   Chaos engineering principles and practices for building resilient systems.
-  Use when designing reliability testing, failure injection experiments, or game days.
+  Covers tools such as Chaos Monkey, Gremlin, and Litmus for fault injection,
+  blast radius analysis, steady state hypothesis definition, experiment design,
+  failure mode validation, and game day planning.
+  Use when designing reliability testing, running fault injection experiments,
+  defining steady state hypotheses, or planning chaos game days to verify
+  system resilience.
 license: MIT
 metadata:
   author: iceflower

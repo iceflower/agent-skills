@@ -3,8 +3,11 @@ name: system-design
 description: >-
   Large-scale system design patterns including database architecture, caching,
   CDN, stateless design, message queues, consistent hashing, and rate limiting.
-  Includes system stability patterns (circuit breaker, bulkhead, backpressure).
-  Use when designing scalable system architectures.
+  Covers CAP theorem, eventual consistency, sharding strategies, replication factor,
+  read replica configuration, and system stability patterns (circuit breaker,
+  bulkhead, backpressure).
+  Use when designing scalable system architectures, evaluating consistency vs
+  availability trade-offs, or planning data partitioning and replication strategies.
 license: MIT
 metadata:
   author: iceflower

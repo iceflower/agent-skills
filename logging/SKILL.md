@@ -1,7 +1,12 @@
 ---
 name: logging
-description: Logging standards and sensitive data handling. Use when writing logging
-  code or reviewing logs.
+description: >-
+  Logging standards, structured logging, and sensitive data handling.
+  Covers log levels (DEBUG, INFO, WARN, ERROR, TRACE), MDC (Mapped Diagnostic Context),
+  correlation ID propagation, log format standardization, sensitive data masking,
+  and log aggregation best practices.
+  Use when writing logging code, configuring log frameworks (Logback, Log4j2),
+  reviewing log output, or implementing request tracing with correlation IDs.
 license: MIT
 metadata:
   author: iceflower

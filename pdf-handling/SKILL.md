@@ -98,11 +98,18 @@ pdftotext input.pdf /tmp/output.txt
 
 The actual PDF page number and the printed page number in the document may differ.
 
-| Situation                      | Example                           | Resolution                          |
-| ------------------------------ | --------------------------------- | ----------------------------------- |
-| Cover/preface pages present    | Document "page 1" is PDF page 3  | Apply offset +2                     |
-| Roman numeral pages            | i, ii, iii, ...                   | Cross-reference with table of contents |
+| Situation                      | Example                           | Resolution                                |
+| ------------------------------ | --------------------------------- | ----------------------------------------- |
+| Cover/preface pages present    | Document "page 1" is PDF page 3  | Apply offset +2                           |
+| Roman numeral pages            | i, ii, iii, ...                   | Cross-reference with table of contents    |
 | Appendix with separate numbers | A-1, A-2, ...                     | Calculate PDF page from table of contents |
+
+## Library and Tool References
+
+> See [references/pdf-libraries.md](references/pdf-libraries.md) for detailed comparison of PDF libraries (Apache PDFBox, iText, pdf.js, pypdf, pdfplumber, and others) including licensing, capabilities, and selection guide.
+> See [references/pdf-text-extraction.md](references/pdf-text-extraction.md) for text/table extraction techniques (Camelot, Tabula, pdfplumber) and OCR guide with Tesseract.
+
+---
 
 ## Anti-Patterns
 

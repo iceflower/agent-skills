@@ -19,6 +19,7 @@ compatibility:
   - Codex
   - Antigravity
 ---
+
 # Troubleshooting Rules
 
 ## 1. Slow API Response
@@ -79,6 +80,8 @@ kubectl get pods -n <namespace> -l app=<app-name>
 
 ## 3. Connection and Network Issues
 
+> See [references/database-connection-troubleshooting.md](references/database-connection-troubleshooting.md) for detailed HikariCP pool sizing, leak detection, and connection pool troubleshooting patterns.
+
 ### Database Connection
 
 | Symptom                | Check                        | Fix                                   |
@@ -135,6 +138,9 @@ kubectl get pods -n <namespace> -l app=<app-name>
 
 ## Additional References
 
+- For Kubernetes troubleshooting (OOMKilled, CrashLoopBackOff, Pod debugging), see [references/kubernetes-troubleshooting.md](references/kubernetes-troubleshooting.md)
+- For JVM troubleshooting (heap dump, thread dump, GC analysis, diagnostic tools), see [references/jvm-troubleshooting.md](references/jvm-troubleshooting.md)
+- For database connection and connection pool troubleshooting (HikariCP, leak detection), see [references/database-connection-troubleshooting.md](references/database-connection-troubleshooting.md)
 - [Google SRE Book - Debugging](https://sre.google/sre-book/effective-troubleshooting/) - Effective troubleshooting methodology
 - [Brendan Gregg's Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) - Systems performance analysis
 - For Spring Boot troubleshooting (startup failures, JVM OOM, HikariCP), see `spring-framework` skill — [references/troubleshooting.md](../spring-framework/references/troubleshooting.md)

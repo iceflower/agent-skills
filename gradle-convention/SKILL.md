@@ -12,11 +12,7 @@ metadata:
   author: iceflower
   version: "1.0"
   last-reviewed: "2026-03"
-compatibility:
-  - OpenCode
-  - Claude Code
-  - Codex
-  - Antigravity
+compatibility: Requires Gradle or Gradle Wrapper
 ---
 
 # Gradle Convention Rules

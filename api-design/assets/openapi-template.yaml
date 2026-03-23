@@ -1,0 +1,303 @@
+openapi: 3.1.0
+
+info:
+  title: ${API_TITLE}
+  version: "1.0.0"
+  description: ${API_DESCRIPTION}
+  contact:
+    name: ${TEAM_NAME}
+    email: ${TEAM_EMAIL}
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production
+  - url: https://api.staging.example.com/v1
+    description: Staging
+
+tags:
+  - name: users
+    description: User management
+
+paths:
+  /users:
+    get:
+      operationId: listUsers
+      summary: List all users
+      tags:
+        - users
+      parameters:
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/LimitParam"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - meta
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserResponse"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+        - bearerAuth: []
+
+    post:
+      operationId: createUser
+      summary: Create a new user
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateRequest"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+        - bearerAuth: []
+
+  /users/{userId}:
+    get:
+      operationId: getUserById
+      summary: Get a user by ID
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: User identifier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: "#/components/schemas/UserResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    UserCreateRequest:
+      type: object
+      required:
+        - email
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: "user@example.com"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: User display name
+          example: "John Doe"
+
+    UserResponse:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: User identifier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+          description: User email address
+          example: "user@example.com"
+        name:
+          type: string
+          description: User display name
+          example: "John Doe"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Creation timestamp
+          example: "2024-01-15T10:30:45.123Z"
+
+    PaginationMeta:
+      type: object
+      required:
+        - total
+        - page
+        - perPage
+        - totalPages
+      properties:
+        total:
+          type: integer
+          description: Total number of items
+          example: 100
+        page:
+          type: integer
+          description: Current page number
+          example: 1
+        perPage:
+          type: integer
+          description: Items per page
+          example: 20
+        totalPages:
+          type: integer
+          description: Total number of pages
+          example: 5
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              description: Human-readable error message
+              example: "Invalid request parameters"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                    example: "email"
+                  message:
+                    type: string
+                    example: "Must be a valid email address"
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      description: Page number (1-based)
+      example: 1
+
+    LimitParam:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Number of items per page
+      example: 20
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token authentication
+
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for service-to-service authentication
+
+security:
+  - bearerAuth: []

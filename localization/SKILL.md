@@ -71,7 +71,7 @@ Korean: `other` only). Always include `other` as fallback.
 
 ### Rules
 
-- Always provide the `other` category as fallback
+- Always provide the `other` category as fallback (required even for languages like Korean/Japanese that only use `other`)
 - Use `#` as a placeholder for the numeric value in plural messages
 - Keep messages as complete sentences — never concatenate fragments
 - Provide translator context/description for ambiguous messages
@@ -243,7 +243,9 @@ automatic RTL support.
 - Keep phone numbers, code snippets, and URLs in LTR direction
 - Use HTML `dir` attribute over CSS `direction` (better for accessibility)
 - Flexbox and Grid automatically adjust with `dir="rtl"`
-- Test layouts in both LTR and RTL modes
+- Test layouts in both LTR and RTL modes (if your application supports RTL languages)
+- Icons to mirror in RTL: navigation arrows, progress bars, send/reply, undo/redo
+- Icons NOT to mirror: media controls, clocks, checkmarks, logos, slashes
 
 ## 7. Unicode and CLDR
 

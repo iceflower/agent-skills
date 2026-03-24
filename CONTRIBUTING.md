@@ -95,6 +95,7 @@ docs: README.md 업데이트
 - [ ] `python3 scripts/lint_frontmatter.py .` 통과
 - [ ] `python3 scripts/check_references.py .` 통과
 - [ ] `python3 scripts/check_index.py .` 통과
+- [ ] `npx markdownlint-cli2 "**/SKILL.md"` 통과
 
 ## 라이선스
 

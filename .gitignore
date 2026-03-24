@@ -19,6 +19,14 @@ package-lock.json
 yarn.lock
 bun.lock
 
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+*credentials*.json
+*secret*.*
+
 # Generated reports
 COMPLIANCE_REPORT.md
 *_REPORT.md

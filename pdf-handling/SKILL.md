@@ -94,11 +94,11 @@ pdftotext input.pdf /tmp/output.txt
 
 The actual PDF page number and the printed page number in the document may differ.
 
-| Situation                      | Example                           | Resolution                                |
-| ------------------------------ | --------------------------------- | ----------------------------------------- |
-| Cover/preface pages present    | Document "page 1" is PDF page 3  | Apply offset +2                           |
-| Roman numeral pages            | i, ii, iii, ...                   | Cross-reference with table of contents    |
-| Appendix with separate numbers | A-1, A-2, ...                     | Calculate PDF page from table of contents |
+| Situation                      | Example                           | Resolution                             |
+| ------------------------------ | --------------------------------- | -------------------------------------- |
+| Cover/preface pages present    | Document "page 1" is PDF page 3   | Apply offset +2                        |
+| Roman numeral pages            | i, ii, iii, ...                   | Cross-reference with table of contents |
+| Appendix with separate numbers | A-1, A-2, ...                     | Calculate from table of contents       |
 
 ## Library and Tool References
 

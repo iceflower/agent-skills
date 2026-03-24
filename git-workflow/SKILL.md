@@ -183,3 +183,218 @@ git rebase -i HEAD~3
 | Committed sensitive info      | `git filter-repo` or BFG Cleaner   |
 | Want to undo merge            | `git reset --hard ORIG_HEAD`       |
 | Restore specific file         | `git checkout HEAD~1 -- <file>`    |
+
+---
+
+## 6. Rebase Workflow
+
+### Rebase vs Merge: When to Use Which
+
+| Scenario                              | Recommended          |
+| ------------------------------------- | -------------------- |
+| Updating a local feature branch       | Rebase               |
+| Integrating a shared/protected branch | Merge                |
+| Cleaning up commit history before PR  | Rebase (interactive) |
+| Preserving exact merge timeline       | Merge                |
+
+**Golden rule**: Never rebase commits that have been pushed to a shared branch.
+
+### Rebasing onto the Base Branch
+
+```bash
+# Update feature branch with latest changes from develop
+git checkout feature/123-add-login
+git fetch origin
+git rebase origin/develop
+```
+
+### Interactive Rebase
+
+Use `git rebase -i` to clean up commit history before opening a PR.
+
+| Action   | Effect                                        |
+| -------- | --------------------------------------------- |
+| `pick`   | Keep the commit as-is                         |
+| `reword` | Keep the commit but edit its message          |
+| `squash` | Combine with previous commit, keep message    |
+| `fixup`  | Combine with previous commit, discard message |
+| `drop`   | Remove the commit entirely                    |
+
+```bash
+# Squash the last 4 commits into one
+git rebase -i HEAD~4
+```
+
+### Handling Rebase Conflicts
+
+1. Resolve conflicts in the affected files and stage them: `git add <file>`.
+2. Continue: `git rebase --continue`.
+3. To abort and restore the original state: `git rebase --abort`.
+
+---
+
+## 7. Cherry-pick
+
+### Use Cases
+
+- Backporting a bug fix from `develop` to a `release/*` or `hotfix/*` branch
+- Applying a specific commit to another branch without merging the entire branch
+- Recovering a commit from a deleted or abandoned branch
+
+### Basic Usage
+
+```bash
+git cherry-pick <commit-hash>                       # single commit
+git cherry-pick <hash-1> <hash-2>                   # multiple commits
+git cherry-pick <start-hash>..<end-hash>            # range (exclusive of start)
+```
+
+### Important Considerations
+
+- Cherry-picked commits get new hashes; the original and copy are independent.
+- Avoid cherry-picking merge commits unless necessary (use `-m 1` to specify mainline parent).
+- If the same change is later merged normally, expect potential conflicts.
+- Always verify the result compiles and passes tests after cherry-picking.
+
+---
+
+## 8. Merge Conflict Resolution
+
+### Prevention
+
+- Rebase feature branches frequently, keep PRs small, and communicate about shared file ownership.
+
+### Resolution Steps
+
+1. Identify conflicting files: `git status` shows "both modified" entries.
+2. Open each file, find conflict markers (`<<<<<<<` / `=======` / `>>>>>>>`), and decide which changes to keep.
+3. Remove all conflict markers and stage resolved files: `git add <file>`.
+4. Complete: `git commit` (for merge) or `git rebase --continue` (for rebase).
+
+### Tools
+
+| Tool       | Command / Setup                          |
+| ---------- | ---------------------------------------- |
+| vimdiff    | `git mergetool --tool=vimdiff`           |
+| VS Code    | Open conflicting file; use inline UI     |
+| IntelliJ   | VCS → Git → Resolve Conflicts            |
+| `diff3`    | `git config merge.conflictstyle diff3`   |
+
+Using `diff3` style adds the common ancestor between the two sides, making conflict resolution easier.
+
+---
+
+## 9. Git Bisect
+
+### Purpose
+
+Efficiently find the commit that introduced a bug using binary search.
+
+### Basic Workflow
+
+```bash
+git bisect start
+git bisect bad                   # mark current (broken) commit
+git bisect good <known-good-hash> # mark a known-good commit
+
+# Git checks out a middle commit — test it, then mark good or bad.
+# Repeat until Git identifies the first bad commit.
+
+git bisect reset                 # end session, return to original branch
+```
+
+### Automated Bisect
+
+Provide a test script that exits 0 for good and non-zero for bad:
+
+```bash
+git bisect start HEAD <known-good-hash>
+git bisect run ./test-script.sh
+```
+
+### Tips
+
+- Choose a known-good commit as far back as practical to reduce iterations.
+- The number of steps is approximately `log2(N)` where N is the number of commits in the range.
+- If a commit cannot be tested (e.g., broken build), skip it: `git bisect skip`.
+
+---
+
+## 10. History Management
+
+### Squash Merge
+
+Combine all feature branch commits into a single commit. Ideal for branches with many WIP commits.
+
+```bash
+git checkout develop
+git merge --squash feature/123-add-login
+git commit -m "feat(auth): Add login feature"
+```
+
+### Fixup Commits
+
+Create a commit intended to be squashed into a previous commit during rebase:
+
+```bash
+git commit --fixup=<target-hash>
+git rebase -i --autosquash HEAD~5    # autosquash fixup commits
+```
+
+Tip: enable autosquash by default with `git config --global rebase.autosquash true`.
+
+### Amend
+
+Modify the most recent commit (message or content). Only use on unpushed commits.
+
+```bash
+git commit --amend -m "fix(auth): Correct token expiry check"  # change message
+git add forgotten-file.ts && git commit --amend --no-edit       # add missed files
+```
+
+### When to Use Each
+
+| Technique    | Scenario                                             |
+| ------------ | ---------------------------------------------------- |
+| Squash merge | Merging a feature branch with noisy history          |
+| Fixup        | Addressing review feedback before merge              |
+| Amend        | Fixing typos or adding missed files in latest commit |
+| Reword       | Correcting a misleading commit message               |
+
+---
+
+## 11. Pull Request Workflow
+
+### PR Size Guidelines
+
+| Size        | Lines Changed | Recommendation         |
+| ----------- | ------------- | ---------------------- |
+| Small       | < 200         | Ideal                  |
+| Medium      | 200–400       | Acceptable             |
+| Large       | 400–800       | Consider splitting     |
+| Extra large | > 800         | Split into smaller PRs |
+
+### Splitting Large PRs
+
+- Separate refactoring from feature work; split backend/frontend when possible.
+- Use stacked PRs: PR1 (base) → PR2 (builds on PR1) → PR3.
+
+### Draft PRs
+
+Use draft PRs for work-in-progress needing early feedback, dependent changes, or experimental spikes. Convert to ready when all checks pass and the work is complete.
+
+```bash
+gh pr create --draft --title "feat(auth): Add OAuth2 flow" --body "WIP: seeking feedback"
+```
+
+### Reviewer Assignment
+
+- Assign at least one reviewer with domain knowledge of the changed area.
+- For cross-cutting changes, assign reviewers from each affected team.
+- Use `.github/CODEOWNERS` to automate reviewer assignment per directory.
+
+### Review Etiquette
+
+- Reviewers: provide actionable feedback; distinguish between blocking issues and suggestions.
+- Authors: respond to all comments before merging; do not dismiss reviews without discussion.
+- Use conventional comment prefixes: `nit:`, `suggestion:`, `question:`, `blocker:`.

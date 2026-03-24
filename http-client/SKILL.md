@@ -209,7 +209,7 @@ Example:
 ## 8. Related Skills
 
 - `error-handling`: HTTP error response handling strategies
-- `monitoring`: HTTP client metrics collection and monitoring
+- `observability`: HTTP client metrics collection and monitoring
 - `security`: API authentication, TLS, header security
 - `caching`: HTTP response caching strategies
 

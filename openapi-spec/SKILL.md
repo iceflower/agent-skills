@@ -191,23 +191,8 @@ schemas:
 ### Composition Patterns
 
 - Use `allOf` for inheritance/extension
-- Use `oneOf` with discriminator for polymorphic types
+- Use `oneOf` with discriminator for polymorphic types (see [references/reusable-components.md](references/reusable-components.md) for example)
 - Use `$ref` for shared components — do not duplicate schemas
-
-```yaml
-# Polymorphic notification type
-Notification:
-  oneOf:
-    - $ref: '#/components/schemas/EmailNotification'
-    - $ref: '#/components/schemas/SmsNotification'
-    - $ref: '#/components/schemas/PushNotification'
-  discriminator:
-    propertyName: channel
-    mapping:
-      email: '#/components/schemas/EmailNotification'
-      sms: '#/components/schemas/SmsNotification'
-      push: '#/components/schemas/PushNotification'
-```
 
 ---
 
@@ -291,95 +276,14 @@ paths:
 
 ## 4. Reusable Components
 
-### Shared Parameters
+> See [references/reusable-components.md](references/reusable-components.md) for shared parameters, shared responses, security schemes, and composition pattern YAML examples.
 
-```yaml
-components:
-  parameters:
-    PageParam:
-      name: page
-      in: query
-      description: Page number (1-based)
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
+### Component Rules
 
-    LimitParam:
-      name: limit
-      in: query
-      description: Number of items per page
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 20
-```
-
-### Shared Responses
-
-```yaml
-components:
-  responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-    Unauthorized:
-      description: Authentication required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-    Conflict:
-      description: Resource already exists
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-    InternalError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-```
-
----
-
-## 5. Security Definitions
-
-```yaml
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: JWT access token
-
-    apiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-Key
-      description: API key for service-to-service calls
-
-# Global security (can be overridden per operation)
-security:
-  - bearerAuth: []
-```
+- Define shared parameters (`PageParam`, `LimitParam`) in `components/parameters`
+- Define shared error responses (`BadRequest`, `Unauthorized`, `NotFound`, `Conflict`, `InternalError`) in `components/responses`
+- Define security schemes (`bearerAuth`, `apiKeyAuth`) in `components/securitySchemes`
+- Apply global security and override per operation when needed
 
 ---
 

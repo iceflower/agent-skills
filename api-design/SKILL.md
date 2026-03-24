@@ -224,6 +224,7 @@ GET /users?fields=id,name,email
 ## 7. API Versioning
 
 > **See [references/versioning.md](references/versioning.md) for detailed patterns including:**
+>
 > - Version identification strategies (URL, Header, Custom)
 > - Compatibility principles (safe vs breaking changes)
 > - Handling breaking changes and deprecation
@@ -241,6 +242,7 @@ GET /users?fields=id,name,email
 ## 9. Documentation
 
 > **See [references/documentation.md](references/documentation.md) for detailed patterns including:**
+>
 > - OpenAPI specification structure
 > - Schema and parameter documentation
 > - Error response documentation

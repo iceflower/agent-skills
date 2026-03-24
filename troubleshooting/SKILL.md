@@ -127,7 +127,7 @@ kubectl get pods -n <namespace> -l app=<app-name>
 
 ## 6. Related Skills
 
-- `monitoring`: System monitoring and alerting setup
+- `observability`: System monitoring and alerting setup
 - `logging`: Log-based problem diagnosis
 - `incident-response`: Incident response processes
 

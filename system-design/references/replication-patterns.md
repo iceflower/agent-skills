@@ -31,7 +31,7 @@ Persist operations before applying them.
 ```java
 class WriteAheadLog {
     private final File logFile;
-    
+
     public long append(LogEntry entry) {
         long index = logFile.length();
         logFile.seek(index);
@@ -39,7 +39,7 @@ class WriteAheadLog {
         logFile.fsync(); // Durability
         return index;
     }
-    
+
     public List<LogEntry> readAll() {
         return logFile.readLines()
             .map(LogEntry::deserialize)
@@ -85,11 +85,11 @@ Track minimum log index needed for recovery.
 ```java
 class LowWaterMark {
     private volatile long mark = 0;
-    
+
     public void updateFromSnapshot(long snapshotIndex) {
         this.mark = Math.max(this.mark, snapshotIndex);
     }
-    
+
     public boolean canDelete(long logIndex) {
         return logIndex < mark;
     }
@@ -136,11 +136,11 @@ class HeartbeatMonitor {
     private final Map<NodeId, Long> lastHeartbeat = new ConcurrentHashMap<>();
     private final long heartbeatInterval = 5000; // ms
     private final long failureThreshold = 15000; // ms
-    
+
     public void recordHeartbeat(NodeId nodeId) {
         lastHeartbeat.put(nodeId, System.currentTimeMillis());
     }
-    
+
     public Set<NodeId> detectFailedNodes() {
         long now = System.currentTimeMillis();
         return lastHeartbeat.entrySet().stream()
@@ -162,10 +162,10 @@ Require majority agreement for decisions.
 **Why?** Ensures only one decision can be made.
 
 | Cluster Size | Quorum | Tolerates Failures |
-|--------------|--------|-------------------|
-| 3            | 2      | 1                 |
-| 5            | 3      | 2                 |
-| 7            | 4      | 3                 |
+| ------------ | ------ | ------------------ |
+| 3            | 2      | 1                  |
+| 5            | 3      | 2                  |
+| 7            | 4      | 3                  |
 
 **Elastic Quorum**: Adjust quorum during partial failures.
 
@@ -203,11 +203,11 @@ Track maximum replicated log index.
 class HighWaterMark {
     private final int quorum;
     private final Map<Integer, Long> replicationIndexes = new ConcurrentHashMap<>();
-    
+
     public void updateReplicaIndex(int replicaId, long index) {
         replicationIndexes.put(replicaId, index);
     }
-    
+
     public long computeHighWaterMark() {
         return replicationIndexes.values().stream()
             .sorted(Comparator.reverseOrder())
@@ -229,7 +229,7 @@ Distributed consensus algorithm.
 
 - **Proposer**: Proposes values
 - **Acceptor**: Votes on proposals
-- **Learner**: Lears decided values
+- **Learner**: Learns decided values
 
 **Phases**:
 
@@ -288,7 +288,7 @@ Process requests sequentially per connection.
 class SingleSocketChannel {
     private final Socket socket;
     private final Object lock = new Object();
-    
+
     public Response sendRequest(Request request) {
         synchronized (lock) {
             socket.write(request.serialize());
@@ -325,19 +325,19 @@ Handle duplicate requests safely.
 ```java
 class IdempotentReceiver {
     private final Map<RequestId, Response> processedRequests = new ConcurrentHashMap<>();
-    
+
     public Response handleRequest(Request request) {
         // Check if already processed
         if (processedRequests.containsKey(request.getId())) {
             return processedRequests.get(request.getId());
         }
-        
+
         // Process request
         Response response = processRequest(request);
-        
+
         // Cache response
         processedRequests.put(request.getId(), response);
-        
+
         return response;
     }
 }

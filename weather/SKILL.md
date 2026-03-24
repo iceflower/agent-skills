@@ -204,7 +204,7 @@ For precise astronomical data:
 
 ## 11. Best Practices
 
-### Query Strategy
+### Best Practices Query Strategy
 
 1. For current weather: `scripts/weather.py now`
 2. For hourly forecast: `scripts/weather.py hourly` with `--day` parameter

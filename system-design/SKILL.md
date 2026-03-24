@@ -6,20 +6,24 @@ description: >-
   Covers CAP theorem, eventual consistency, sharding strategies, replication factor,
   read replica configuration, and system stability patterns (circuit breaker,
   bulkhead, backpressure).
+  Includes distributed systems patterns: data replication, partitioning, consensus,
+  distributed time (Lamport clock, hybrid clock), cluster management (lease, gossip,
+  state watch), and network communication patterns.
   Use when designing scalable system architectures, evaluating consistency vs
-  availability trade-offs, or planning data partitioning and replication strategies.
+  availability trade-offs, planning data partitioning and replication strategies,
+  or implementing distributed systems patterns.
 license: MIT
 metadata:
   author: iceflower
-  version: "1.0"
+  version: "2.0"
   last-reviewed: "2026-03"
 ---
 
-# System Design Interview Patterns
+# System Design Patterns
 
-Large-scale system design principles and patterns. Use when designing scalable architectures, preparing for system design interviews, or evaluating system architecture.
+Large-scale system design principles and distributed systems patterns. Use when designing scalable architectures, preparing for system design interviews, evaluating system architecture, or implementing distributed systems.
 
-> **Note**: This document synthesizes system design concepts from various sources including industry best practices, technical blogs, and community knowledge.
+> **Note**: This document synthesizes system design concepts from various sources including industry best practices, technical blogs, community knowledge, and "Patterns of Distributed Systems" by Unmesh Joshi.
 
 ## Design Discussion Framework
 
@@ -54,7 +58,7 @@ When approaching a system design problem:
 ### Vertical vs Horizontal Scaling
 
 | Aspect     | Vertical (Scale Up)   | Horizontal (Scale Out)  |
-|------------|-----------------------|-------------------------|
+| ---------- | --------------------- | ----------------------- |
 | Approach   | Bigger server         | More servers            |
 | Limit      | Hardware max          | Theoretically unlimited |
 | Cost       | Expensive at high end | Linear growth           |
@@ -97,7 +101,7 @@ Distribute traffic across servers.
 ### RDBMS vs NoSQL
 
 | Feature  | RDBMS           | NoSQL                     |
-|----------|-----------------|---------------------------|
+| -------- | --------------- | ------------------------- |
 | Schema   | Fixed           | Flexible                  |
 | Scaling  | Vertical        | Horizontal                |
 | ACID     | Full            | Varies                    |
@@ -113,7 +117,7 @@ Distribute traffic across servers.
 ### Cache Eviction Policies
 
 | Policy | Description           | Use Case             |
-|--------|-----------------------|----------------------|
+| ------ | --------------------- | -------------------- |
 | LRU    | Least Recently Used   | General purpose      |
 | LFU    | Least Frequently Used | Popular items matter |
 | FIFO   | First In First Out    | Simple needs         |
@@ -129,7 +133,7 @@ Distribute traffic across servers.
 
 ---
 
-## 7. Message Queue
+## 4. Message Queue
 
 Decouple components with async messaging.
 
@@ -159,24 +163,107 @@ Producer                 Queue                   Consumer
 
 ---
 
-## 8. System Design Components
+## 5. Distributed Systems Core Challenges
 
-### Latency Reference Numbers
+| Challenge       | Description                            |
+| --------------- | -------------------------------------- |
+| Network Latency | Communication between nodes takes time |
+| Partial Failure | Some nodes fail while others continue  |
+| Clock Drift     | No synchronized clock across nodes     |
+| Consistency     | Data may differ across replicas        |
+| Concurrency     | Multiple operations on same data       |
+
+---
+
+## 6. Distributed Systems Patterns Overview
+
+30 patterns organized in 5 categories. See referenced files for detailed descriptions and code examples.
+
+### Replication Patterns (16 patterns)
+
+> See [references/replication-patterns.md](references/replication-patterns.md) for full details.
+
+| #  | Pattern              | Purpose                                   |
+| -- | -------------------- | ----------------------------------------- |
+| 1  | Write-Ahead Log      | Persist operations before applying        |
+| 2  | Segmented Log        | Split log into manageable segments        |
+| 3  | Low-Water Mark       | Track minimum log index for recovery      |
+| 4  | Leader-Follower      | Single coordinator manages cluster        |
+| 5  | Heartbeat            | Detect node failures                      |
+| 6  | Quorum               | Require majority agreement                |
+| 7  | Generation Clock     | Track leadership epochs                   |
+| 8  | High-Water Mark      | Track max replicated log index            |
+| 9  | Paxos                | Distributed consensus                     |
+| 10 | Replicated Log       | Consensus-based log replication (Raft)    |
+| 11 | Single-Socket Channel| Sequential request processing             |
+| 12 | Request Queue        | Concurrent requests with ordering         |
+| 13 | Idempotent Receiver  | Handle duplicate requests safely          |
+| 14 | Follower Read        | Serve reads from followers                |
+| 15 | Versioned Value      | Store multiple versions per key           |
+| 16 | Version Vector       | Track causality across replicas           |
+
+### Partition Patterns (3 patterns)
+
+> See [references/partition-patterns.md](references/partition-patterns.md) for full details.
+
+| #  | Pattern            | Purpose                              |
+| -- | ------------------ | ------------------------------------ |
+| 17 | Fixed Partitions   | Pre-create fixed number of partitions|
+| 18 | Key-Range Partition| Partition by key ranges              |
+| 19 | Two-Phase Commit   | Atomic commit across partitions      |
+
+### Time Patterns (3 patterns)
+
+> See [references/time-and-cluster.md](references/time-and-cluster.md) for full details.
+
+| #  | Pattern          | Purpose                            |
+| -- | ---------------- | ---------------------------------- |
+| 20 | Lamport Clock    | Logical timestamps for ordering    |
+| 21 | Hybrid Clock     | Combine physical and logical clocks|
+| 22 | Clock Bound Wait | Handle clock uncertainty           |
+
+### Cluster Management Patterns (5 patterns)
+
+> See [references/time-and-cluster.md](references/time-and-cluster.md) for full details.
+
+| #  | Pattern              | Purpose                               |
+| -- | -------------------- | ------------------------------------- |
+| 23 | Consistency Core     | Centralized metadata management       |
+| 24 | Lease                | Time-based exclusive access           |
+| 25 | State Watch          | React to state changes in cluster     |
+| 26 | Gossip Dissemination | Spread info via random peer comm      |
+| 27 | Emergent Leader      | Decentralized leader election         |
+
+### Network Communication Patterns (3 patterns)
+
+> See [references/network-patterns.md](references/network-patterns.md) for full details.
+
+| #  | Pattern           | Purpose                                  |
+| -- | ----------------- | ---------------------------------------- |
+| 28 | Single-Socket Ch. | Maintain single connection for ordering  |
+| 29 | Batched Requests  | Send multiple requests in single message |
+| 30 | Request Pipeline  | Send requests without waiting responses  |
+
+---
+
+## 7. Latency Reference Numbers
 
 > Source: Based on "Numbers Every Programmer Should Know" by Jeff Dean (Google). Actual values vary by hardware.
 
-| Operation                 | Approximate Latency |
-|---------------------------|---------------------|
-| L1 cache reference        | ~1 ns               |
-| L2 cache reference        | ~4 ns               |
-| Mutex lock/unlock         | ~17 ns              |
-| Main memory reference     | ~100 ns             |
-| SSD random read           | ~16 μs              |
-| Read 1MB from SSD         | ~50 μs              |
-| Network round-trip same DC| ~500 μs             |
-| Disk seek                 | ~3 ms               |
+| Operation                  | Approximate Latency |
+| -------------------------- | ------------------- |
+| L1 cache reference         | ~1 ns               |
+| L2 cache reference         | ~4 ns               |
+| Mutex lock/unlock          | ~17 ns              |
+| Main memory reference      | ~100 ns             |
+| SSD random read            | ~16 us              |
+| Read 1MB from SSD          | ~50 us              |
+| Network round-trip same DC | ~500 us             |
+| Disk seek                  | ~3 ms               |
 
-### Capacity Estimation Example
+---
+
+## 8. Capacity Estimation Example
 
 ```text
 Example calculation (adjust numbers for your use case):
@@ -194,20 +281,27 @@ With replication (3x): 750GB/day
 
 ---
 
----
-
 ## 9. System Design Patterns Summary
 
-| Problem                  | Pattern                               |
-|--------------------------|---------------------------------------|
-| Single server bottleneck | Load balancer + horizontal scaling    |
-| Database overload        | Caching, read replicas                |
-| Large dataset            | Sharding, partitioning                |
-| Geographic latency       | CDN, multi-DC                         |
-| Session management       | External session store                |
-| Service coupling         | Message queue                         |
-| Hot partitions           | Consistent hashing with virtual nodes |
-| Traffic spikes           | Rate limiting, circuit breaker        |
+| Problem                      | Pattern                               |
+| ---------------------------- | ------------------------------------- |
+| Single server bottleneck     | Load balancer + horizontal scaling    |
+| Database overload            | Caching, read replicas                |
+| Large dataset                | Sharding, partitioning                |
+| Geographic latency           | CDN, multi-DC                         |
+| Session management           | External session store                |
+| Service coupling             | Message queue                         |
+| Hot partitions               | Consistent hashing with virtual nodes |
+| Traffic spikes               | Rate limiting, circuit breaker        |
+| Data persistence             | WAL, Segmented Log                    |
+| High availability            | Leader-Follower, Quorum               |
+| Failure detection            | Heartbeat, Generation Clock           |
+| Consistency                  | Paxos, Raft (Replicated Log)          |
+| Read scalability             | Follower Read, Versioned Value        |
+| Data partitioning            | Fixed Partitions, Key-Range           |
+| Cross-partition transactions | 2PC                                   |
+| Time ordering                | Lamport Clock, Hybrid Clock           |
+| Cluster coordination         | Consistency Core, Lease, Gossip       |
 
 ---
 
@@ -246,18 +340,18 @@ With replication (3x): 750GB/day
 ## Related Skills
 
 - **api-design**: REST API design principles
-- **distributed-systems**: Distributed patterns
-- **messaging**: Message broker patterns
-- **caching**: Cache implementation patterns
+- **messaging**: Message broker patterns (Kafka, RabbitMQ)
+- **caching**: Cache implementation patterns, distributed cache patterns
+- **spring-framework**: Reactive distributed clients (WebFlux)
+- **k8s-workflow**: Container orchestration patterns
 
 ---
 
 ## References
 
 - Designing Data-Intensive Applications by Martin Kleppmann
+- Patterns of Distributed Systems by Unmesh Joshi
 - Building Secure and Reliable Systems by Google
-- Various technical blogs and community resources
-
-## Additional References
-
+- Raft paper by Diego Ongaro and John Ousterhout
+- Various technical blogs, distributed systems literature, and community resources
 - For system stability patterns, see [references/stability-patterns.md](references/stability-patterns.md)

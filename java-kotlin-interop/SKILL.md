@@ -47,15 +47,15 @@ val maybeUser: User? = userService.findByEmail(email)  // Nullable
 
 ### Annotation Priority (Kotlin Recognition Order)
 
-| Priority | Annotation Source        | Package                              |
-| -------- | ------------------------ | ------------------------------------ |
-| 1        | JSpecify                 | `org.jspecify.annotations`           |
-| 2        | JetBrains               | `org.jetbrains.annotations`          |
-| 3        | Android                  | `androidx.annotation`                |
-| 4        | JSR-305                  | `javax.annotation`                   |
-| 5        | FindBugs                 | `edu.umd.cs.findbugs.annotations`    |
-| 6        | Eclipse                  | `org.eclipse.jdt.annotation`         |
-| 7        | Lombok                   | `lombok`                             |
+| Priority | Annotation Source | Package                            |
+| -------- | ----------------- | ---------------------------------- |
+| 1        | JSpecify          | `org.jspecify.annotations`         |
+| 2        | JetBrains         | `org.jetbrains.annotations`        |
+| 3        | Android           | `androidx.annotation`              |
+| 4        | JSR-305           | `javax.annotation`                 |
+| 5        | FindBugs          | `edu.umd.cs.findbugs.annotations`  |
+| 6        | Eclipse           | `org.eclipse.jdt.annotation`       |
+| 7        | Lombok            | `lombok`                           |
 
 ### Framework JSpecify Integration
 
@@ -72,6 +72,7 @@ val maybeUser: User? = userService.findByEmail(email)  // Nullable
 ## 2. Calling Kotlin from Java
 
 > **See [references/calling-kotlin-from-java.md](references/calling-kotlin-from-java.md) for detailed patterns including:**
+>
 > - Companion object members (@JvmStatic, @JvmField)
 > - Default parameters (@JvmOverloads)
 > - Checked exceptions (@Throws)
@@ -84,12 +85,12 @@ val maybeUser: User? = userService.findByEmail(email)  // Nullable
 
 ### Read-Only vs Mutable Mapping
 
-| Java Type        | Kotlin Read-Only       | Kotlin Mutable             |
-| ---------------- | ---------------------- | -------------------------- |
-| `java.util.List` | `kotlin.List`          | `kotlin.MutableList`       |
-| `java.util.Set`  | `kotlin.Set`           | `kotlin.MutableSet`        |
-| `java.util.Map`  | `kotlin.Map`           | `kotlin.MutableMap`        |
-| `java.util.Collection` | `kotlin.Collection` | `kotlin.MutableCollection` |
+| Java Type              | Kotlin Read-Only       | Kotlin Mutable             |
+| ---------------------- | ---------------------- | -------------------------- |
+| `java.util.List`       | `kotlin.List`          | `kotlin.MutableList`       |
+| `java.util.Set`        | `kotlin.Set`           | `kotlin.MutableSet`        |
+| `java.util.Map`        | `kotlin.Map`           | `kotlin.MutableMap`        |
+| `java.util.Collection` | `kotlin.Collection`    | `kotlin.MutableCollection` |
 
 ### Common Pitfalls
 
@@ -110,7 +111,7 @@ fun processJavaList(list: List<String>) {
 }
 ```
 
-### Rules
+### Collection Interop Rules
 
 - Return `List` (read-only) from Kotlin APIs — Java consumers cannot mutate accidentally
 - Accept `MutableList` in Kotlin parameters when Java caller needs to mutate
@@ -160,7 +161,7 @@ fun <T> parseJson(json: String, type: Class<T>): T {
 }
 ```
 
-### Rules
+### Generics Rules
 
 - Provide non-reified overload with `Class<T>` parameter for Java consumers
 - Use `@JvmWildcard` / `@JvmSuppressWildcards` to control Java signature when needed
@@ -199,7 +200,7 @@ fun userFlux(): Flux<User> = userStream().asFlux()
 fun userPublisher(): Publisher<User> = userStream().asPublisher()
 ```
 
-### Rules
+### Coroutines Interop Rules
 
 - Never expose raw `suspend fun` as public API consumed by Java — wrap in `CompletableFuture`
 - Use `kotlinx-coroutines-jdk8` for `future {}` builder
@@ -235,7 +236,7 @@ fun interface Validator<T> {
 Validator<String> notEmpty = s -> !s.isEmpty();
 ```
 
-### Rules
+### SAM Conversion Rules
 
 - Use `fun interface` in Kotlin when Java consumers should use lambdas
 - Regular Kotlin interfaces do NOT support SAM conversion from Java — must use `fun interface`
@@ -265,7 +266,7 @@ internal fun processInternal() { ... }
 // This is intentional — discourages accidental use from Java
 ```
 
-### Rules
+### Name Conflict Rules
 
 - Avoid using Kotlin keywords (`is`, `when`, `object`, `in`, `fun`, `val`, `var`) as Java identifiers in interop boundaries
 - `internal` Kotlin members are accessible from Java but name-mangled — do not depend on them from Java
@@ -276,6 +277,7 @@ internal fun processInternal() { ... }
 ## 8. Framework-Specific Interop Patterns
 
 > **See `spring-framework` skill — [references/kotlin-interop.md](../spring-framework/references/kotlin-interop.md) for:**
+>
 > - Spring `@Configuration` with Kotlin (allopen plugin)
 > - JPA entities in mixed Java/Kotlin projects
 > - Extension function usage from Java in Spring context
@@ -325,15 +327,15 @@ kotlin {
 
 ### Gradual Java → Kotlin Migration
 
-| Step | Action                                  | Risk Level |
-| ---- | --------------------------------------- | ---------- |
-| 1    | Add Kotlin plugin to build              | Low        |
-| 2    | Write new test code in Kotlin           | Low        |
-| 3    | Write new utility/extension classes     | Low        |
-| 4    | Convert data classes (DTOs, responses)  | Low        |
-| 5    | Convert service layer classes           | Medium     |
-| 6    | Convert controller layer                | Medium     |
-| 7    | Convert entity classes (requires plugins)| Medium    |
+| Step | Action                                    | Risk Level |
+| ---- | ----------------------------------------- | ---------- |
+| 1    | Add Kotlin plugin to build                | Low        |
+| 2    | Write new test code in Kotlin             | Low        |
+| 3    | Write new utility/extension classes       | Low        |
+| 4    | Convert data classes (DTOs, responses)    | Low        |
+| 5    | Convert service layer classes             | Medium     |
+| 6    | Convert controller layer                  | Medium     |
+| 7    | Convert entity classes (requires plugins) | Medium     |
 
 ### Migration Rules
 

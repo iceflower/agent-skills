@@ -132,7 +132,7 @@ Modular, self-contained tool installers distributed via OCI registries.
 | `github-cli` | GitHub CLI (gh) |
 | `common-utils` | zsh, git, curl, etc. |
 
-### Rules
+### Feature Rules
 
 - Prefer Features over manual installation in Dockerfile
 - Pin Feature versions (`feature:1`, not `feature:latest`) — browse available versions at [containers.dev/features](https://containers.dev/features)
@@ -181,7 +181,7 @@ volumes:
   postgres-data:
 ```
 
-### Rules
+### Compose Rules
 
 - Use `command: sleep infinity` on the dev service to keep it running
 - Use `:cached` volume flag on macOS for performance

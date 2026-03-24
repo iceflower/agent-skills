@@ -35,7 +35,7 @@ metadata:
 
 > See [references/aop-patterns.md](references/aop-patterns.md) for detailed patterns including aspect definition, pointcut expressions, and proxy mechanism.
 
-### Key Rules
+### AOP Key Rules
 
 - Use `@Around` for timing, logging, retry — use `@Before`/`@After` for simpler cross-cutting
 - Never put business logic in aspects — only cross-cutting concerns
@@ -48,7 +48,7 @@ metadata:
 
 > See [references/transaction-management.md](references/transaction-management.md) for detailed patterns including propagation levels, rollback rules, and pitfall examples.
 
-### Key Rules
+### Transaction Key Rules
 
 - Use `@Transactional(readOnly = true)` for read operations
 - Default rollback: unchecked exceptions only — use `rollbackFor` for checked exceptions
@@ -62,7 +62,7 @@ metadata:
 
 > See [references/event-system.md](references/event-system.md) for detailed patterns including publishing, consuming, and listener types.
 
-### Key Rules
+### Event Key Rules
 
 - Use `@TransactionalEventListener(AFTER_COMMIT)` for operations that must not execute if transaction rolls back
 - `@TransactionalEventListener` events are NOT delivered if no transaction is active
@@ -106,7 +106,7 @@ public class CacheWarmer {
 7. Bean destroyed
 ```
 
-### Rules
+### Lifecycle Rules
 
 - Prefer `@PostConstruct` over `InitializingBean.afterPropertiesSet()`
 - `@PostConstruct` runs once — do not put retry logic here
@@ -118,6 +118,7 @@ public class CacheWarmer {
 ## 6. Spring WebMVC
 
 > **See [references/webmvc.md](references/webmvc.md) for detailed patterns including:**
+>
 > - REST Controller patterns (CRUD, pagination, binding)
 > - Exception handling (`@RestControllerAdvice`)
 > - Filter vs Interceptor usage
@@ -138,6 +139,7 @@ public class CacheWarmer {
 ## 7. Spring WebFlux
 
 > **See [references/webflux.md](references/webflux.md) for detailed patterns including:**
+>
 > - Kotlin Coroutines integration (suspend functions, Flow)
 > - R2DBC database access
 > - WebClient configuration and usage
@@ -329,6 +331,7 @@ spring:
 ## 11. @ConfigurationProperties
 
 > **See [references/configuration-properties.md](references/configuration-properties.md) for detailed patterns including:**
+>
 > - Kotlin data class and Java record patterns
 > - Environment variable binding and secret management
 > - HikariCP connection pool configuration
@@ -339,6 +342,7 @@ spring:
 ## 12. JPA and Data Access
 
 > **See [references/jpa-patterns.md](references/jpa-patterns.md) for detailed patterns including:**
+>
 > - N+1 problem prevention (fetch join, EntityGraph)
 > - JPA entity conventions and design rules
 > - Spring Data repository patterns
@@ -399,7 +403,7 @@ These references provide Spring Boot-specific implementation for cross-cutting c
 - **Caching** (Caffeine, Redis, `@Cacheable`): [references/caching.md](references/caching.md) — general principles in `caching` skill
 - **Error Handling** (`@ControllerAdvice`, ErrorCode enum): [references/error-handling.md](references/error-handling.md) — general principles in `error-handling` skill
 - **HTTP Client** (RestClient, Spring Retry, Resilience4j): [references/http-client.md](references/http-client.md) — general principles in `http-client` skill
-- **Monitoring** (Actuator, Micrometer, distributed tracing): [references/monitoring.md](references/monitoring.md) — general principles in `monitoring` skill
+- **Monitoring** (Actuator, Micrometer, distributed tracing): [references/monitoring.md](references/monitoring.md) — general principles in `observability` skill
 - **Security** (SecurityFilterChain, Bean Validation): [references/security.md](references/security.md) — general principles in `security` skill
 - **Troubleshooting** (startup failures, JVM OOM, HikariCP): [references/troubleshooting.md](references/troubleshooting.md) — general principles in `troubleshooting` skill
 

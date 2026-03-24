@@ -1,15 +1,21 @@
-name: Lint SKILL.md Frontmatter
+name: Lint Skills
 
 on:
   push:
     paths:
       - "**/SKILL.md"
+      - "**/references/**"
+      - "scripts/**"
+      - "index/**"
   pull_request:
     paths:
       - "**/SKILL.md"
+      - "**/references/**"
+      - "scripts/**"
+      - "index/**"
 
 jobs:
-  lint-frontmatter:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +30,16 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
-      - name: Run frontmatter lint
+      - name: Lint frontmatter
         run: python scripts/lint_frontmatter.py .
+
+      - name: Check reference links
+        run: python scripts/check_references.py .
+
+      - name: Check index completeness
+        run: python scripts/check_index.py .
+
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: "**/SKILL.md"

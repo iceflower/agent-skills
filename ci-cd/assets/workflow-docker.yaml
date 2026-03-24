@@ -7,7 +7,8 @@ on:
 
 permissions:
   contents: read
-  id-token: write
+  # Uncomment if using OIDC authentication (e.g., aws-actions/configure-aws-credentials)
+  # id-token: write
 
 env:
   REGISTRY: ${{ vars.REGISTRY }}

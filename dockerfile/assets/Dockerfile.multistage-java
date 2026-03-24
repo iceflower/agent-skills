@@ -8,6 +8,8 @@ FROM gradle:8-jdk21 AS build
 WORKDIR /app
 
 # Copy dependency files first for layer caching
+# NOTE: If your project uses buildSrc, gradle.properties, or multi-module build files,
+# copy them here as well to avoid breaking the dependency cache layer.
 COPY build.gradle.kts settings.gradle.kts ./
 COPY gradle ./gradle
 
@@ -39,7 +41,7 @@ USER appuser
 EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-    CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+    CMD wget -qO /dev/null http://localhost:8080/actuator/health || exit 1
 
 ENTRYPOINT ["java", \
     "-XX:MaxRAMPercentage=75.0", \

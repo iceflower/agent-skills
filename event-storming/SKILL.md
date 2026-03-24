@@ -175,7 +175,7 @@ For the detailed facilitation guide, see
 
 - Start implementation using identified Aggregates and Events
 - Use Example Mapping for deeper business rule analysis
-- Define Bounded Context relationships with Context Mapping
+- Draw a Context Map to define relationships between Bounded Contexts (Partnership, Customer-Supplier, Conformist, ACL, etc.)
 - For DDD tactical patterns, see the [ddd skill](../ddd/SKILL.md)
 
 ## 6. Remote Event Storming
@@ -202,6 +202,7 @@ For the detailed facilitation guide, see
 
 | Anti-Pattern | Problem | Fix |
 | --- | --- | --- |
+| Facilitator talks more than participants | Suppressed collaboration | Ask questions, then stay silent |
 | No domain experts | Incomplete domain understanding | Always include business stakeholders |
 | Premature detail | Lost in data attributes and validation | Stay at process level first |
 | Events only | Superficial model without behavior | Add Commands, Policies, Aggregates |

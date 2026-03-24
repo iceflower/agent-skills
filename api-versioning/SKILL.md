@@ -66,6 +66,7 @@ metadata:
 | Change error codes | Breaks error handling | Version error responses |
 | Change sort order | Breaks position-dependent clients | Document ordering contract |
 | Add required header | Breaks existing integrations | Make optional with fallback first |
+| Add required field to request body | Existing clients get 400 errors | Make optional with default, or new version |
 
 ### Backward Compatible Changes (safe without version bump)
 
@@ -179,7 +180,9 @@ Client-side defensive design:
 For detailed implementation examples, see
 [references/implementation-patterns.md](references/implementation-patterns.md).
 
-### Spring Framework 7 / Spring Boot 4
+### Spring Framework 7 / Spring Boot 4+
+
+> Note: Requires Spring Boot 4.0+ (Spring Framework 7). Not available in Boot 3.x.
 
 ```java
 @Configuration

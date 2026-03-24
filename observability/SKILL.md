@@ -236,7 +236,7 @@ for cross-cluster aggregation and routing.
 | Processor | Purpose |
 | --- | --- |
 | `batch` | Buffer and send in batches (reduces network overhead) |
-| `memory_limiter` | Prevent OOM (always configure) |
+| `memory_limiter` | Prevent OOM (always configure — set `limit_mib` to ~80% of container memory) |
 | `attributes` | Add, update, delete, hash attributes |
 | `filter` | Drop unwanted telemetry |
 | `tail_sampling` | Sample based on complete trace (Collector only) |
@@ -255,7 +255,7 @@ Use standard attribute names for interoperability across tools and dashboards.
 | `url.scheme` | `https` |
 | `url.path` | `/api/users` |
 | `server.address` | `api.example.com` |
-| `http.route` | `/api/users/{id}` |
+| `http.route` | `/api/users/{id}` (auto-set by Spring `@RequestMapping`, Express route patterns) |
 
 ### Database
 
@@ -340,7 +340,7 @@ OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:9090/api/v1/otlp/v1/metrics
 | Anti-Pattern | Problem | Fix |
 | --- | --- | --- |
 | No sampling in production | Storage explosion | Use head or tail sampling |
-| High-cardinality attributes | Metric/index explosion | Limit attribute values, use Views |
+| High-cardinality attributes (e.g., user ID, request ID in metrics) | Metric/index explosion (traces can tolerate high cardinality; metrics cannot) | Limit metric attribute values, use Views to filter |
 | Sensitive data in spans | Security/compliance risk | Redact PII with attribute processor |
 | Skipping Collector | No buffering, sampling, or routing | Deploy Collector in Agent mode |
 | Ignoring Semantic Conventions | Inconsistent dashboards/alerts | Follow OTel standard names |

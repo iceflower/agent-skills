@@ -10,11 +10,7 @@ metadata:
   author: iceflower
   version: "1.0"
   last-reviewed: "2026-03"
-compatibility:
-  - OpenCode
-  - Claude Code
-  - Codex
-  - Antigravity
+compatibility: May require vault CLI or cloud provider CLI
 ---
 
 # Secrets Management Rules

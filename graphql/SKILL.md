@@ -185,33 +185,9 @@ Query.user(id) → UserResolver
 - One resolver class per type or domain area
 - Field resolvers load data lazily — only when requested
 
-### N+1 Problem and DataLoader
+> See [references/advanced-patterns.md](references/advanced-patterns.md) for N+1 problem explanation, DataLoader implementation example, and mutation error patterns.
 
-The N+1 problem occurs when fetching a list of entities and then
-individually fetching related data for each entity.
-
-```text
-# N+1 problem example:
-Query: { users { orders { id } } }
-1 query: SELECT * FROM users           → N users
-N queries: SELECT * FROM orders WHERE user_id = ?  (per user)
-```
-
-**Solution — DataLoader (batch loading)**:
-
-```java
-// DataLoader batches individual load calls into a single batch request
-@DgsDataLoader(name = "orders")
-public class OrderDataLoader implements BatchLoader<String, List<Order>> {
-    @Override
-    public CompletionStage<List<List<Order>>> load(List<String> userIds) {
-        // Single query: SELECT * FROM orders WHERE user_id IN (...)
-        return CompletableFuture.supplyAsync(
-            () -> orderService.findByUserIds(userIds)
-        );
-    }
-}
-```
+### DataLoader Rules
 
 - Always use DataLoader for field resolvers that load related entities
 - DataLoader batches requests within a single request context
@@ -311,33 +287,7 @@ type UserPage {
 - Return partial data when possible — GraphQL supports partial responses
 - Never expose internal details (stack traces, SQL) in error messages
 
-### Mutation Error Pattern (Union-based)
-
-```graphql
-type Mutation {
-  createUser(input: CreateUserInput!): CreateUserPayload!
-}
-
-union CreateUserPayload = CreateUserSuccess | ValidationError | ConflictError
-
-type CreateUserSuccess {
-  user: User!
-}
-
-type ValidationError {
-  field: String!
-  message: String!
-}
-
-type ConflictError {
-  message: String!
-  existingId: ID!
-}
-```
-
-- Use union return types for mutations to provide typed error responses
-- Each error type carries specific contextual information
-- Clients get type-safe error handling via `__typename`
+- Use union return types for mutations to provide typed error responses (see [references/advanced-patterns.md](references/advanced-patterns.md) for union-based mutation error pattern examples)
 
 ---
 
@@ -373,22 +323,7 @@ type ConflictError {
 - Set a maximum total complexity per query (e.g., 1000)
 - Return the complexity cost in response extensions for transparency
 
-### Configuration Example (DGS)
-
-```java
-@Configuration
-public class GraphQLConfig {
-    @Bean
-    public InstrumentationProvider instrumentation() {
-        return new InstrumentationProvider() {
-            @Override
-            public Instrumentation provide() {
-                return new MaxQueryDepthInstrumentation(10);
-            }
-        };
-    }
-}
-```
+> For DGS framework configuration example, see [references/advanced-patterns.md](references/advanced-patterns.md).
 
 ---
 
@@ -462,28 +397,7 @@ type OrderStatusEvent {
 - Microservice architecture where each service owns its domain types
 - Need to compose a unified schema from independent subgraphs
 
-### Subgraph Schema
-
-```graphql
-# User subgraph
-type User @key(fields: "id") {
-  id: ID!
-  name: String!
-  email: String!
-}
-
-# Order subgraph
-type Order @key(fields: "id") {
-  id: ID!
-  items: [OrderItem!]!
-  user: User!  # Reference to User from another subgraph
-}
-
-extend type User @key(fields: "id") {
-  id: ID! @external
-  orders: [Order!]!  # Extend User with orders from this subgraph
-}
-```
+> For subgraph schema examples, see [references/advanced-patterns.md](references/advanced-patterns.md).
 
 ### Federation Guidelines
 

@@ -4,7 +4,7 @@
 
 ## 개요
 
-이 저장소는 Java, Kotlin, Spring, NestJS, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **60개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
+이 저장소는 Java, Kotlin, Spring, NestJS, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **61개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
 
 ## 호환 도구
 

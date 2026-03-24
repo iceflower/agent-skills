@@ -19,9 +19,8 @@ from pathlib import Path
 
 import yaml
 
-REQUIRED_TOP_LEVEL = {"name", "description", "license", "metadata", "compatibility"}
+REQUIRED_TOP_LEVEL = {"name", "description", "license", "metadata"}
 REQUIRED_METADATA = {"author", "version", "last-reviewed"}
-REQUIRED_COMPATIBILITY = {"OpenCode", "Claude Code", "Codex", "Antigravity"}
 
 
 def parse_frontmatter(path: Path) -> dict | None:
@@ -71,19 +70,10 @@ def validate(path: Path) -> list[str]:
                 f"missing metadata fields: {', '.join(sorted(missing_meta))}"
             )
 
-    # compatibility required values
+    # compatibility (optional, string per Agent Skills Specification)
     compat = fm.get("compatibility")
-    if compat is None:
-        pass  # already reported above
-    elif not isinstance(compat, list):
-        errors.append("'compatibility' must be a list")
-    else:
-        compat_set = set(compat)
-        missing_compat = REQUIRED_COMPATIBILITY - compat_set
-        if missing_compat:
-            errors.append(
-                f"missing compatibility values: {', '.join(sorted(missing_compat))}"
-            )
+    if compat is not None and not isinstance(compat, str):
+        errors.append("'compatibility' must be a string (not a list)")
 
     return errors
 

@@ -67,7 +67,7 @@ const Dashboard = React.lazy(() => import("./Dashboard"));
 | Responsive images (`srcset` + `sizes`) | Serve viewport-appropriate size |
 | Lazy loading (`loading="lazy"`) | Defer offscreen images |
 | Explicit dimensions (`width`/`height`) | Prevent CLS |
-| `fetchpriority="high"` on LCP image | Prioritize critical image |
+| `fetchpriority="high"` on LCP image | Prioritize critical image (limit to 1-2 images to avoid priority contention) |
 | CDN image transformation | On-demand resize and format conversion |
 
 ```html
@@ -147,7 +147,7 @@ users = User.query.options(joinedload(User.orders)).all()  # 1 query
 ### Connection Pooling
 
 - Reuse database connections instead of creating per request
-- Pool size guideline: `connections = (CPU cores × 2) + effective_spindle_count`
+- Pool size guideline (HikariCP/PostgreSQL): `connections = (CPU cores × 2) + effective_spindle_count` — adjust for other databases
 - Set idle timeout and max lifetime
 - Tools: HikariCP (Java), `pg-pool` (Node.js), PgBouncer (PostgreSQL)
 

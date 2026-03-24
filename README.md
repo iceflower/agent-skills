@@ -4,7 +4,7 @@
 
 ## 개요
 
-이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **53개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
+이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **61개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
 
 ## 호환 도구
 
@@ -76,6 +76,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [gitops-argocd](./gitops-argocd/) | GitOps 워크플로우 (Argo CD, ApplicationSet, 동기화 전략, 프로그레시브 딜리버리) |
 | [dockerfile](./dockerfile/) | Dockerfile 작성 규칙 (멀티스테이지, JVM 패턴, BuildKit, 멀티아키텍처) |
 | [ci-cd](./ci-cd/) | GitHub Actions 기반 CI/CD 파이프라인 패턴 |
+| [devcontainer](./devcontainer/) | Dev Containers 설정 (devcontainer.json, Features, Docker Compose, Codespaces) |
 | [feature-flag](./feature-flag/) | Feature Flag / Progressive Delivery (OpenFeature, Toggle 분류, Canary + Feature Flag) |
 
 ### 아키텍처 & 설계
@@ -85,6 +86,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [clean-architecture](./clean-architecture/) | 클린 아키텍처 / 헥사고날 아키텍처 (포트 & 어댑터) |
 | [microservices](./microservices/) | 마이크로서비스 (서비스 분해, Saga, CQRS, API Gateway, Circuit Breaker) |
 | [ddd](./ddd/) | 도메인 주도 설계 (엔티티, 애그리거트, 바운디드 컨텍스트) |
+| [event-storming](./event-storming/) | 이벤트 스토밍 워크샵 (스티커 규칙, 퍼실리테이션, DDD 전환) |
 | [object-oriented-design](./object-oriented-design/) | 객체지향 설계 원칙 (SOLID, 합성 우선) |
 | [system-design](./system-design/) | 대규모 시스템 설계 + 안정성 패턴 (Circuit Breaker, Bulkhead) |
 | [distributed-systems](./distributed-systems/) | 분산 시스템 (복제, 파티셔닝, 합의 알고리즘) |
@@ -96,6 +98,9 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | ---- | ---- |
 | [react-convention](./react-convention/) | React/Next.js 코딩 컨벤션 (컴포넌트 패턴, Hooks, 상태 관리, 성능 최적화) |
 | [typescript-convention](./typescript-convention/) | TypeScript 타입 시스템 (타입 가드, 제네릭, 유틸리티 타입, 코딩 컨벤션) |
+| [a11y](./a11y/) | 웹 접근성 (WCAG 2.2 AA, ARIA 패턴, 키보드 접근성, axe-core 테스트) |
+| [localization](./localization/) | 다국어/i18n (ICU Message Format, react-intl/i18next, RTL 지원, Intl API) |
+| [performance-optimization](./performance-optimization/) | 성능 최적화 (Core Web Vitals, 번들 최적화, DB 튜닝, 캐싱, 성능 버짓) |
 
 ### 코드 품질 & 테스트
 
@@ -120,6 +125,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | ---- | ---- |
 | [logging](./logging/) | 로깅 표준 (로그 레벨, 구조화 로깅, 민감 데이터 마스킹) |
 | [monitoring](./monitoring/) | 옵저버빌리티 패턴 (메트릭, 트레이싱, 알림 규칙) |
+| [observability](./observability/) | OpenTelemetry 심화 (OTel SDK, OTLP, Collector, Semantic Conventions, Exemplars) |
 | [caching](./caching/) | 캐시 전략 (TTL, 무효화, Stampede 방지) |
 | [messaging](./messaging/) | 비동기 메시징 (Kafka, RabbitMQ, NATS, Pulsar) |
 | [troubleshooting](./troubleshooting/) | 트러블슈팅 가이드 (느린 API, 배포 롤백, 연결 문제) |
@@ -140,12 +146,14 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [gradle-convention](./gradle-convention/) | Gradle 빌드 컨벤션 (멀티모듈, 버전 카탈로그) |
 | [http-client](./http-client/) | 외부 API 클라이언트 (타임아웃, 재시도, Circuit Breaker) |
 | [api-design](./api-design/) | REST API 설계 원칙 (URL, 상태 코드, 버전 관리) |
+| [api-versioning](./api-versioning/) | API 버전 관리 심화 (전략 선택, Deprecation RFC, Expand-and-Contract, Gateway 라우팅) |
 | [graphql](./graphql/) | GraphQL API 설계 (스키마, Resolver, DataLoader, Federation, 보안) |
 | [grpc](./grpc/) | gRPC 서비스 간 통신 (Proto3, Streaming, Interceptor, Service Mesh 통합) |
 | [openapi-spec](./openapi-spec/) | OpenAPI 명세 작성 (스키마 설계, 코드 생성, 버전 관리) |
 | [prompt-engineering](./prompt-engineering/) | LLM 프롬프트 설계 패턴 (Zero-shot, Few-shot, CoT, 안전성 가이드) |
 | [resume-writing](./resume-writing/) | 개발자 이력서 작성 가이드 (STAR 메서드) |
 | [pdf-handling](./pdf-handling/) | PDF 파일 읽기 및 처리 규칙 |
+| [code-search](./code-search/) | 코드 탐색 전략 (ripgrep, ast-grep, git 검색, LSP, GitHub Code Search) |
 | [weather](./weather/) | 기상청/AccuWeather 기반 날씨 정보 조회 |
 | [technical-documentation](./technical-documentation/) | 기술 문서 작성 가이드 (품질 측정, 배포) |
 
@@ -154,16 +162,17 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 ```text
 <skill-name>/
 ├── SKILL.md           # 스킬 정의 (필수)
-├── README.md          # 스킬 설명
 ├── references/        # 관련 참조 문서 (선택)
 │   ├── migration.md
 │   └── ...
+├── assets/            # 템플릿, 정적 리소스 (선택)
+│   ├── template.yaml
+│   └── ...
 └── scripts/           # 검증/린트 스크립트 (선택)
-    ├── lint_chart.py
     └── ...
 ```
 
-각 `SKILL.md`는 YAML frontmatter(`name`, `description`, `license`, `metadata`, `compatibility`)와 마크다운 본문으로 구성됩니다. `references/` 디렉토리에는 관련된 세부 가이드가, `scripts/` 디렉토리에는 검증 및 린트 자동화 스크립트가 포함됩니다.
+각 `SKILL.md`는 YAML frontmatter(`name`, `description`, `license`, `metadata`)와 마크다운 본문으로 구성됩니다. 환경 요구사항이 있는 스킬은 `compatibility` 필드를 추가로 포함합니다. `references/` 디렉토리에는 관련된 세부 가이드가, `assets/` 디렉토리에는 템플릿 파일이 포함됩니다.
 
 ## 라이선스
 

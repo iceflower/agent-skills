@@ -1,17 +1,21 @@
 ---
 name: observability
 description: >-
-  Modern observability patterns centered on OpenTelemetry (OTel).
-  Covers OTel SDK architecture, OTLP protocol, distributed tracing with
-  W3C Trace Context, metrics (Counter, Histogram, Gauge, Exemplars),
-  log correlation, OTel Collector pipelines, Semantic Conventions,
-  and backend integration (Jaeger, Grafana Tempo, Loki, Prometheus).
+  Modern observability and monitoring patterns centered on OpenTelemetry (OTel).
+  Covers the three pillars (traces, metrics, logs) with context propagation,
+  OTel SDK architecture, OTLP protocol, distributed tracing with W3C Trace Context,
+  metric instrument types (Counter, Histogram, Gauge, Timer, Exemplars),
+  key metrics to monitor (application, business, infrastructure),
+  metric naming conventions, log correlation, OTel Collector pipelines,
+  Semantic Conventions, backend integration (Jaeger, Grafana Tempo, Loki, Prometheus),
+  alerting rules, and health check patterns (liveness, readiness, startup).
   Use when implementing distributed tracing, setting up OTel instrumentation,
-  configuring Collector pipelines, or integrating observability backends.
+  configuring Collector pipelines, designing alerting strategies,
+  implementing health checks, or integrating observability backends.
 license: MIT
 metadata:
   author: iceflower
-  version: "1.0"
+  version: "2.0"
   last-reviewed: "2026-03"
 ---
 
@@ -23,12 +27,12 @@ OpenTelemetry provides a unified standard for collecting telemetry data.
 
 ### Three Pillars + Context
 
-| Signal | Purpose | Example |
+| Signal | Purpose | Role in Debugging |
 | --- | --- | --- |
-| **Traces** | Request flow across services | HTTP request → DB query → cache lookup |
-| **Metrics** | Aggregated measurements | Request count, latency histogram |
-| **Logs** | Discrete events | Error messages, audit records |
-| **Context** | Correlates all signals | trace ID, span ID propagated across services |
+| **Traces** | Request flow across services | Where it went wrong (which service/span) |
+| **Metrics** | Aggregated measurements over time | Something is wrong (alert trigger) |
+| **Logs** | Discrete event records | What went wrong (error details) |
+| **Context** | Correlates all signals via trace ID, span ID | Connect all three for correlated debugging |
 
 ### Architecture
 
@@ -110,6 +114,10 @@ business-critical operations that auto-instrumentation doesn't cover.
 | Gauge | N/A | Sync | CPU temperature, memory usage |
 | Observable* | Varies | Async | Collected once per export cycle |
 
+> **Timer note**: Some frameworks (e.g., Micrometer) provide a Timer type
+> that combines duration measurement with count. In OTel, use a Histogram
+> instrument for the same purpose (e.g., `http.server.request.duration`).
+
 ### Exemplars
 
 Link metrics to traces for drill-down from aggregated data to individual requests.
@@ -127,6 +135,53 @@ Customize metric processing per instrument:
 - Override aggregation strategy (e.g., explicit bucket histogram)
 - Filter or rename attributes
 - Set aggregation temporality
+
+### Metric Naming Convention
+
+```text
+# OTel standard: dot-separated, lowercase, include unit
+http.server.request.duration
+db.client.operation.duration
+
+# Domain-specific pattern: <domain>.<entity>.<action>
+orders.created.total
+payments.processing.duration
+users.active.count
+cache.hits.total
+```
+
+Use standard units: `s` (seconds), `By` (bytes), `{request}` (count).
+
+### Key Metrics to Monitor
+
+#### Application Metrics
+
+| Metric | Alert Threshold | Severity |
+| --- | --- | --- |
+| HTTP error rate (5xx) | > 1% of requests | Critical |
+| HTTP P99 latency | > 3x baseline | Warning |
+| Heap/memory usage | > 85% | Warning |
+| GC pause time | > 500ms | Warning |
+| Thread pool active threads | > 90% capacity | Warning |
+| DB connection pool exhaustion | > 90% used | Critical |
+
+#### Business Metrics
+
+| Metric | Purpose |
+| --- | --- |
+| Orders per minute | Business throughput |
+| Payment success rate | Revenue impact |
+| User login rate | Traffic pattern |
+| API call count by endpoint | Usage analytics |
+
+#### Infrastructure Metrics
+
+| Metric | Alert Threshold |
+| --- | --- |
+| CPU usage | > 80% sustained |
+| Memory usage | > 85% |
+| Disk I/O | > 80% utilization |
+| Pod restart count | > 0 unexpected |
 
 ## 4. Logs
 
@@ -161,7 +216,7 @@ into log records. No code changes required.
 }
 ```
 
-### Rules
+### Log Rules
 
 - Use structured logging (JSON) for machine readability
 - Let OTel SDK inject trace context automatically
@@ -170,55 +225,9 @@ into log records. No code changes required.
 
 ## 5. OTel Collector
 
-### Pipeline Architecture
-
-```yaml
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-
-processors:
-  batch:
-    timeout: 5s
-    send_batch_size: 8192
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 512
-  attributes:
-    actions:
-      - key: environment
-        value: production
-        action: upsert
-
-exporters:
-  otlp/tempo:
-    endpoint: tempo:4317
-    tls:
-      insecure: true
-  prometheusremotewrite:
-    endpoint: http://prometheus:9090/api/v1/write
-  otlphttp/loki:
-    endpoint: http://loki:3100/otlp
-
-service:
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp/tempo]
-    metrics:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [prometheusremotewrite]
-    logs:
-      receivers: [otlp]
-      processors: [memory_limiter, batch, attributes]
-      exporters: [otlphttp/loki]
-```
+The Collector is a vendor-agnostic proxy that receives, processes, and exports
+telemetry data. For detailed pipeline configuration, see
+[references/otel-collector.md](references/otel-collector.md).
 
 ### Deployment Patterns
 
@@ -245,65 +254,31 @@ for cross-cluster aggregation and routing.
 ## 6. Semantic Conventions
 
 Use standard attribute names for interoperability across tools and dashboards.
-
-### HTTP
-
-| Attribute | Example |
-| --- | --- |
-| `http.request.method` | `GET`, `POST` |
-| `http.response.status_code` | `200`, `500` |
-| `url.scheme` | `https` |
-| `url.path` | `/api/users` |
-| `server.address` | `api.example.com` |
-| `http.route` | `/api/users/{id}` (auto-set by Spring `@RequestMapping`, Express route patterns) |
-
-### Database
-
-| Attribute | Example |
-| --- | --- |
-| `db.system` | `postgresql`, `mysql`, `redis` |
-| `db.operation.name` | `SELECT`, `INSERT` |
-| `db.collection.name` | `users` |
-| `server.address` | `db.example.com` |
-| `server.port` | `5432` |
-
-### Messaging
-
-| Attribute | Example |
-| --- | --- |
-| `messaging.system` | `kafka`, `rabbitmq` |
-| `messaging.operation.type` | `publish`, `receive` |
-| `messaging.destination.name` | `orders-topic` |
-
 For the full convention list, see
 [references/semantic-conventions.md](references/semantic-conventions.md).
 
-## 7. SDK Patterns by Language
+### Key Conventions (Summary)
 
-For detailed setup examples, see
+| Domain | Key Attributes |
+| --- | --- |
+| HTTP | `http.request.method`, `http.response.status_code`, `url.path`, `http.route` |
+| Database | `db.system`, `db.operation.name`, `db.collection.name` |
+| Messaging | `messaging.system`, `messaging.operation.type`, `messaging.destination.name` |
+| RPC | `rpc.system`, `rpc.service`, `rpc.method` |
+
+## 7. SDK Patterns
+
+For detailed setup examples by language (Java, Node.js, Python), see
 [references/otel-sdk-patterns.md](references/otel-sdk-patterns.md).
 
-### Java (Spring Boot)
+### Quick Reference
 
-- **Zero-code**: `-javaagent:opentelemetry-javaagent.jar`
-- **Spring Boot Starter**: `spring-boot-starter-opentelemetry` (Boot 4.0+)
-- Use Java agent for broader coverage; Starter for Native Image or Spring-integrated config
-
-### Node.js
-
-```typescript
-import { NodeSDK } from "@opentelemetry/sdk-node";
-const sdk = new NodeSDK({ /* config */ });
-sdk.start();
-```
-
-### Python
-
-```python
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-trace.set_tracer_provider(TracerProvider())
-```
+| Language | Zero-Code | Manual |
+| --- | --- | --- |
+| Java | `-javaagent:opentelemetry-javaagent.jar` | `GlobalOpenTelemetry.getTracer()` |
+| Java (Spring Boot 4.0+) | `spring-boot-starter-opentelemetry` | Spring-integrated config |
+| Node.js | `@opentelemetry/auto-instrumentations-node` | `trace.getTracer()` |
+| Python | `opentelemetry-instrument` CLI | `trace.get_tracer()` |
 
 ## 8. Backend Integration
 
@@ -335,15 +310,79 @@ OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
 OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:9090/api/v1/otlp/v1/metrics
 ```
 
-## 9. Common Anti-Patterns
+## 9. Alerting
+
+Design alerts around symptoms, not causes. For detailed alerting rules,
+severity levels, and templates, see
+[references/alerting-rules.md](references/alerting-rules.md).
+
+### Key Principles
+
+- Alert on symptoms (error rate, latency), not causes (CPU, memory)
+- Every alert must have a runbook or action item
+- Avoid alert fatigue — only alert on actionable conditions
+- Use multi-window or burn-rate alerts over simple thresholds
+- Include context in alert messages (service, environment, metric value)
+
+### Alert Severity Summary
+
+| Level | Response Time | Example |
+| --- | --- | --- |
+| Critical | Immediate | Service down, data loss risk |
+| Warning | Within 1 hour | Degraded performance |
+| Info | Next business day | Approaching threshold |
+
+## 10. Health Checks
+
+Health checks enable orchestrators (Kubernetes, load balancers) to manage
+application lifecycle. For detailed probe configuration and rules, see
+[references/health-checks.md](references/health-checks.md).
+
+### Probe Types
+
+| Probe | Check | External Dependencies |
+| --- | --- | --- |
+| Liveness | App is running | No |
+| Readiness | App can serve traffic | Yes (DB, cache) |
+| Startup | App initialization done | Yes |
+
+### Key Rules
+
+- Liveness probes must be lightweight — no external dependency checks
+- Readiness probes should verify critical dependencies
+- Never put slow checks in liveness probes (causes unnecessary restarts)
+- Health checks must not cause side effects (writes, external calls)
+
+## 11. Common Anti-Patterns
 
 | Anti-Pattern | Problem | Fix |
 | --- | --- | --- |
 | No sampling in production | Storage explosion | Use head or tail sampling |
-| High-cardinality attributes (e.g., user ID, request ID in metrics) | Metric/index explosion (traces can tolerate high cardinality; metrics cannot) | Limit metric attribute values, use Views to filter |
+| High-cardinality attributes in metrics | Metric/index explosion | Limit metric attribute values, use Views to filter |
 | Sensitive data in spans | Security/compliance risk | Redact PII with attribute processor |
 | Skipping Collector | No buffering, sampling, or routing | Deploy Collector in Agent mode |
 | Ignoring Semantic Conventions | Inconsistent dashboards/alerts | Follow OTel standard names |
 | No `memory_limiter` processor | Collector OOM | Always configure memory limits |
 | Manual trace propagation | Broken traces, missing context | Use SDK auto-propagation |
 | Logging trace ID manually | Duplicate/inconsistent IDs | Let OTel SDK inject automatically |
+| Alerting on every error | Alert fatigue | Alert on error rate instead |
+| Missing traceId in logs | Breaks correlation | Enable OTel log bridge |
+| Dashboard with 50+ panels | Information overload | Focus on key signals per dashboard |
+| No baseline metrics | Cannot detect regressions | Establish baselines before alerting |
+| Monitoring only infra, not business | Miss revenue-impacting issues | Add business metrics |
+
+## 12. Related Skills
+
+- `logging`: Structured logging and monitoring integration
+- `incident-response`: Alert-driven incident response processes
+- `troubleshooting`: Monitoring data-driven problem diagnosis
+- `spring-framework`: Spring Boot Actuator and Micrometer metrics
+- `slo`: Service level objectives and error budgets
+
+## Additional References
+
+- For PromQL examples, recording rules, and common query patterns, see [references/prometheus-queries.md](references/prometheus-queries.md)
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - Official OpenTelemetry documentation
+- [Prometheus Documentation](https://prometheus.io/docs/) - Official Prometheus documentation
+- [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/) - Monitoring distributed systems
+- For Spring Boot implementation patterns (Actuator, Micrometer, distributed tracing), see `spring-framework` skill — [references/monitoring.md](../spring-framework/references/monitoring.md)

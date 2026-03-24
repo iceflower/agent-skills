@@ -399,7 +399,7 @@ These references provide Spring Boot-specific implementation for cross-cutting c
 - **Caching** (Caffeine, Redis, `@Cacheable`): [references/caching.md](references/caching.md) — general principles in `caching` skill
 - **Error Handling** (`@ControllerAdvice`, ErrorCode enum): [references/error-handling.md](references/error-handling.md) — general principles in `error-handling` skill
 - **HTTP Client** (RestClient, Spring Retry, Resilience4j): [references/http-client.md](references/http-client.md) — general principles in `http-client` skill
-- **Monitoring** (Actuator, Micrometer, distributed tracing): [references/monitoring.md](references/monitoring.md) — general principles in `monitoring` skill
+- **Monitoring** (Actuator, Micrometer, distributed tracing): [references/monitoring.md](references/monitoring.md) — general principles in `observability` skill
 - **Security** (SecurityFilterChain, Bean Validation): [references/security.md](references/security.md) — general principles in `security` skill
 - **Troubleshooting** (startup failures, JVM OOM, HikariCP): [references/troubleshooting.md](references/troubleshooting.md) — general principles in `troubleshooting` skill
 

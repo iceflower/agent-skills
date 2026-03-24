@@ -296,52 +296,7 @@ HALF_OPEN → (test calls succeed) → CLOSED
 HALF_OPEN → (test calls fail) → OPEN
 ```
 
-### Resilience Configuration Example
-
-```kotlin
-class PaymentService(
-    private val paymentClient: PaymentClient
-) {
-    // Apply: circuit breaker → retry → bulkhead (via framework or library config)
-    fun processPayment(request: PaymentRequest): PaymentResponse {
-        return paymentClient.charge(request)
-    }
-
-    // Fallback when circuit breaker is open
-    fun paymentFallback(request: PaymentRequest, e: Exception): PaymentResponse {
-        log.warn("Payment service unavailable, queuing for retry", e)
-        pendingPaymentQueue.enqueue(request)
-        return PaymentResponse.pending(request.orderId)
-    }
-}
-```
-
-```yaml
-# Resilience4j configuration (Spring Boot application.yml format shown;
-# standalone usage configures via code or resilience4j.yml)
-resilience4j:
-  circuitbreaker:
-    instances:
-      paymentApi:
-        sliding-window-size: 10
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 30s
-        permitted-number-of-calls-in-half-open-state: 3
-  retry:
-    instances:
-      paymentApi:
-        max-attempts: 3
-        wait-duration: 1s
-        exponential-backoff-multiplier: 2
-        retry-exceptions:
-          - java.net.ConnectException
-          - java.net.SocketTimeoutException
-  bulkhead:
-    instances:
-      paymentApi:
-        max-concurrent-calls: 10
-        max-wait-duration: 500ms
-```
+> See [references/migration-patterns.md](references/migration-patterns.md) for Resilience4j configuration example (circuit breaker, retry, bulkhead YAML).
 
 ### Resilience Rules
 
@@ -357,58 +312,7 @@ resilience4j:
 
 ## 9. Monolith to Microservices Migration
 
-### Strangler Fig Pattern
-
-```text
-Phase 1: Route all traffic through new gateway
-┌──────────┐     ┌──────────────┐
-│  Gateway  │────→│  Monolith    │
-└──────────┘     └──────────────┘
-
-Phase 2: Extract one service, route specific paths to it
-┌──────────┐     ┌──────────────┐
-│  Gateway  │──┬─→│  Monolith    │  (remaining features)
-└──────────┘  │  └──────────────┘
-              │  ┌──────────────┐
-              └─→│  Order Svc   │  (extracted feature)
-                 └──────────────┘
-
-Phase 3: Repeat until monolith is empty
-```
-
-### Branch by Abstraction
-
-```kotlin
-// Step 1: Introduce abstraction layer in monolith
-interface NotificationSender {
-    fun send(userId: String, message: String)
-}
-
-// Step 2: Old implementation (still in monolith)
-class MonolithNotificationSender : NotificationSender {
-    override fun send(userId: String, message: String) {
-        // Direct DB call within monolith
-    }
-}
-
-// Step 3: New implementation (calls extracted service)
-class MicroserviceNotificationSender(
-    private val notificationClient: NotificationClient
-) : NotificationSender {
-    override fun send(userId: String, message: String) {
-        notificationClient.send(SendRequest(userId, message))
-    }
-}
-
-// Step 4: Feature toggle to switch implementations
-// Wired via dependency injection with feature toggle
-fun notificationSender(
-    enabled: Boolean,  // from configuration: feature.notification-service.enabled
-    notificationClient: NotificationClient
-): NotificationSender =
-    if (enabled) MicroserviceNotificationSender(notificationClient)
-    else MonolithNotificationSender()
-```
+> See [references/migration-patterns.md](references/migration-patterns.md) for Strangler Fig Pattern diagram and Branch by Abstraction code examples.
 
 ### Migration Strategy Rules
 
@@ -475,17 +379,17 @@ fun notificationSender(
 
 ## 11. Related Rule References
 
-| Topic                 | Related Skill            | Relevance                                          |
-| --------------------- | ------------------------ | -------------------------------------------------- |
-| Messaging patterns    | `messaging` skill        | Broker selection, producer/consumer patterns       |
-| API client resilience | `http-client` skill      | Timeout, retry, circuit breaker configuration      |
-| Error handling        | `error-handling` skill   | Exception hierarchy, error response format         |
-| Monitoring            | `monitoring` skill       | Metrics, tracing, alerting for distributed systems |
-| Caching               | `caching` skill          | Cache strategy, TTL, invalidation patterns         |
-| Database              | `database` skill         | Migration, transaction management, query patterns  |
-| API design            | `api-design` skill       | REST conventions, versioning, pagination           |
-| Security              | `security` skill         | Authentication, authorization, rate limiting       |
-| Logging               | `logging` skill          | Structured logging, traceId correlation            |
+| Topic                 | Related Skill            | Relevance                                            |
+| --------------------- | ------------------------ | ---------------------------------------------------- |
+| Messaging patterns    | `messaging` skill        | Broker selection, producer/consumer patterns         |
+| API client resilience | `http-client` skill      | Timeout, retry, circuit breaker configuration        |
+| Error handling        | `error-handling` skill   | Exception hierarchy, error response format           |
+| Monitoring            | `observability` skill    | Metrics, tracing, alerting for distributed systems   |
+| Caching               | `caching` skill          | Cache strategy, TTL, invalidation patterns           |
+| Database              | `database` skill         | Migration, transaction management, query patterns    |
+| API design            | `api-design` skill       | REST conventions, versioning, pagination             |
+| Security              | `security` skill         | Authentication, authorization, rate limiting         |
+| Logging               | `logging` skill          | Structured logging, traceId correlation              |
 | Spring implementation | `spring-framework` skill | RestClient, error handling, monitoring, Resilience4j |
 
 ---

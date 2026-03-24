@@ -177,32 +177,7 @@ message ListOrdersRequest {
 - Attach error details using `google.rpc.Status` with `google.rpc.ErrorInfo`, `google.rpc.BadRequest`, or `google.rpc.DebugInfo`
 - Never expose stack traces or internal details in production error messages
 
-### Rich Error Model
-
-```kotlin
-import io.grpc.protobuf.StatusProto
-import com.google.rpc.Status
-import com.google.rpc.BadRequest
-import com.google.protobuf.Any
-
-// Build rich error response
-val fieldViolation = BadRequest.FieldViolation.newBuilder()
-    .setField("email")
-    .setDescription("Invalid email format")
-    .build()
-
-val badRequest = BadRequest.newBuilder()
-    .addFieldViolations(fieldViolation)
-    .build()
-
-val status = Status.newBuilder()
-    .setCode(com.google.rpc.Code.INVALID_ARGUMENT_VALUE)
-    .setMessage("Request validation failed")
-    .addDetails(Any.pack(badRequest))
-    .build()
-
-throw StatusProto.toStatusRuntimeException(status)
-```
+> See [references/error-handling-retry.md](references/error-handling-retry.md) for rich error model implementation and retry/hedging JSON configuration examples.
 
 ---
 
@@ -220,71 +195,7 @@ throw StatusProto.toStatusRuntimeException(status)
 | Error Translation    | Convert exceptions to gRPC Status codes    | Server |
 | Deadline Propagation | Forward remaining deadline to downstream   | Client |
 
-### Server Interceptor Example (Kotlin)
-
-```kotlin
-class AuthenticationInterceptor(
-    private val tokenValidator: TokenValidator
-) : ServerInterceptor {
-
-    override fun <ReqT, RespT> interceptCall(
-        call: ServerCall<ReqT, RespT>,
-        headers: Metadata,
-        next: ServerCallHandler<ReqT, RespT>
-    ): ServerCall.Listener<ReqT> {
-        val token = headers.get(AUTH_METADATA_KEY)
-
-        if (token == null) {
-            call.close(
-                Status.UNAUTHENTICATED.withDescription("Missing authentication token"),
-                Metadata()
-            )
-            return object : ServerCall.Listener<ReqT>() {}
-        }
-
-        val principal = tokenValidator.validate(token)
-            ?: run {
-                call.close(
-                    Status.UNAUTHENTICATED.withDescription("Invalid authentication token"),
-                    Metadata()
-                )
-                return object : ServerCall.Listener<ReqT>() {}
-            }
-
-        val context = Context.current().withValue(PRINCIPAL_CONTEXT_KEY, principal)
-        return Contexts.interceptCall(context, call, headers, next)
-    }
-
-    companion object {
-        val AUTH_METADATA_KEY: Metadata.Key<String> =
-            Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER)
-        val PRINCIPAL_CONTEXT_KEY: Context.Key<Principal> =
-            Context.key("principal")
-    }
-}
-```
-
-### Client Interceptor Example (Kotlin)
-
-```kotlin
-class DeadlinePropagationInterceptor(
-    private val defaultDeadlineMs: Long = 5000
-) : ClientInterceptor {
-
-    override fun <ReqT, RespT> interceptCall(
-        method: MethodDescriptor<ReqT, RespT>,
-        callOptions: CallOptions,
-        next: Channel
-    ): ClientCall<ReqT, RespT> {
-        val options = if (callOptions.deadline == null) {
-            callOptions.withDeadlineAfter(defaultDeadlineMs, TimeUnit.MILLISECONDS)
-        } else {
-            callOptions
-        }
-        return next.newCall(method, options)
-    }
-}
-```
+> See [references/interceptor-patterns.md](references/interceptor-patterns.md) for server and client interceptor implementation examples (authentication, deadline propagation).
 
 ### Interceptor Rules
 
@@ -299,42 +210,14 @@ class DeadlinePropagationInterceptor(
 
 ## 5. Deadline and Timeout Management
 
+> See [references/kotlin-conventions.md](references/kotlin-conventions.md) for deadline configuration code examples (client-side and server-side).
+
 ### Deadline vs Timeout
 
 | Concept  | Description                                          | Propagation    |
 | -------- | ---------------------------------------------------- | -------------- |
 | Timeout  | Duration from when the call starts                   | Not propagated |
 | Deadline | Absolute point in time by which the call must finish | Propagated     |
-
-### Deadline Configuration
-
-```kotlin
-// Client-side deadline
-val response = orderServiceStub
-    .withDeadlineAfter(3, TimeUnit.SECONDS)
-    .getOrder(GetOrderRequest.newBuilder().setOrderId("order-123").build())
-
-// Server-side deadline check
-override fun getOrder(request: GetOrderRequest, responseObserver: StreamObserver<Order>) {
-    if (Context.current().isCancelled) {
-        responseObserver.onError(
-            Status.CANCELLED.withDescription("Request already cancelled").asRuntimeException()
-        )
-        return
-    }
-
-    // Check remaining time before expensive operation
-    val deadline = Context.current().deadline
-    if (deadline != null && deadline.timeRemaining(TimeUnit.MILLISECONDS) < 100) {
-        responseObserver.onError(
-            Status.DEADLINE_EXCEEDED.withDescription("Insufficient time remaining").asRuntimeException()
-        )
-        return
-    }
-
-    // Process request...
-}
-```
 
 ### Deadline Rules
 
@@ -410,31 +293,6 @@ spec:
 
 ## 7. Error Handling and Retry Policy
 
-### Retry Configuration
-
-```json
-{
-  "methodConfig": [
-    {
-      "name": [
-        { "service": "com.example.order.v1.OrderService" }
-      ],
-      "timeout": "5s",
-      "retryPolicy": {
-        "maxAttempts": 3,
-        "initialBackoff": "0.1s",
-        "maxBackoff": "1s",
-        "backoffMultiplier": 2,
-        "retryableStatusCodes": [
-          "UNAVAILABLE",
-          "DEADLINE_EXCEEDED"
-        ]
-      }
-    }
-  ]
-}
-```
-
 ### Retry Rules
 
 - Only retry on transient status codes: `UNAVAILABLE`, `DEADLINE_EXCEEDED`, `ABORTED`
@@ -445,67 +303,11 @@ spec:
 - Use hedging (sending parallel requests) only for read-only operations with low cost
 - gRPC built-in retry is configured via service config JSON — prefer it over application-level retry
 
-### Hedging Policy (Read-Only Operations)
-
-```json
-{
-  "methodConfig": [
-    {
-      "name": [
-        { "service": "com.example.order.v1.OrderService", "method": "GetOrder" }
-      ],
-      "hedgingPolicy": {
-        "maxAttempts": 2,
-        "hedgingDelay": "0.5s",
-        "nonFatalStatusCodes": ["UNAVAILABLE"]
-      }
-    }
-  ]
-}
-```
-
 ---
 
 ## 8. gRPC-Java and gRPC-Kotlin Conventions
 
-### gRPC-Kotlin Coroutine Stubs
-
-```kotlin
-// Generated coroutine stub usage
-class OrderServiceImpl(
-    private val orderRepository: OrderRepository
-) : OrderServiceGrpcKt.OrderServiceCoroutineImplBase() {
-
-    override suspend fun createOrder(request: CreateOrderRequest): CreateOrderResponse {
-        val order = orderRepository.save(request.toOrder())
-        return CreateOrderResponse.newBuilder()
-            .setOrder(order.toProto())
-            .build()
-    }
-
-    override fun listOrders(request: ListOrdersRequest): Flow<Order> = flow {
-        orderRepository.findByUserId(request.userId)
-            .collect { order -> emit(order.toProto()) }
-    }
-}
-```
-
-### Kotlin Extension Patterns
-
-```kotlin
-// Proto to domain model mapping — keep in a separate mapper file
-fun CreateOrderRequest.toOrder(): DomainOrder = DomainOrder(
-    userId = this.userId,
-    items = this.itemsList.map { it.toDomainItem() }
-)
-
-fun DomainOrder.toProto(): Order = Order.newBuilder()
-    .setOrderId(this.id)
-    .setUserId(this.userId)
-    .setStatus(this.status.toProtoStatus())
-    .addAllItems(this.items.map { it.toProto() })
-    .build()
-```
+> See [references/kotlin-conventions.md](references/kotlin-conventions.md) for coroutine stub usage, extension patterns, and proto-to-domain mapping examples.
 
 ### Convention Rules
 
@@ -604,7 +406,9 @@ grpc:
 
 ## 10. Service Mesh Integration (Istio / Envoy)
 
-### Service Mesh Benefits for gRPC
+> See [references/service-mesh-integration.md](references/service-mesh-integration.md) for detailed Istio/Envoy configuration examples, DestinationRule/VirtualService YAML, and gRPC health check implementation.
+
+### Key Benefits
 
 | Feature            | Without Mesh                    | With Service Mesh              |
 | ------------------ | ------------------------------- | ------------------------------ |
@@ -614,50 +418,6 @@ grpc:
 | Circuit Breaking   | Resilience4j or similar library | Envoy configuration            |
 | Observability      | Manual instrumentation          | Automatic metrics and tracing  |
 | Traffic Management | Custom routing logic            | VirtualService rules           |
-
-### Istio Configuration for gRPC
-
-```yaml
-# DestinationRule — circuit breaking and connection pool
-apiVersion: networking.istio.io/v1
-kind: DestinationRule
-metadata:
-  name: order-service
-spec:
-  host: order-service
-  trafficPolicy:
-    connectionPool:
-      http:
-        h2UpgradePolicy: UPGRADE  # Force HTTP/2 for gRPC
-        maxRequestsPerConnection: 100
-    outlierDetection:
-      consecutive5xxErrors: 3
-      interval: 30s
-      baseEjectionTime: 30s
-      maxEjectionPercent: 50
-```
-
-```yaml
-# VirtualService — traffic routing and retries
-apiVersion: networking.istio.io/v1
-kind: VirtualService
-metadata:
-  name: order-service
-spec:
-  hosts:
-    - order-service
-  http:
-    - route:
-        - destination:
-            host: order-service
-            port:
-              number: 50051
-      retries:
-        attempts: 3
-        perTryTimeout: 2s
-        retryOn: cancelled,deadline-exceeded,unavailable
-      timeout: 10s
-```
 
 ### Service Mesh Integration Rules
 
@@ -669,38 +429,6 @@ spec:
 - Ensure gRPC health checking is configured — Envoy uses it for endpoint health status
 - Use `grpc_health_v1.Health` service for standardized health checks
 
-### gRPC Health Checking
-
-```kotlin
-// Implement standard gRPC health check service
-@GrpcService
-class HealthService : HealthGrpc.HealthImplBase() {
-
-    override fun check(
-        request: HealthCheckRequest,
-        responseObserver: StreamObserver<HealthCheckResponse>
-    ) {
-        val response = HealthCheckResponse.newBuilder()
-            .setStatus(HealthCheckResponse.ServingStatus.SERVING)
-            .build()
-        responseObserver.onNext(response)
-        responseObserver.onCompleted()
-    }
-
-    override fun watch(
-        request: HealthCheckRequest,
-        responseObserver: StreamObserver<HealthCheckResponse>
-    ) {
-        // Stream health status updates
-        val response = HealthCheckResponse.newBuilder()
-            .setStatus(HealthCheckResponse.ServingStatus.SERVING)
-            .build()
-        responseObserver.onNext(response)
-        // Keep stream open for updates
-    }
-}
-```
-
 ---
 
 ## 11. Related Skills
@@ -711,7 +439,7 @@ class HealthService : HealthGrpc.HealthImplBase() {
 | REST API design            | `api-design` skill       | Alternative protocol, API gateway patterns        |
 | Messaging patterns         | `messaging` skill        | Async communication, event-driven alternatives    |
 | Error handling             | `error-handling` skill   | Exception hierarchy, error propagation            |
-| Monitoring                 | `monitoring` skill       | gRPC metrics, tracing, alerting                   |
+| Monitoring                 | `observability` skill    | gRPC metrics, tracing, alerting                   |
 | Security                   | `security` skill         | mTLS, authentication, authorization               |
 | Kubernetes                 | `k8s-workflow` skill     | Service deployment, health checks, networking     |
 | Spring Framework           | `spring-framework` skill | grpc-spring integration, dependency injection     |

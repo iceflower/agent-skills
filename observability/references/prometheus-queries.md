@@ -211,13 +211,13 @@ groups:
 
 ## Query Optimization Tips
 
-| Problem                      | Solution                                        |
-| ---------------------------- | ----------------------------------------------- |
-| Slow dashboard loading       | Use recording rules for complex aggregations    |
-| High cardinality labels      | Avoid labels with unbounded values (user IDs)   |
-| `rate()` returns nothing     | Ensure range window > 2x scrape interval        |
-| Missing data points          | Check `up` metric and scrape config             |
-| Counter resets on restart    | Use `rate()` or `increase()`, not raw values    |
+| Problem | Solution |
+| --- | --- |
+| Slow dashboard loading | Use recording rules for complex aggregations |
+| High cardinality labels | Avoid labels with unbounded values (user IDs) |
+| `rate()` returns nothing | Ensure range window > 2x scrape interval |
+| Missing data points | Check `up` metric and scrape config |
+| Counter resets on restart | Use `rate()` or `increase()`, not raw values |
 
 ### Range Window Selection
 

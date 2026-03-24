@@ -313,12 +313,12 @@ Use this checklist when reviewing an application for cloud native readiness.
 | `helm-workflow` skill    | Helm chart design for cloud native applications                      |
 | `terraform-workflow`     | Infrastructure as code for cloud resource provisioning               |
 | `gitops-argocd` skill    | GitOps-based continuous deployment                                   |
-| `monitoring` skill       | Metrics, alerting, dashboards, SLI/SLO                               |
+| `observability` skill    | Metrics, alerting, dashboards, SLI/SLO                               |
 | `logging` skill          | Structured logging, log aggregation, log levels                      |
 | `secrets-management`     | Secret storage, rotation, access control                             |
 | `security` skill         | OWASP Top 10, secure coding, vulnerability scanning                  |
 | `api-design` skill       | API-first design, versioning, contract testing                       |
-| `distributed-systems`    | CAP theorem, consistency patterns, distributed consensus             |
+| `system-design`          | CAP theorem, consistency patterns, distributed consensus             |
 | `ci-cd` skill            | Build/release/run pipeline design and automation                     |
 
 ---

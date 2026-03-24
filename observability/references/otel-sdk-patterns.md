@@ -192,7 +192,7 @@ function recordOrder(type: string, durationMs: number) {
 
 ## Python
 
-### SDK Setup
+### Python SDK Setup
 
 ```python
 from opentelemetry import trace, metrics

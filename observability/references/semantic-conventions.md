@@ -59,7 +59,7 @@ Based on [OTel Semantic Conventions](https://opentelemetry.io/docs/specs/semconv
 | `server.address` | `db.example.com` | Recommended |
 | `server.port` | `5432` | Recommended |
 
-### Span Naming
+### Database Span Naming
 
 - `{db.operation.name} {db.collection.name}` → `SELECT users`
 - If collection unknown: `{db.operation.name}` → `SELECT`
@@ -78,7 +78,7 @@ Sanitize or redact before enabling in production.
 | `messaging.consumer.group.name` | `order-processors` | Recommended |
 | `messaging.kafka.offset` | `42` | Kafka-specific |
 
-### Span Naming
+### Messaging Span Naming
 
 - `{destination} {operation}` → `orders-topic publish`
 
@@ -91,7 +91,7 @@ Sanitize or redact before enabling in production.
 | `rpc.method` | `GetUser` | Recommended |
 | `rpc.grpc.status_code` | `0` (OK), `2` (UNKNOWN) | Yes |
 
-### Span Naming
+### RPC Span Naming
 
 - `{rpc.service}/{rpc.method}` → `mypackage.MyService/GetUser`
 

@@ -246,12 +246,16 @@ Effort: 15-60 minutes for a focused investigation.
 3. Use `rg -A10` or `git grep -W` to read function bodies
 4. Map the full request/event flow
 
+Effort: 30 minutes – 2 hours depending on call depth.
+
 ### Data Flow Tracing
 
 1. Find where a variable/value is created
 2. Use LSP Find References to trace all usages
 3. Follow transformations (map, convert, serialize)
 4. Identify where the value is consumed (API response, DB write, UI)
+
+Effort: 30 minutes – 1 hour for a single data path.
 
 ## 8. Common Anti-Patterns
 

@@ -135,7 +135,7 @@ Modular, self-contained tool installers distributed via OCI registries.
 ### Rules
 
 - Prefer Features over manual installation in Dockerfile
-- Pin Feature versions (`feature:1`, not `feature:latest`)
+- Pin Feature versions (`feature:1`, not `feature:latest`) — browse available versions at [containers.dev/features](https://containers.dev/features)
 - Features apply only to the primary service (in Docker Compose setups)
 
 ## 4. Docker Compose Integration
@@ -223,7 +223,9 @@ postAttachCommand     → Every VS Code attach
 }
 ```
 
-Object form runs commands in parallel. Use `&&` chaining for sequential.
+Object form runs commands in parallel. If any command fails, the container
+creation still succeeds but the failed command's error is shown.
+Use `&&` chaining for sequential execution where order matters.
 
 ## 6. Ports and Environment
 
@@ -316,7 +318,8 @@ Access in devcontainer.json via `${localEnv:DATABASE_URL}`.
 
 ## 9. Cache Optimization
 
-Mount named volumes for package manager caches:
+Mount named volumes for package manager caches.
+Named volumes are OS-independent and work consistently across Windows, macOS, and Linux:
 
 ```jsonc
 {

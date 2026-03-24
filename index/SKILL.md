@@ -132,3 +132,4 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | Weather, air quality, KMA, AccuWeather                 | weather                  |
 | Code search, ripgrep, ast-grep, git history search     | code-search              |
 | Developer resume, STAR method, portfolio               | resume-writing           |
+| Skill routing, finding appropriate skill by domain     | index                   |

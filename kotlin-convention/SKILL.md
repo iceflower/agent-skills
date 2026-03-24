@@ -122,12 +122,12 @@ val nicknames = users.mapNotNull { it.nickname }
 
 ---
 
-## 5. Coroutines (for async APIs)
+## 5. Coroutines
 
 ### Structured Concurrency
 
 ```kotlin
-// Use coroutineScope for parallel operations
+// Use coroutineScope for parallel operations that must all succeed
 suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
     val profile = async { userService.getProfile(userId) }
     val orders = async { orderService.getRecentOrders(userId) }
@@ -135,13 +135,182 @@ suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
 }
 ```
 
+### CoroutineScope Design
+
+| Scenario | Scope Strategy |
+| --- | --- |
+| ViewModel / UI layer | `viewModelScope` (auto-cancelled on clear) |
+| Service with managed lifecycle | Custom `CoroutineScope(SupervisorJob() + dispatcher)` — cancel in `close()` |
+| One-shot suspend call | `coroutineScope { }` — no custom scope needed |
+| Background work surviving caller | `CoroutineScope` tied to component lifecycle |
+
+### suspend Function Rules
+
+- Mark a function `suspend` only if it actually calls other suspend functions or uses `delay`
+- Never wrap blocking I/O in `suspend` without switching dispatcher — use `withContext(Dispatchers.IO)`
+- Keep suspend functions main-safe: callers should not need to know which dispatcher to use
+
+```kotlin
+// Good: dispatcher switching is the callee's responsibility
+suspend fun loadUser(id: Long): User = withContext(Dispatchers.IO) {
+    userRepository.findById(id) ?: throw UserNotFoundException(id)
+}
+```
+
+### Exception Handling
+
+| Pattern | Use When |
+| --- | --- |
+| `coroutineScope` | All children must succeed — one failure cancels siblings |
+| `supervisorScope` | Children are independent — one failure should not cancel others |
+| `SupervisorJob()` in scope | Long-lived scope where launched jobs are independent |
+| `CoroutineExceptionHandler` | Top-level last-resort logging for uncaught exceptions |
+
+```kotlin
+// SupervisorJob for independent child jobs
+private val scope = CoroutineScope(
+    SupervisorJob() + Dispatchers.Default + exceptionHandler
+)
+```
+
 ### Spring Integration
 
 - For Spring-specific coroutine and WebFlux patterns, see `spring-framework` skill
+- For detailed coroutine examples, see [references/coroutines-and-flow.md](references/coroutines-and-flow.md)
 
 ---
 
-## 6. Naming Conventions
+## 6. Flow
+
+### StateFlow vs SharedFlow
+
+| Criteria | `StateFlow` | `SharedFlow` |
+| --- | --- | --- |
+| Has current value | Yes (`.value`) | No |
+| Replay | Always 1 (latest) | Configurable (`replay` param) |
+| Equality check | Skips duplicate values | Emits all values |
+| Use case | UI state, current status | Events, notifications, commands |
+
+```kotlin
+// StateFlow: always has a current value, skips duplicates
+private val _state = MutableStateFlow(UiState.Loading)
+val state: StateFlow<UiState> = _state.asStateFlow()
+
+// SharedFlow: fire-and-forget events, no initial value
+private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 64)
+val events: SharedFlow<UiEvent> = _events.asSharedFlow()
+```
+
+### Cold vs Hot Flow
+
+| Type | Examples | Behavior |
+| --- | --- | --- |
+| Cold | `flow { }`, `channelFlow { }` | Starts on collection, each collector gets independent stream |
+| Hot | `StateFlow`, `SharedFlow` | Active regardless of collectors, shared among subscribers |
+
+### Flow Operator Essentials
+
+```kotlin
+repository.observeAll()
+    .map { items -> items.filter { it.isActive } }   // transform
+    .distinctUntilChanged()                            // skip duplicates
+    .catch { e -> emit(emptyList()) }                  // handle upstream errors
+    .onEach { items -> logger.debug("Got ${items.size} items") }
+    .flowOn(Dispatchers.IO)                            // upstream dispatcher
+```
+
+### Flow Testing (with Turbine)
+
+```kotlin
+@Test
+fun `should emit active users only`() = runTest {
+    sut.observeActiveUsers().test {
+        val result = awaitItem()
+        assertThat(result).allMatch { it.isActive }
+        awaitComplete()
+    }
+}
+```
+
+- For extended Flow examples and patterns, see [references/coroutines-and-flow.md](references/coroutines-and-flow.md)
+
+---
+
+## 7. Scope Functions
+
+### Selection Guide
+
+| Function | Object ref | Return value | Use case |
+| --- | --- | --- | --- |
+| `let` | `it` | Lambda result | Null-check execution, mapping |
+| `run` | `this` | Lambda result | Object config + compute result |
+| `apply` | `this` | Object itself | Object initialization / builder |
+| `also` | `it` | Object itself | Side effects (logging, validation) |
+| `with` | `this` | Lambda result | Calling multiple methods on an object |
+
+### Chaining Rules
+
+- Maximum **2 scope functions** chained — beyond that, extract to local variables
+- Never nest scope functions more than 1 level deep
+- Prefer `?.let` only for **null-conditional** logic — do not use `let` on non-null values without reason
+
+```kotlin
+// Good: clear scope function usage
+val user = userRepository.findById(id)?.also {
+    logger.info("Found user: ${it.name}")
+}
+
+// Good: apply for initialization
+val config = ServerConfig().apply {
+    host = "0.0.0.0"
+    port = 8080
+}
+
+// Bad: unnecessary nesting
+user?.let { u -> u.address?.let { a -> a.city?.let { println(it) } } }
+// Good: flatten with safe calls
+val city = user?.address?.city ?: return
+println(city)
+```
+
+- For scope function anti-patterns, see [references/scope-functions-and-dsl.md](references/scope-functions-and-dsl.md)
+
+---
+
+## 8. Kotlin DSL
+
+### Type-Safe Builder Pattern
+
+Use `@DslMarker` to prevent accidental access to outer receiver scopes:
+
+```kotlin
+@DslMarker
+annotation class ConfigDsl
+
+@ConfigDsl
+class ServerConfigBuilder {
+    var host: String = "localhost"
+    var port: Int = 8080
+
+    fun database(block: DatabaseConfigBuilder.() -> Unit) { /* ... */ }
+}
+
+fun serverConfig(block: ServerConfigBuilder.() -> Unit): ServerConfig =
+    ServerConfigBuilder().apply(block).build()
+```
+
+### DSL Design Rules
+
+- Always annotate builder classes with a `@DslMarker` annotation to enforce scope control
+- Provide a top-level entry function (e.g., `html { }`, `serverConfig { }`) that returns the built object
+- Keep DSL blocks focused — each builder handles one concern
+- Make required properties fail-fast with clear error messages (not silent defaults)
+
+- For detailed DSL examples, see [references/scope-functions-and-dsl.md](references/scope-functions-and-dsl.md)
+
+---
+
+## 9. Naming Conventions
 
 | Element | Convention | Example |
 | --- | --- | --- |
@@ -157,6 +326,8 @@ suspend fun fetchDashboard(userId: Long): Dashboard = coroutineScope {
 ## Additional References
 
 - For Kotlin version migration (1.4 → 2.3), see [references/migration.md](references/migration.md)
+- For coroutine and Flow detailed examples, see [references/coroutines-and-flow.md](references/coroutines-and-flow.md)
+- For scope function anti-patterns and DSL examples, see [references/scope-functions-and-dsl.md](references/scope-functions-and-dsl.md)
 
 ## Related Skills
 

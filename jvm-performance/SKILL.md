@@ -31,7 +31,6 @@ JVM tuning involves inherent trade-offs. Improving one metric often impacts anot
 | Scalability | Performance under increasing load |
 | Degradation | Performance decline over time     |
 
-
 ## 2. Garbage Collection Algorithms
 
 > See [references/gc-tuning.md](references/gc-tuning.md) for detailed GC algorithms (mark-and-sweep, generational collection, STW pauses), JVM tuning parameters, memory analysis, and JIT compilation.
@@ -41,6 +40,7 @@ JVM tuning involves inherent trade-offs. Improving one metric often impacts anot
 ## 3. Garbage Collectors
 
 > **See [references/garbage-collectors.md](references/garbage-collectors.md) for detailed information on:**
+>
 > - Serial GC, Parallel GC, G1 GC
 > - ZGC (Z Garbage Collector)
 > - Shenandoah

@@ -167,7 +167,7 @@ Common patterns:
 | UI components and graphical objects | 3:1 |
 | Focus indicators | 3:1 |
 
-### Rules
+### Contrast Rules
 
 - Never convey information by color alone — provide text, icons, or patterns
 - Ensure links are distinguishable from surrounding text (underline or 3:1 contrast + non-color indicator on hover/focus)

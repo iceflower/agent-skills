@@ -105,6 +105,7 @@ metadata:
 ## 3. Ports and Adapters Pattern
 
 > **See [references/ports-and-adapters.md](references/ports-and-adapters.md) for detailed patterns including:**
+>
 > - Inbound ports (use cases) and inbound adapters (controllers)
 > - Outbound ports (repository interfaces) and outbound adapters (implementations)
 
@@ -319,13 +320,13 @@ class CreateOrderService implements CreateOrderUseCase {
 
 ### Common Mistakes
 
-| Mistake                                  | Why It Hurts                              | Fix                                                          |
-| ---------------------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
-| Persistence entity as domain entity      | Domain coupled to persistence framework   | Separate domain model and persistence entity                 |
-| Business logic in controller             | Untestable without HTTP context           | Move to domain or application layer                          |
-| Repository returning DTOs                | Mixes persistence and presentation        | Return domain objects, map at boundary                       |
-| Transaction annotations on domain service | Domain depends on framework              | Put transaction management on application service            |
-| Using framework events as domain events  | Domain coupled to framework event system  | Domain defines events, application publishes via framework   |
+| Mistake                                   | Why It Hurts                             | Fix                                                        |
+| ----------------------------------------- | ---------------------------------------- | ---------------------------------------------------------- |
+| Persistence entity as domain entity       | Domain coupled to persistence framework  | Separate domain model and persistence entity               |
+| Business logic in controller              | Untestable without HTTP context          | Move to domain or application layer                        |
+| Repository returning DTOs                 | Mixes persistence and presentation       | Return domain objects, map at boundary                     |
+| Transaction annotations on domain service | Domain depends on framework              | Put transaction management on application service          |
+| Using framework events as domain events   | Domain coupled to framework event system | Domain defines events, application publishes via framework |
 
 ---
 

@@ -112,7 +112,7 @@ Link: <https://api.example.com/deprecation-policy>; rel="deprecation"
 | Rate limiting | D-1 month | Gradually reduce rate limits (optional) |
 | Retirement | D-day | Return `410 Gone` or `301 Redirect` |
 
-### Rules
+### Deprecation Rules
 
 - Never remove an API version without the full deprecation process
 - Minimum deprecation period: 6 months for public APIs, 3 months for internal

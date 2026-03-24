@@ -300,6 +300,7 @@ if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
 ## 6. Kotlin Coroutines In-Depth
 
 > **See [references/kotlin-coroutines.md](references/kotlin-coroutines.md) for detailed patterns including:**
+>
 > - Dispatcher selection (Default, IO, Main, custom)
 > - Structured concurrency (coroutineScope vs supervisorScope)
 > - Exception propagation and handling
@@ -311,7 +312,7 @@ if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
 
 > See [references/virtual-threads.md](references/virtual-threads.md) for detailed patterns including usage examples, caveats, and pinning issues.
 
-### Key Rules
+### Virtual Threads Key Rules
 
 - Virtual threads are cheap — create per task, never pool them
 - Blocking operations (JDBC, `Thread.sleep`, file I/O) are fine on virtual threads
@@ -394,6 +395,7 @@ Thread.sleep(ThreadLocalRandom.current().nextInt(10, 100));
 ## 9. Concurrency Testing
 
 > **See [references/testing.md](references/testing.md) for detailed patterns including:**
+>
 > - Testing strategies (stress testing, deterministic scheduling)
 > - JCStress and Lincheck examples
 > - CountDownLatch test pattern

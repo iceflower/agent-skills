@@ -212,6 +212,7 @@ transaction {
 ## 5. Spring Boot Integration
 
 > **See `spring-framework` skill — [references/exposed-integration.md](../spring-framework/references/exposed-integration.md) for:**
+>
 > - Dependency setup (`exposed-spring-boot-starter`)
 > - Spring YAML configuration
 > - Spring `@Transactional` + Exposed `transaction` coexistence
@@ -223,11 +224,11 @@ transaction {
 
 ### Migration Tool Options
 
-| Tool      | Integration           | Use Case                           |
-| --------- | --------------------- | ---------------------------------- |
+| Tool      | Integration                   | Use Case                           |
+| --------- | ----------------------------- | ---------------------------------- |
 | Flyway    | Standalone / framework plugin | SQL-based migrations (recommended) |
 | Liquibase | Standalone / framework plugin | XML/YAML/SQL migrations            |
-| Exposed   | `SchemaUtils.create`  | Development/testing only           |
+| Exposed   | `SchemaUtils.create`          | Development/testing only           |
 
 ### Migration Rules
 

@@ -341,16 +341,16 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 ## 7. Naming Conventions
 
-| Element        | Convention        | Example                          |
-| -------------- | ----------------- | -------------------------------- |
-| Class          | PascalCase        | `UserService`, `OrderResponse`   |
-| Interface      | PascalCase        | `UserRepository`, `Cacheable`    |
-| Method         | camelCase         | `findByEmail`, `calculateTotal`  |
-| Variable       | camelCase         | `userName`, `isActive`           |
-| Constant       | SCREAMING_SNAKE   | `MAX_RETRY_COUNT`, `DEFAULT_TTL` |
-| Package        | lowercase dotted  | `com.example.user.service`       |
-| Enum value     | SCREAMING_SNAKE   | `PENDING`, `IN_PROGRESS`         |
-| Type parameter | Single uppercase  | `T`, `E`, `K`, `V`              |
+| Element        | Convention       | Example                          |
+| -------------- | ---------------- | -------------------------------- |
+| Class          | PascalCase       | `UserService`, `OrderResponse`   |
+| Interface      | PascalCase       | `UserRepository`, `Cacheable`    |
+| Method         | camelCase        | `findByEmail`, `calculateTotal`  |
+| Variable       | camelCase        | `userName`, `isActive`           |
+| Constant       | SCREAMING_SNAKE  | `MAX_RETRY_COUNT`, `DEFAULT_TTL` |
+| Package        | lowercase dotted | `com.example.user.service`       |
+| Enum value     | SCREAMING_SNAKE  | `PENDING`, `IN_PROGRESS`         |
+| Type parameter | Single uppercase | `T`, `E`, `K`, `V`               |
 
 ---
 
@@ -358,14 +358,14 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 ### Standard Functional Interfaces
 
-| Interface           | Signature              | Use Case                     |
-| ------------------- | ---------------------- | ---------------------------- |
-| `Function<T, R>`    | `T → R`               | Transform input to output    |
-| `Predicate<T>`      | `T → boolean`         | Test a condition             |
-| `Consumer<T>`       | `T → void`            | Process without return       |
-| `Supplier<T>`       | `() → T`              | Provide a value lazily       |
-| `BiFunction<T,U,R>` | `(T, U) → R`          | Two-input transformation     |
-| `UnaryOperator<T>`  | `T → T`               | Same-type transformation     |
+| Interface           | Signature       | Use Case                  |
+| ------------------- | --------------- | ------------------------- |
+| `Function<T, R>`    | `T -> R`        | Transform input to output |
+| `Predicate<T>`      | `T -> boolean`  | Test a condition          |
+| `Consumer<T>`       | `T -> void`     | Process without return    |
+| `Supplier<T>`       | `() -> T`       | Provide a value lazily    |
+| `BiFunction<T,U,R>` | `(T, U) -> R`   | Two-input transformation  |
+| `UnaryOperator<T>`  | `T -> T`        | Same-type transformation  |
 
 ### Lambda Best Practices
 

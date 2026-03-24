@@ -58,7 +58,7 @@ Skill combinations recommended for common task types. Primary skills should be l
 ### Integrating with external APIs
 
 - **Primary**: http-client
-- **Secondary**: error-handling, monitoring (for tracking external calls)
+- **Secondary**: error-handling, observability (for tracking external calls)
 
 ## Architecture and Design
 
@@ -70,12 +70,12 @@ Skill combinations recommended for common task types. Primary skills should be l
 ### Designing microservice architecture
 
 - **Primary**: microservices
-- **Secondary**: distributed-systems, messaging, api-design, system-design
+- **Secondary**: system-design, messaging, api-design, system-design
 
 ### Large-scale system design
 
 - **Primary**: system-design
-- **Secondary**: distributed-systems, caching, monitoring, database
+- **Secondary**: system-design, caching, observability, database
 
 ## Infrastructure
 
@@ -117,12 +117,12 @@ Skill combinations recommended for common task types. Primary skills should be l
 ### Designing load tests
 
 - **Primary**: load-testing
-- **Secondary**: monitoring (metrics collection), ci-cd (CI integration)
+- **Secondary**: observability (metrics collection), ci-cd (CI integration)
 
 ### Setting up chaos experiments
 
 - **Primary**: chaos-engineering
-- **Secondary**: monitoring, incident-response, k8s-workflow
+- **Secondary**: observability, incident-response, k8s-workflow
 
 ## Security
 
@@ -142,36 +142,36 @@ Skill combinations recommended for common task types. Primary skills should be l
 ### Incident response
 
 - **Primary**: incident-response
-- **Secondary**: monitoring, troubleshooting, logging
+- **Secondary**: observability, troubleshooting, logging
 
 ### Debugging production issues
 
 - **Primary**: troubleshooting
-- **Secondary**: monitoring (diagnostic data), logging (log analysis)
+- **Secondary**: observability (diagnostic data), logging (log analysis)
 - **If K8s**: k8s-workflow
 - **If JVM**: jvm-performance
 
 ### Setting up observability
 
-- **Primary**: monitoring
+- **Primary**: observability
 - **Secondary**: logging, incident-response (alerting rules)
 
 ### JVM performance tuning
 
 - **Primary**: jvm-performance
-- **Secondary**: monitoring (JVM metrics), concurrency (thread tuning), dockerfile (container JVM settings)
+- **Secondary**: observability (JVM metrics), concurrency (thread tuning), dockerfile (container JVM settings)
 
 ## Communication and Messaging
 
 ### Implementing event-driven architecture
 
 - **Primary**: messaging
-- **Secondary**: microservices, distributed-systems, monitoring
+- **Secondary**: microservices, system-design, observability
 
 ### Setting up async messaging (Kafka/RabbitMQ)
 
 - **Primary**: messaging
-- **Secondary**: monitoring (queue monitoring), error-handling
+- **Secondary**: observability (queue observability), error-handling
 
 ## Documentation and Workflow
 
@@ -192,7 +192,7 @@ Skill combinations recommended for common task types. Primary skills should be l
 ### Designing cache strategy
 
 - **Primary**: caching
-- **Secondary**: system-design, database, monitoring
+- **Secondary**: system-design, database, observability
 
 ### Working with PDF files
 

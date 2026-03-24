@@ -27,6 +27,10 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | Kotlin code, Kotlin idioms, coroutines style           | kotlin-convention        |
 | TypeScript code, strict mode, utility types            | typescript-convention    |
 | React, Next.js, hooks, component patterns              | react-convention         |
+| Web accessibility, WCAG 2.2, ARIA, axe-core            | a11y                     |
+| i18n, l10n, ICU Message Format, RTL support            | localization             |
+| Performance optimization, Core Web Vitals, bundles     | performance-optimization |
+| NestJS, Node.js backend, modules, DI, guards, pipes    | nestjs-convention        |
 | Java-Kotlin mixed project, JSpecify, interop           | java-kotlin-interop      |
 | Gradle build, version catalog, multi-module            | gradle-convention        |
 
@@ -35,6 +39,7 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | Keyword / Situation                                    | Recommended Skill        |
 | ------------------------------------------------------ | ------------------------ |
 | Spring DI, AOP, WebMVC, WebFlux, JPA, scheduling       | spring-framework         |
+| Spring AI, ChatClient, RAG, tool calling, MCP          | spring-ai                |
 | Exposed ORM, Kotlin DSL/DAO, table definition          | exposed                  |
 | Spring Security, OAuth2, JWT in Spring context         | security                 |
 
@@ -46,8 +51,10 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | DDD, aggregates, bounded contexts, domain events       | ddd                      |
 | Microservices, Saga, CQRS, event sourcing, API gateway | microservices            |
 | Large-scale system design, CDN, rate limiting          | system-design            |
-| Distributed systems, replication, partitioning         | distributed-systems      |
+| Distributed patterns, replication, partitioning        | system-design            |
 | SOLID principles, class hierarchy, OOP patterns        | object-oriented-design   |
+| Event Storming workshop, facilitation, DDD transition  | event-storming           |
+| 12-Factor App, Cloud Native, Well-Architected          | cloud-native             |
 
 ## 4. Infrastructure and Deployment
 
@@ -60,12 +67,15 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | GitOps, Argo CD, ApplicationSet, sync strategies       | gitops-argocd            |
 | CI/CD, GitHub Actions, deployment pipelines            | ci-cd                    |
 | Karpenter, NodePool, autoscaling, spot instances       | karpenter-workflow       |
+| Dev Containers, devcontainer.json, Codespaces          | devcontainer             |
+| Feature flags, progressive delivery, canary rollout    | feature-flag             |
 
 ## 5. Database
 
 | Keyword / Situation                                    | Recommended Skill        |
 | ------------------------------------------------------ | ------------------------ |
 | Database design, migration, query optimization         | database                 |
+| Data migration, ETL, zero-downtime, CDC, gh-ost        | data-migration           |
 | Exposed ORM queries, Kotlin DB access                  | exposed                  |
 | Optimistic/pessimistic locking, DB concurrency         | concurrency              |
 
@@ -73,7 +83,7 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 
 | Keyword / Situation                                    | Recommended Skill        |
 | ------------------------------------------------------ | ------------------------ |
-| Metrics, Prometheus, Grafana, alerting, health checks  | monitoring               |
+| Observability, OTel, metrics, tracing, alerting        | observability            |
 | Log levels, structured logging, sensitive data in logs | logging                  |
 | Incident management, severity, postmortem, runbooks    | incident-response        |
 | Debugging, slow API, OOMKilled, CrashLoopBackOff       | troubleshooting          |
@@ -100,6 +110,9 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | Keyword / Situation                                    | Recommended Skill        |
 | ------------------------------------------------------ | ------------------------ |
 | REST API design, URL design, HTTP methods, pagination  | api-design               |
+| API versioning, deprecation, breaking changes          | api-versioning           |
+| GraphQL schema, resolvers, DataLoader, Federation      | graphql                  |
+| gRPC, Protocol Buffers, streaming, service mesh        | grpc                     |
 | OpenAPI spec, schema design, code generation           | openapi-spec             |
 | HTTP client, timeouts, retry, circuit breaker          | http-client              |
 | Kafka, RabbitMQ, async messaging, event-driven         | messaging                |
@@ -117,4 +130,5 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | PDF reading, content extraction                        | pdf-handling             |
 | Exception hierarchy, error response format             | error-handling           |
 | Weather, air quality, KMA, AccuWeather                 | weather                  |
+| Code search, ripgrep, ast-grep, git history search     | code-search              |
 | Developer resume, STAR method, portfolio               | resume-writing           |

@@ -61,17 +61,12 @@ Detailed routing information for each skill, including core coverage and relatio
 ### microservices
 
 - **Core coverage**: Service decomposition, sync/async communication, gRPC, API gateway, Saga, CQRS, event sourcing, transactional outbox, fault isolation
-- **Related skills**: messaging (async communication), api-design (API contracts), distributed-systems (distributed patterns), monitoring (observability)
+- **Related skills**: messaging (async communication), api-design (API contracts), system-design (distributed patterns), observability (observability)
 
 ### system-design
 
-- **Core coverage**: Database architecture, caching, CDN, stateless design, message queues, consistent hashing, rate limiting, circuit breaker, bulkhead, backpressure
-- **Related skills**: distributed-systems (distributed patterns), caching (cache strategies), monitoring (system health)
-
-### distributed-systems
-
-- **Core coverage**: Data replication, partitioning, distributed time, cluster management, network communication
-- **Related skills**: system-design (system-level patterns), microservices (service architecture), database (replication)
+- **Core coverage**: Database architecture, caching, CDN, stateless design, message queues, consistent hashing, rate limiting, circuit breaker, bulkhead, backpressure, data replication, partitioning, distributed time, cluster management, network communication
+- **Related skills**: caching (cache strategies), observability (system health), microservices (service architecture), database (replication)
 
 ### object-oriented-design
 
@@ -129,30 +124,30 @@ Detailed routing information for each skill, including core coverage and relatio
 
 ## Operations and Monitoring
 
-### monitoring
+### observability
 
-- **Core coverage**: Metrics (Prometheus, Micrometer), logging, distributed tracing (OpenTelemetry), alerting rules, health checks
+- **Core coverage**: OpenTelemetry (OTel SDK, OTLP, Collector), metrics (Prometheus, Micrometer), distributed tracing, alerting rules, health checks, Semantic Conventions, backend integration
 - **Related skills**: logging (log standards), incident-response (alerting workflow), troubleshooting (diagnostic data)
 
 ### logging
 
 - **Core coverage**: Logging standards, sensitive data handling in logs
-- **Related skills**: monitoring (observability stack), security (data protection in logs)
+- **Related skills**: observability (observability stack), security (data protection in logs)
 
 ### incident-response
 
 - **Core coverage**: Severity classification, communication protocols, triage, mitigation, runbooks, postmortem, on-call, MTTD/MTTA/MTTR metrics
-- **Related skills**: monitoring (alerting triggers), troubleshooting (diagnosis), chaos-engineering (proactive resilience)
+- **Related skills**: observability (alerting triggers), troubleshooting (diagnosis), chaos-engineering (proactive resilience)
 
 ### troubleshooting
 
 - **Core coverage**: Debugging slow APIs, deployment rollback, connection issues, OOMKilled, CrashLoopBackOff, debugging principles
-- **Related skills**: monitoring (diagnostic data), logging (log analysis), k8s-workflow (K8s-specific issues)
+- **Related skills**: observability (diagnostic data), logging (log analysis), k8s-workflow (K8s-specific issues)
 
 ### chaos-engineering
 
 - **Core coverage**: Chaos principles, failure injection, game days, resilience testing
-- **Related skills**: incident-response (incident preparedness), monitoring (observing experiments), k8s-workflow (K8s chaos tools)
+- **Related skills**: incident-response (incident preparedness), observability (observing experiments), k8s-workflow (K8s chaos tools)
 
 ## Security
 
@@ -176,7 +171,7 @@ Detailed routing information for each skill, including core coverage and relatio
 ### load-testing
 
 - **Core coverage**: k6 and Gatling, test design, metrics, thresholds, CI integration, result analysis
-- **Related skills**: testing (general test strategy), monitoring (performance metrics), ci-cd (CI integration)
+- **Related skills**: testing (general test strategy), observability (performance metrics), ci-cd (CI integration)
 
 ### code-review
 
@@ -207,8 +202,8 @@ Detailed routing information for each skill, including core coverage and relatio
 
 ### messaging
 
-- **Core coverage**: Async messaging, broker selection, message design, producer/consumer patterns, schema evolution, monitoring
-- **Related skills**: microservices (event-driven architecture), monitoring (message queue monitoring), distributed-systems (async patterns)
+- **Core coverage**: Async messaging, broker selection, message design, producer/consumer patterns, schema evolution, observability
+- **Related skills**: microservices (event-driven architecture), observability (message queue observability), system-design (async patterns)
 
 ## Miscellaneous
 
@@ -220,12 +215,12 @@ Detailed routing information for each skill, including core coverage and relatio
 ### caching
 
 - **Core coverage**: Cache selection, TTL design, invalidation patterns, stampede prevention, anti-patterns, Redis patterns
-- **Related skills**: system-design (caching in architecture), database (query caching), monitoring (cache metrics)
+- **Related skills**: system-design (caching in architecture), database (query caching), observability (cache metrics)
 
 ### jvm-performance
 
 - **Core coverage**: GC algorithms, GC selection, heap analysis, profiling tools, cloud-native JVM considerations
-- **Related skills**: concurrency (thread/coroutine performance), dockerfile (JVM container tuning), monitoring (JVM metrics)
+- **Related skills**: concurrency (thread/coroutine performance), dockerfile (JVM container tuning), observability (JVM metrics)
 
 ### prompt-engineering
 

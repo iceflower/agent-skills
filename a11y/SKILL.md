@@ -105,7 +105,7 @@ Use `aria-live` to announce dynamic content changes:
 
 ### aria-hidden Cautions
 
-- **Never** apply `aria-hidden="true"` to focusable elements
+- **Never** apply `aria-hidden="true"` to focusable elements (including `tabindex="-1"`, which is programmatically focusable)
 - **Never** apply it to ancestors of focusable elements
 - Use it only for purely decorative content (icons with adjacent text, visual separators)
 
@@ -236,7 +236,7 @@ Common patterns:
   - Paragraph spacing: 2× font size
   - Letter spacing: 0.12× font size
   - Word spacing: 0.16× font size
-- Touch targets: minimum 24×24 CSS pixels (WCAG 2.5.8)
+- Touch targets: minimum 24×24 CSS pixels (WCAG 2.5.8) — see also Section 5 for contrast requirements
 - Provide alternatives for drag-based interactions (WCAG 2.5.7)
 
 ## 9. Testing
@@ -293,6 +293,7 @@ Essential manual tests:
 - Run axe-core in CI pipeline on every PR
 - Set axe as a blocking check (zero violations policy for new code)
 - Use `eslint-plugin-jsx-a11y` for React/JSX static analysis
+- Use `eslint-plugin-vuejs-accessibility` for Vue.js static analysis
 - Track accessibility coverage over time
 
 ## 10. Common Anti-Patterns

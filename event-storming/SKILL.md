@@ -212,4 +212,4 @@ For the detailed facilitation guide, see
 | Chasing consensus | Groupthink, suppressed diversity | Use Hot Spots for disagreements |
 | No follow-up | Workshop results go unused | Plan implementation and follow-up sessions |
 | Custom sticky colors | Confusion about conventions | Stick to the standard color scheme |
-| Single session | Incomplete exploration | Plan multiple sessions |
+| Single session | Incomplete exploration | Plan 2-4 sessions for a new domain, more for complex domains |

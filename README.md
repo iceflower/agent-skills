@@ -4,7 +4,7 @@
 
 ## 개요
 
-이 저장소는 Java, Kotlin, Spring, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **61개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
+이 저장소는 Java, Kotlin, Spring, NestJS, Kubernetes, Terraform 등 다양한 기술 스택에 대한 **60개 스킬**을 포함하고 있습니다. 관련 스킬은 `references/` 하위 디렉토리를 활용하여 하나의 스킬로 통합되어 있으며, 메타 스킬(`index`)을 통해 카테고리별 라우팅을 제공합니다.
 
 ## 호환 도구
 
@@ -88,16 +88,16 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | [ddd](./ddd/) | 도메인 주도 설계 (엔티티, 애그리거트, 바운디드 컨텍스트) |
 | [event-storming](./event-storming/) | 이벤트 스토밍 워크샵 (스티커 규칙, 퍼실리테이션, DDD 전환) |
 | [object-oriented-design](./object-oriented-design/) | 객체지향 설계 원칙 (SOLID, 합성 우선) |
-| [system-design](./system-design/) | 대규모 시스템 설계 + 안정성 패턴 (Circuit Breaker, Bulkhead) |
-| [distributed-systems](./distributed-systems/) | 분산 시스템 (복제, 파티셔닝, 합의 알고리즘) |
+| [system-design](./system-design/) | 대규모 시스템 설계 + 분산 시스템 패턴 + 안정성 패턴 (복제, 파티셔닝, 합의, Circuit Breaker) |
 | [cloud-native](./cloud-native/) | 12-Factor App / Cloud Native 패턴 (15-Factor, Well-Architected Framework) |
 
-### 프론트엔드 & TypeScript
+### TypeScript & 프론트엔드
 
 | 스킬 | 설명 |
 | ---- | ---- |
-| [react-convention](./react-convention/) | React/Next.js 코딩 컨벤션 (컴포넌트 패턴, Hooks, 상태 관리, 성능 최적화) |
 | [typescript-convention](./typescript-convention/) | TypeScript 타입 시스템 (타입 가드, 제네릭, 유틸리티 타입, 코딩 컨벤션) |
+| [nestjs-convention](./nestjs-convention/) | NestJS 프레임워크 컨벤션 (모듈, DI, Guard, Interceptor, Pipe, Prisma/TypeORM) |
+| [react-convention](./react-convention/) | React/Next.js 코딩 컨벤션 (컴포넌트 패턴, Hooks, 상태 관리, 성능 최적화) |
 | [a11y](./a11y/) | 웹 접근성 (WCAG 2.2 AA, ARIA 패턴, 키보드 접근성, axe-core 테스트) |
 | [localization](./localization/) | 다국어/i18n (ICU Message Format, react-intl/i18next, RTL 지원, Intl API) |
 | [performance-optimization](./performance-optimization/) | 성능 최적화 (Core Web Vitals, 번들 최적화, DB 튜닝, 캐싱, 성능 버짓) |
@@ -124,8 +124,7 @@ git clone https://github.com/iceflower/agent-skills.git .agents/skills
 | 스킬 | 설명 |
 | ---- | ---- |
 | [logging](./logging/) | 로깅 표준 (로그 레벨, 구조화 로깅, 민감 데이터 마스킹) |
-| [monitoring](./monitoring/) | 옵저버빌리티 패턴 (메트릭, 트레이싱, 알림 규칙) |
-| [observability](./observability/) | OpenTelemetry 심화 (OTel SDK, OTLP, Collector, Semantic Conventions, Exemplars) |
+| [observability](./observability/) | 옵저버빌리티 통합 (메트릭, 트레이싱, 알림, OTel SDK, OTLP, Collector, 헬스체크) |
 | [caching](./caching/) | 캐시 전략 (TTL, 무효화, Stampede 방지) |
 | [messaging](./messaging/) | 비동기 메시징 (Kafka, RabbitMQ, NATS, Pulsar) |
 | [troubleshooting](./troubleshooting/) | 트러블슈팅 가이드 (느린 API, 배포 롤백, 연결 문제) |

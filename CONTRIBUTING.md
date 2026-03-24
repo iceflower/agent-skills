@@ -65,6 +65,7 @@ metadata:
 python3 scripts/lint_frontmatter.py .
 python3 scripts/check_references.py .
 python3 scripts/check_index.py .
+npx markdownlint-cli2 "**/SKILL.md"
 ```
 
 ## 스킬 수정 절차

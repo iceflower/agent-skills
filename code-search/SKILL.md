@@ -49,7 +49,7 @@ semantic navigation (LSP) + history search (git) for comprehensive exploration.
 | `-c` | Count matches per file | `rg -c 'TODO'` |
 | `-C N` | Context (N lines around) | `rg -C3 'pattern'` |
 | `-A N` / `-B N` | After / before context | `rg -B2 -A5 'fn main'` |
-| `-U` | Multiline mode | `rg -U 'struct\s*\{[^}]*\}'` |
+| `-U` | Multiline mode | `rg -U 'fn \w+\([^)]*\)\s*\{'` (note: cannot handle nested braces) |
 | `--pcre2` | PCRE2 regex (lookaround) | `rg --pcre2 '(?<=fn )\w+'` |
 | `-r` | Replace (stdout only) | `rg 'old' -r 'new'` |
 
@@ -143,6 +143,9 @@ git log -G "frotz\(nitfol" --oneline
 | Moved code | Skipped (count unchanged) | Found (appears in diff) |
 | Use for | "When was this added/removed?" | "When was this changed?" |
 
+**Recommendation**: Start with `-S` for most cases. Use `-G` when you need to find
+changes that include moving or reformatting code.
+
 ### git grep
 
 Search tracked files with git-aware filtering.
@@ -224,6 +227,7 @@ content:pattern                # Search file contents only (not paths)
 4. Drill down into specific implementations
 
 Best for: Understanding overall architecture of an unfamiliar project.
+Effort: 1-2 hours for medium projects, half day for large ones.
 
 ### Bottom-Up (Specific → General)
 
@@ -233,6 +237,7 @@ Best for: Understanding overall architecture of an unfamiliar project.
 4. Place in the context of the full system
 
 Best for: Debugging, understanding a specific feature.
+Effort: 15-60 minutes for a focused investigation.
 
 ### Call Chain Tracing
 

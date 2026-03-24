@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+  labels:
+    app.kubernetes.io/name: ${APP_NAME}
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: ${PROJECT_NAME}
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/version: "${APP_VERSION}"
+    environment: ${ENVIRONMENT}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${APP_NAME}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  minReadySeconds: 30
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${APP_NAME}
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/part-of: ${PROJECT_NAME}
+        app.kubernetes.io/version: "${APP_VERSION}"
+        environment: ${ENVIRONMENT}
+    spec:
+      # NOTE: Create a ServiceAccount resource separately before applying this template.
+      # If your app needs additional writable paths (e.g., log directories),
+      # add them as emptyDir volume mounts similar to the /tmp volume below.
+      serviceAccountName: ${APP_NAME}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: ${APP_NAME}
+          image: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "${ENVIRONMENT}"
+          envFrom:
+            - configMapRef:
+                name: ${APP_NAME}-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

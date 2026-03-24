@@ -1,0 +1,47 @@
+# syntax=docker/dockerfile:1
+
+# ============================================================
+# Stage 1: Build
+# ============================================================
+FROM node:22-alpine AS build
+
+WORKDIR /app
+
+# Copy dependency files first for layer caching
+COPY package.json package-lock.json ./
+
+# Install all dependencies (including devDependencies for build)
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+# Copy source and build
+COPY . .
+RUN npm run build
+
+# ============================================================
+# Stage 2: Runtime
+# ============================================================
+FROM node:22-alpine AS runtime
+
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Copy dependency files and install production only
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev
+
+# Copy build output from build stage
+COPY --from=build /app/dist ./dist
+
+# Switch to non-root user
+USER appuser
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+    CMD wget -qO- http://localhost:3000/health || exit 1
+
+ENTRYPOINT ["node", "dist/index.js"]

@@ -436,6 +436,12 @@ ToolExecutionExceptionProcessor toolErrorProcessor() {
 
 ---
 
+## Related Skills
+
+- `security`: Secure handling of API keys, prompt injection defense, and output sanitization
+- `error-handling`: Error classification and retry patterns for LLM API calls
+- `caching`: Caching strategies for LLM responses and vector store results
+
 ## Additional References
 
 - For ChatClient fluent API, streaming, and structured output patterns, see [references/chatclient-patterns.md](references/chatclient-patterns.md)

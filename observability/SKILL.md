@@ -412,7 +412,6 @@ For detailed design patterns, see [references/slo-sli-design.md](references/slo-
 - `incident-response`: Alert-driven incident response processes
 - `troubleshooting`: Monitoring data-driven problem diagnosis
 - `spring-framework`: Spring Boot Actuator and Micrometer metrics
-- `slo`: Service level objectives and error budgets
 
 ## Additional References
 

@@ -176,5 +176,5 @@ For detailed patterns, see [references/container-supply-chain.md](references/con
 
 - For authentication and authorization implementation patterns, see [references/authentication.md](references/authentication.md)
 - For web protection (CSRF, XSS, injection defense, TLS), see [references/web-protection.md](references/web-protection.md)
-- For container security, supply chain security (SBOM, Cosign, SLSA, Kyverno), see [references/container-supply-chain.md](references/container-supply-chain.md)
+- For container and supply chain security (SBOM, Cosign, SLSA, Kyverno, image hardening), see [references/container-supply-chain.md](references/container-supply-chain.md)
 - For Spring Boot implementation patterns (SecurityFilterChain, Bean Validation), see `spring-framework` skill — [references/security.md](../spring-framework/references/security.md)

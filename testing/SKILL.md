@@ -3,13 +3,14 @@ name: testing
 description: >-
   BDD-style test writing rules including unit testing patterns, integration
   testing with Testcontainers, contract testing for microservices (Pact,
-  Spring Cloud Contract), and performance testing strategies (k6, Gatling).
+  Spring Cloud Contract), E2E testing (Playwright, Cypress, visual regression),
+  and performance testing strategies (k6, Gatling).
   Use when writing or modifying test code.
 license: MIT
 metadata:
   author: iceflower
-  version: "1.0"
-  last-reviewed: "2026-03"
+  version: "2.0"
+  last-reviewed: "2026-04"
 ---
 # BDD-Style Unit Test Rules
 
@@ -133,6 +134,7 @@ Every test must satisfy all five criteria:
 - For integration testing patterns, see [references/integration.md](references/integration.md)
 - For contract testing patterns, see [references/contract.md](references/contract.md)
 - For performance testing strategies, see [references/performance.md](references/performance.md)
+- For E2E testing patterns (Playwright, Cypress, visual regression), see [references/e2e.md](references/e2e.md)
 
 ## Related Skills
 

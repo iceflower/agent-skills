@@ -3,13 +3,14 @@ name: security
 description: >-
   Framework-agnostic security rules including input validation, auth principles,
   CORS, API headers, rate limiting, secret management, authentication patterns
-  (JWT, OAuth2, session, MFA), and web protection (CSRF, XSS, injection defense, TLS).
+  (JWT, OAuth2, session, MFA), web protection (CSRF, XSS, injection defense, TLS),
+  container security, and software supply chain security (SBOM, Cosign, Sigstore, SLSA).
   Use when implementing security-related code.
 license: MIT
 metadata:
   author: iceflower
-  version: "1.0"
-  last-reviewed: "2026-03"
+  version: "2.0"
+  last-reviewed: "2026-04"
 ---
 # Security Rules
 
@@ -140,6 +141,32 @@ When writing code, be vigilant against all 10 categories:
 | A09 | Security Logging and Monitoring Failures   | Log security events; ensure logs are tamper-resistant   |
 | A10 | Server-Side Request Forgery (SSRF)         | Validate and whitelist outbound URLs                    |
 
+## 10. Container and Supply Chain Security
+
+Securing containers and the software supply chain is essential for modern cloud-native deployments.
+For detailed patterns, see [references/container-supply-chain.md](references/container-supply-chain.md).
+
+### Key Rules
+
+- Use minimal base images (distroless, Alpine) — reduce attack surface
+- Run containers as non-root user — set `USER` directive in Dockerfile
+- Generate and attest SBOMs (Software Bill of Materials) with Syft or Trivy
+- Sign container images with Cosign (Sigstore keyless signing)
+- Enforce admission policies (OPA/Gatekeeper, Kyverno) in Kubernetes clusters
+- Target SLSA Build Level 2+ for production workloads — provenance attestation required
+
+### Supply Chain Controls
+
+| Control | Tool | Purpose |
+| ------- | ---- | ------- |
+| Image scanning | Trivy, Grype | Vulnerability detection |
+| Image signing | Cosign (Sigstore) | Authenticity and integrity |
+| SBOM generation | Syft | Dependency inventory |
+| Policy enforcement | Kyverno, OPA | Admission control |
+| Provenance | SLSA | Build process attestation |
+
+---
+
 ## Related Skills
 
 - For secret lifecycle management (rotation, storage, detection), see [secrets-management](../secrets-management/) skill
@@ -149,4 +176,5 @@ When writing code, be vigilant against all 10 categories:
 
 - For authentication and authorization implementation patterns, see [references/authentication.md](references/authentication.md)
 - For web protection (CSRF, XSS, injection defense, TLS), see [references/web-protection.md](references/web-protection.md)
+- For container and supply chain security (SBOM, Cosign, SLSA, Kyverno, image hardening), see [references/container-supply-chain.md](references/container-supply-chain.md)
 - For Spring Boot implementation patterns (SecurityFilterChain, Bean Validation), see `spring-framework` skill — [references/security.md](../spring-framework/references/security.md)

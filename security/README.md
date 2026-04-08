@@ -18,6 +18,18 @@ cp -r security/ ~/.agents/skills/security/
 cp -r security/ .agents/skills/security/
 ```
 
+## 디렉토리 구조
+
+```text
+security/
+├── SKILL.md
+├── README.md
+└── references/
+    ├── authentication.md
+    ├── container-supply-chain.md
+    └── web-protection.md
+```
+
 ## 호환 도구
 
 | 도구 | 전역 경로 | 프로젝트 경로 |

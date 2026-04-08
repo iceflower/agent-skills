@@ -8,15 +8,16 @@ description: >-
   key metrics to monitor (application, business, infrastructure),
   metric naming conventions, log correlation, OTel Collector pipelines,
   Semantic Conventions, backend integration (Jaeger, Grafana Tempo, Loki, Prometheus),
-  alerting rules, and health check patterns (liveness, readiness, startup).
+  alerting rules, health check patterns (liveness, readiness, startup),
+  SLO/SLI design, error budget management, and business metrics modeling.
   Use when implementing distributed tracing, setting up OTel instrumentation,
   configuring Collector pipelines, designing alerting strategies,
-  implementing health checks, or integrating observability backends.
+  implementing health checks, defining SLO/SLI targets, or integrating observability backends.
 license: MIT
 metadata:
   author: iceflower
-  version: "2.0"
-  last-reviewed: "2026-03"
+  version: "3.0"
+  last-reviewed: "2026-04"
 ---
 
 # Observability Rules (OpenTelemetry)
@@ -371,17 +372,51 @@ application lifecycle. For detailed probe configuration and rules, see
 | No baseline metrics | Cannot detect regressions | Establish baselines before alerting |
 | Monitoring only infra, not business | Miss revenue-impacting issues | Add business metrics |
 
-## 12. Related Skills
+## 12. SLO/SLI Design
+
+Service Level Objectives (SLOs) and Indicators (SLIs) translate reliability into measurable targets.
+For detailed design patterns, see [references/slo-sli-design.md](references/slo-sli-design.md).
+
+### SLI Selection Framework
+
+| Request Type | Recommended SLIs |
+| ------------ | ---------------- |
+| User-facing APIs | Availability, Latency (p99), Error rate |
+| Background jobs | Freshness, Throughput, Error rate |
+| Data pipelines | Completeness, Freshness, Accuracy |
+| Storage systems | Durability, Availability, Latency |
+
+### SLO Design Rules
+
+- Set SLO targets based on user pain thresholds, not current performance — aspire and improve
+- Define error budget = `(1 - SLO) × time window`; consume it deliberately on features, not incidents
+- Use multi-window multi-burn-rate alerts (5m + 1h short window, 30m + 6h long window)
+- Review and adjust SLOs quarterly — SLOs should reflect current user expectations
+- Start conservative (e.g., 99.0%) and tighten as reliability improves
+
+### Error Budget Policy
+
+| Budget Remaining | Action |
+| ---------------- | ------ |
+| > 50% | Ship features freely |
+| 25–50% | Review risky changes |
+| 10–25% | Freeze non-critical deploys |
+| < 10% | Incident review required before any deploy |
+| 0% | Reliability work only until budget restored |
+
+---
+
+## 13. Related Skills
 
 - `logging`: Structured logging and monitoring integration
 - `incident-response`: Alert-driven incident response processes
 - `troubleshooting`: Monitoring data-driven problem diagnosis
 - `spring-framework`: Spring Boot Actuator and Micrometer metrics
-- `slo`: Service level objectives and error budgets
 
 ## Additional References
 
 - For PromQL examples, recording rules, and common query patterns, see [references/prometheus-queries.md](references/prometheus-queries.md)
+- For SLO/SLI design, error budget management, and multi-window burn rate alerting, see [references/slo-sli-design.md](references/slo-sli-design.md)
 - [OpenTelemetry Documentation](https://opentelemetry.io/docs/) - Official OpenTelemetry documentation
 - [Prometheus Documentation](https://prometheus.io/docs/) - Official Prometheus documentation
 - [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/) - Monitoring distributed systems

@@ -4,16 +4,19 @@ description: >-
   Spring AI conventions and patterns for building AI-powered applications
   including ChatClient configuration, tool/function calling, prompt template
   management, vector store integration, RAG (Retrieval Augmented Generation),
-  Advisors API, MCP (Model Context Protocol) integration, and multi-model
-  routing patterns.
+  Advisors API, MCP (Model Context Protocol) integration, multi-model
+  routing patterns, advanced RAG (query rewriting, hybrid search, reranking,
+  agentic RAG), agent frameworks (Router Agent, Human-in-the-Loop, memory patterns),
+  and model evaluation/token monitoring.
   Use when building or reviewing Spring AI applications, integrating LLMs
   with Spring Boot, implementing ChatClient, configuring tool calling,
-  designing prompt templates, or working with vector databases in Spring.
+  designing prompt templates, working with vector databases in Spring,
+  or building advanced RAG pipelines and autonomous agent workflows.
 license: MIT
 metadata:
   author: iceflower
-  version: "1.0"
-  last-reviewed: "2026-03"
+  version: "2.0"
+  last-reviewed: "2026-04"
 ---
 
 # Spring AI Core Rules
@@ -430,3 +433,18 @@ ToolExecutionExceptionProcessor toolErrorProcessor() {
 - Hardcoding API keys — use `spring.ai.<provider>.api-key` from environment variables
 - Returning JPA entities from `@Tool` methods — use simple DTOs or Strings
 - Blocking the event loop with tool calls in WebFlux — tool calling is inherently blocking
+
+---
+
+## Related Skills
+
+- `security`: Secure handling of API keys, prompt injection defense, and output sanitization
+- `error-handling`: Error classification and retry patterns for LLM API calls
+- `caching`: Caching strategies for LLM responses and vector store results
+
+## Additional References
+
+- For ChatClient fluent API, streaming, and structured output patterns, see [references/chatclient-patterns.md](references/chatclient-patterns.md)
+- For @Tool annotation usage, ToolCallback interface, and migration patterns, see [references/tool-calling.md](references/tool-calling.md)
+- For vector store patterns, supported databases, and basic RAG implementation, see [references/vector-store-rag.md](references/vector-store-rag.md)
+- For advanced RAG (query rewriting, hybrid search, reranking, agentic RAG), agent frameworks, and model evaluation, see [references/advanced-rag-agents.md](references/advanced-rag-agents.md)

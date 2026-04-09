@@ -189,8 +189,8 @@ ChatClient chatClient = ChatClient.builder(chatModel)
     .defaultSystem("You are a {role}")
     .defaultUser("Default user context")
 
-    .defaultOptions(ChatOptions.builder()
-        .model("gpt-4o")
+    .defaultOptions(OpenAiChatOptions.builder()
+        .model("gpt-5-mini")
         .temperature(0.7)
         .build())
 
@@ -200,7 +200,7 @@ ChatClient chatClient = ChatClient.builder(chatModel)
 
     .defaultTools(new DateTimeTools())
     .defaultToolCallbacks(ToolCallbacks.from(new MyTools()))
-    .defaultFunctions("currentWeather")
+    .defaultToolNames("currentWeather")
     .build();
 
 // Runtime override
@@ -232,7 +232,7 @@ public class ChatClientConfig {
     public ChatClient anthropicChatClient(AnthropicChatModel chatModel) {
         return ChatClient.builder(chatModel)
             .defaultOptions(AnthropicChatOptions.builder()
-                .model("claude-sonnet-4-20250514")
+                .model("claude-sonnet-4-5-20250929")
                 .build())
             .build();
     }
@@ -251,16 +251,25 @@ class MyController {
 ## OpenAI-Compatible Endpoints
 
 ```java
-// Mutate API for different providers with OpenAI-compatible API
-OpenAiApi groqApi = baseOpenAiApi.mutate()
+// Create base OpenAI API and mutate for different providers
+OpenAiApi baseApi = OpenAiApi.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    .build();
+
+OpenAiChatModel baseModel = OpenAiChatModel.builder()
+    .openAiApi(baseApi)
+    .build();
+
+// Mutate for Groq (OpenAI-compatible API)
+OpenAiApi groqApi = baseApi.mutate()
     .baseUrl("https://api.groq.com/openai")
     .apiKey(System.getenv("GROQ_API_KEY"))
     .build();
 
-OpenAiChatModel groqModel = baseChatModel.mutate()
+OpenAiChatModel groqModel = baseModel.mutate()
     .openAiApi(groqApi)
     .defaultOptions(OpenAiChatOptions.builder()
-        .model("llama3-70b-8192")
+        .model("llama-3.3-70b-versatile")
         .temperature(0.5)
         .build())
     .build();
@@ -294,9 +303,53 @@ ChatClient chatClient = ChatClient.builder(chatModel)
 // logging.level.org.springframework.ai.chat.client.advisor=DEBUG
 ```
 
+## Native Structured Output
+
+```java
+// Enable native structured output for supported models (OpenAI, Ollama, Mistral AI)
+ActorFilms films = chatClient.prompt()
+    .advisors(AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT)
+    .user("Generate filmography for Tom Hanks")
+    .call()
+    .entity(ActorFilms.class);
+
+// Dynamically disable at request time
+chatClient.prompt()
+    .advisors(AdvisorParams.DISABLE_NATIVE_STRUCTURED_OUTPUT)
+    .user("...")
+    .call()
+    .entity(ActorFilms.class);
+```
+
+## Spring Boot 4.0 HTTP Client Integration
+
+```java
+// Configure HTTP client with Spring Boot 4.0 patterns
+HttpClientSettings settings = HttpClientSettings.defaults()
+    .withConnectTimeout(Duration.ofSeconds(10))
+    .withReadTimeout(Duration.ofSeconds(30));
+
+RestClient.Builder restClientBuilder = RestClient.builder()
+    .requestFactory(ClientHttpRequestFactoryBuilder.detect().build(settings));
+
+OpenAiApi api = OpenAiApi.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    .baseUrl("https://api.openai.com")
+    .completionsPath("/chat/completions")
+    .restClientBuilder(restClientBuilder)
+    .build();
+
+OpenAiChatModel chatModel = OpenAiChatModel.builder()
+    .openAiApi(api)
+    .build();
+```
+
 ## Important Notes
 
-- **Bug workaround**: Set `spring.http.client.factory=jdk` for Spring Boot 3.4+
+- **Jackson 3**: Spring AI 2.x uses Jackson 3 (`tools.jackson` package). If you have custom Jackson serializers/deserializers for structured output, update imports from `com.fasterxml.jackson` to `tools.jackson`.
+- **Native Structured Output**: Use `AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT` for models that support it (OpenAI, Ollama, Mistral AI) — avoids JSON schema indirection.
+- **No default temperature**: Spring AI 2.x no longer sets a default temperature. Always configure `temperature` in `ChatOptions` or via `spring.ai.<provider>.chat.options.temperature`.
+- **Builder-only ChatOptions**: All provider ChatOptions (AnthropicChatOptions, AzureOpenAiChatOptions, BedrockChatOptions, etc.) use builder pattern in 2.x. Setter-style construction is removed.
 - **Thread safety**: `ChatClient` instances are thread-safe and should be reused
 - **Streaming stack**: Streaming requires WebFlux; non-streaming requires Servlet stack
 - **Tool calling**: Always blocking, even within streaming responses

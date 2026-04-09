@@ -27,6 +27,7 @@ spring-ai/
 └── references/
     ├── advanced-rag-agents.md
     ├── chatclient-patterns.md
+    ├── migration-2x.md
     ├── tool-calling.md
     └── vector-store-rag.md
 ```

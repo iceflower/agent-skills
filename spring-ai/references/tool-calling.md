@@ -371,9 +371,9 @@ class McpClientConfig {
     @Bean
     McpClientCustomizer<McpAsyncClient.Builder> mcpClientCustomizer() {
         return builder -> builder
-            .toolCallbacks(additionalToolCallbacks)
+            .capabilities(/* configure capabilities */)
+            .requestTimeout(Duration.ofSeconds(30));
             // Customize client behavior
-            .build();
     }
 }
 ```

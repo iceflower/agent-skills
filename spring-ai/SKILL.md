@@ -243,7 +243,7 @@ ChatClient chatClient = ChatClient.builder(chatModel)
 | `ReReadingAdvisor`              | RE2 technique for better reasoning      |
 | `SimpleLoggerAdvisor`           | Request/response logging                |
 
-> **Deprecation note (2.x):** `MessageChatMemoryAdvisor.disableMemory()` is deprecated. Use `disableInternalConversationHistory()` instead.
+> **Deprecation note (2.x):** `ChatClient.disableMemory()` is deprecated. Use `disableInternalConversationHistory()` instead.
 
 ---
 

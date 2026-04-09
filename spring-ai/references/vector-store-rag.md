@@ -120,25 +120,25 @@ Expression exp = b.isNotNull("category").build();
 
 ## Supported Vector Databases
 
-| Database             | Artifact                        |
-| -------------------- | ------------------------------- |
-| Azure Vector Search  | `spring-ai-azure-store`         |
-| Apache Cassandra     | `spring-ai-cassandra-store`     |
-| Chroma               | `spring-ai-chroma-store`        |
-| Elasticsearch        | `spring-ai-elasticsearch-store` |
-| Milvus               | `spring-ai-milvus-store`        |
-| MongoDB Atlas        | `spring-ai-mongodb-atlas-store` |
-| Neo4j                | `spring-ai-neo4j-store`         |
-| OpenSearch           | `spring-ai-opensearch-store`    |
-| PGVector (PostgreSQL)| `spring-ai-pgvector-store`      |
-| Pinecone             | `spring-ai-pinecone-store`      |
-| Qdrant               | `spring-ai-qdrant-store`        |
-| Redis                | `spring-ai-redis-store`         |
-| Amazon Bedrock Knowledge Base | `spring-ai-bedrock-kb-store` |
-| Amazon S3 | `spring-ai-amazon-s3-store` |
-| Infinispan | `spring-ai-infinispan-store` |
-| Weaviate             | `spring-ai-weaviate-store`      |
-| SimpleVectorStore    | `spring-ai-core` (in-memory)    |
+| Database                       | Artifact                            |
+| ------------------------------ | ----------------------------------- |
+| Amazon Bedrock Knowledge Base  | `spring-ai-bedrock-kb-store`        |
+| Amazon S3                      | `spring-ai-amazon-s3-store`         |
+| Apache Cassandra               | `spring-ai-cassandra-store`         |
+| Azure Vector Search            | `spring-ai-azure-store`             |
+| Chroma                         | `spring-ai-chroma-store`            |
+| Elasticsearch                  | `spring-ai-elasticsearch-store`     |
+| Infinispan                     | `spring-ai-infinispan-store`        |
+| Milvus                         | `spring-ai-milvus-store`            |
+| MongoDB Atlas                  | `spring-ai-mongodb-atlas-store`     |
+| Neo4j                          | `spring-ai-neo4j-store`             |
+| OpenSearch                     | `spring-ai-opensearch-store`        |
+| PGVector (PostgreSQL)          | `spring-ai-pgvector-store`          |
+| Pinecone                       | `spring-ai-pinecone-store`          |
+| Qdrant                         | `spring-ai-qdrant-store`            |
+| Redis                          | `spring-ai-redis-store`             |
+| Weaviate                       | `spring-ai-weaviate-store`          |
+| SimpleVectorStore              | `spring-ai-core` (in-memory)        |
 
 ## Batching Strategy
 

@@ -200,7 +200,7 @@ ChatClient chatClient = ChatClient.builder(chatModel)
 
     .defaultTools(new DateTimeTools())
     .defaultToolCallbacks(ToolCallbacks.from(new MyTools()))
-    .defaultFunctions("currentWeather")
+    .defaultToolNames("currentWeather")
     .build();
 
 // Runtime override
@@ -232,7 +232,7 @@ public class ChatClientConfig {
     public ChatClient anthropicChatClient(AnthropicChatModel chatModel) {
         return ChatClient.builder(chatModel)
             .defaultOptions(AnthropicChatOptions.builder()
-                .model("claude-sonnet-4-20250514")
+                .model("claude-sonnet-4-5-20250929")
                 .build())
             .build();
     }

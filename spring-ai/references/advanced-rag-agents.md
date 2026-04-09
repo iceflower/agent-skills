@@ -347,6 +347,17 @@ public class HumanInTheLoopAgent {
 }
 ```
 
+#### Configure Thinking Level for Supported Models (Spring AI 2.x)
+
+```java
+// Configure thinking level for supported models (Spring AI 2.x)
+GoogleGenAiChatOptions options = GoogleGenAiChatOptions.builder()
+    .thinkingLevel(ThinkingLevel.HIGH)
+    .build();
+```
+
+> Spring AI 2.x supports `ThinkingLevel` configuration for Google GenAI models.
+
 ### Agent Memory Patterns
 
 ```java
@@ -376,7 +387,22 @@ ChatClient clientWithStructuredMemory = ChatClient.builder(chatModel)
         Always check preferences before making recommendations.
         """)
     .build();
+
+// Persistent: Redis-backed memory (Spring AI 2.x)
+@Configuration
+class RedisMemoryConfig {
+    @Bean
+    ChatClient clientWithPersistentMemory(ChatClient.Builder builder, ChatMemoryRepository redisRepo) {
+        return builder
+            .defaultAdvisors(
+                MessageChatMemoryAdvisor.builder(redisRepo).build()
+            )
+            .build();
+    }
+}
 ```
+
+> Spring AI 2.x includes `RedisChatMemoryRepository` via Spring Boot starter for persistent, distributed conversation storage.
 
 ### Agent Guardrails
 

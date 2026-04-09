@@ -15,11 +15,22 @@ description: >-
 license: MIT
 metadata:
   author: iceflower
-  version: "2.0"
+  version: "2.1"
   last-reviewed: "2026-04"
 ---
 
 # Spring AI Core Rules
+
+## Platform Requirements
+
+| Requirement           | Version                          |
+| --------------------- | -------------------------------- |
+| Spring AI             | 2.0.x (latest: 2.0.0-M4)         |
+| Spring Boot           | 4.0+ (Spring Framework 7.0)      |
+| JDK                   | 17+ (JDK 25 LTS recommended)     |
+| Jackson               | 3 (`tools.jackson` package)      |
+
+> Jackson 3 uses `tools.jackson` package namespace instead of `com.fasterxml.jackson`. Ensure all serialization dependencies align.
 
 ## 1. ChatClient Configuration
 
@@ -33,6 +44,7 @@ metadata:
 - Use `.call()` for synchronous responses, `.stream()` for reactive `Flux` responses
 - Use `.entity(Class<T>)` for structured output — Spring AI handles JSON schema generation
 - Always configure `spring.ai.retry` properties for production resilience
+- Always configure `spring.ai.openai.chat.options.temperature` explicitly — no default value in 2.x
 
 ### ChatClient Creation
 
@@ -60,7 +72,7 @@ class MyController {
 - Use `@Tool` annotation for declarative tool definitions — method name becomes tool name by default
 - Always provide descriptive `description` — the model uses it to decide when to call the tool
 - Use `@ToolParam(description = "...")` for parameter descriptions — improves model accuracy
-- Register tools via `.tools(new MyTools())` on ChatClient or `.defaultTools()` on builder
+- Register tools via `.tools(new MyTools())` on ChatClient or `.defaultTools()` on builder — `.defaultFunctions()` is removed in 2.x; both methods use `ToolCallback` internally
 - Use `ToolContext` to pass application context (tenant ID, user info) without exposing to the model
 - Tool methods must not return reactive types (`Mono`, `Flux`) — tool calling is synchronous
 - Set `returnDirect = true` on `@Tool` when the tool result should go directly to the user
@@ -231,6 +243,8 @@ ChatClient chatClient = ChatClient.builder(chatModel)
 | `ReReadingAdvisor`              | RE2 technique for better reasoning      |
 | `SimpleLoggerAdvisor`           | Request/response logging                |
 
+> **Deprecation note (2.x):** `MessageChatMemoryAdvisor.disableMemory()` is deprecated. Use `disableInternalConversationHistory()` instead.
+
 ---
 
 ## 7. MCP (Model Context Protocol) Integration
@@ -258,6 +272,8 @@ Spring AI provides MCP integration through Boot starters for both client and ser
 ```
 
 ### Server Annotations
+
+> Annotations (`@McpTool`, `@McpResource`, `@McpPrompt`) are provided by `spring-ai-mcp-annotations` artifact — included transitively by the server starters.
 
 ```java
 @McpTool          // Expose tools to MCP clients
@@ -300,7 +316,7 @@ public class MultiModelConfig {
     public ChatClient fastClient(OpenAiChatModel openAiModel) {
         return ChatClient.builder(openAiModel)
             .defaultOptions(OpenAiChatOptions.builder()
-                .model("gpt-4o-mini")
+                .model("gpt-5-mini")
                 .temperature(0.3)
                 .build())
             .build();
@@ -311,7 +327,7 @@ public class MultiModelConfig {
     public ChatClient powerfulClient(AnthropicChatModel anthropicModel) {
         return ChatClient.builder(anthropicModel)
             .defaultOptions(AnthropicChatOptions.builder()
-                .model("claude-sonnet-4-20250514")
+                .model("claude-sonnet-4-5-20250929")
                 .build())
             .build();
     }
@@ -433,6 +449,8 @@ ToolExecutionExceptionProcessor toolErrorProcessor() {
 - Hardcoding API keys — use `spring.ai.<provider>.api-key` from environment variables
 - Returning JPA entities from `@Tool` methods — use simple DTOs or Strings
 - Blocking the event loop with tool calls in WebFlux — tool calling is inherently blocking
+- Using setter-style `ChatOptions` (e.g., `new AnthropicChatOptions()`) — use builder pattern in 2.x
+- Relying on default temperature — must be explicitly configured in 2.x
 
 ---
 
@@ -448,3 +466,4 @@ ToolExecutionExceptionProcessor toolErrorProcessor() {
 - For @Tool annotation usage, ToolCallback interface, and migration patterns, see [references/tool-calling.md](references/tool-calling.md)
 - For vector store patterns, supported databases, and basic RAG implementation, see [references/vector-store-rag.md](references/vector-store-rag.md)
 - For advanced RAG (query rewriting, hybrid search, reranking, agentic RAG), agent frameworks, and model evaluation, see [references/advanced-rag-agents.md](references/advanced-rag-agents.md)
+- For migration from Spring AI 1.x to 2.x, see [references/migration-2x.md](references/migration-2x.md)

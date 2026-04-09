@@ -66,7 +66,11 @@ vectorStore.delete(filter);
 vectorStore.delete("country == 'Korea'");
 ```
 
+Enhanced `IN` and `NIN` (not-in) filter expression grouping is available in 2.x.
+
 ## Metadata Filtering
+
+Spring AI 2.x adds JSpecify `@NonNull`/`@Nullable` annotations to most vector store implementations for compile-time null safety.
 
 ### String Syntax (SQL-like)
 
@@ -102,6 +106,18 @@ Expression exp = b.isNull("year").build();
 Expression exp = b.isNotNull("year").build();
 ```
 
+### Null Value Filters (2.x)
+
+Spring AI 2.x adds `ISNULL` and `ISNOTNULL` filter expressions:
+
+```java
+// ISNULL filter
+Expression exp = b.isNull("category").build();
+
+// ISNOTNULL filter
+Expression exp = b.isNotNull("category").build();
+```
+
 ## Supported Vector Databases
 
 | Database             | Artifact                        |
@@ -118,6 +134,9 @@ Expression exp = b.isNotNull("year").build();
 | Pinecone             | `spring-ai-pinecone-store`      |
 | Qdrant               | `spring-ai-qdrant-store`        |
 | Redis                | `spring-ai-redis-store`         |
+| Amazon Bedrock Knowledge Base | `spring-ai-bedrock-kb-store` |
+| Amazon S3 | `spring-ai-amazon-s3-store` |
+| Infinispan | `spring-ai-infinispan-store` |
 | Weaviate             | `spring-ai-weaviate-store`      |
 | SimpleVectorStore    | `spring-ai-core` (in-memory)    |
 

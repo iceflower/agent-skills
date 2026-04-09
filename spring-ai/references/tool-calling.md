@@ -257,6 +257,136 @@ ToolExecutionExceptionProcessor toolErrorProcessor() {
 
 Property: `spring.ai.tools.throw-exception-on-error` (default: `false`)
 
+## MCP Tool Annotations
+
+> Spring AI 2.x integrates MCP (Model Context Protocol) annotations as a core module.
+> Artifact: `org.springframework.ai:spring-ai-mcp-annotations`
+
+### @McpTool
+
+Expose methods as MCP tools. Use in conjunction with or instead of `@Tool` when building MCP servers.
+
+```java
+@Component
+public class MyMcpTools {
+
+    @McpTool(
+        name = "get_customer",
+        description = "Retrieve customer information by ID",
+        annotations = @McpTool.Annotations(
+            readOnlyHint = true,
+            destructiveHint = false,
+            openWorldHint = true
+        )
+    )
+    public String getCustomer(
+        @McpToolParam(description = "Customer ID", required = true) String customerId
+    ) {
+        return customerService.findById(customerId);
+    }
+}
+```
+
+### @McpTool.Annotations Attributes
+
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `readOnlyHint` | `false` | Whether the tool is read-only (no side effects) |
+| `destructiveHint` | `true` | Whether the tool may perform destructive operations |
+| `openWorldHint` | `true` | Whether the tool operates in an open world (unknown state space) |
+
+### @McpToolParam
+
+Parameter descriptions for MCP tools — equivalent to `@ToolParam` but for MCP context.
+
+```java
+@McpToolParam(description = "City name for weather lookup", required = false) String city
+```
+
+### @McpProgressToken
+
+Enable progress notifications for long-running MCP tools.
+
+```java
+@McpTool(name = "process_document", description = "Process a large document with progress tracking")
+public String processDocument(
+    @McpToolParam(description = "Document file path") String filePath,
+    McpSyncServerExchange exchange,
+    @McpProgressToken Object progressToken
+) {
+    // Create progress notifier
+    ProgressNotifier notifier = createProgressNotifier(exchange, progressToken);
+
+    for (int i = 0; i < totalPages; i++) {
+        processPage(i);
+        notifier.notify(i + 1, totalPages, "Processing page " + (i + 1));
+    }
+
+    return "Document processed successfully";
+}
+
+private ProgressNotifier createProgressNotifier(McpSyncServerExchange exchange, Object progressToken) {
+    if (progressToken == null) {
+        return (current, total, message) -> {}; // no-op
+    }
+    return (current, total, message) -> exchange.progressNotification(
+        new ProgressNotification(progressToken, (double) current, (double) total, message)
+    );
+}
+
+@FunctionalInterface
+interface ProgressNotifier {
+    void notify(int current, int total, String message);
+}
+```
+
+### MCP Server Dependencies
+
+| Role | Artifact |
+|------|----------|
+| MCP Server (STDIO) | `spring-ai-starter-mcp-server` |
+| MCP Server (WebMVC) | `spring-ai-starter-mcp-server-webmvc` |
+| MCP Server (WebFlux) | `spring-ai-starter-mcp-server-webflux` |
+| MCP Client | `spring-ai-starter-mcp-client` |
+| MCP Annotations only | `spring-ai-mcp-annotations` |
+
+### MCP Server Configuration
+
+```yaml
+spring:
+  ai:
+    mcp:
+      server:
+        name: my-mcp-server
+        version: 1.0.0
+        type: SYNC        # SYNC or ASYNC
+        protocol: STDIO   # STDIO, SSE, or STREAMABLE
+```
+
+### MCP Client Customization (2.x)
+
+```java
+@Configuration
+class McpClientConfig {
+    @Bean
+    McpClientCustomizer<McpAsyncClient.Builder> mcpClientCustomizer() {
+        return builder -> builder
+            .toolCallbacks(additionalToolCallbacks)
+            // Customize client behavior
+            .build();
+    }
+}
+```
+
+### MCP Tool Annotations Rules
+
+- Use `@McpTool` for tools exposed via MCP server — not for internal tool calling
+- `@Tool` and `@McpTool` serve different purposes: `@Tool` for ChatClient tool calling, `@McpTool` for MCP server tool exposure
+- Always provide meaningful `description` — MCP clients use it for tool discovery
+- Use `@McpTool.Annotations` hints to help MCP clients optimize tool usage
+- `@McpProgressToken` requires `McpSyncServerExchange` parameter in the method signature
+- Progress notifications are optional — guard against null `progressToken`
+
 ## Key Interfaces
 
 ### ToolDefinition

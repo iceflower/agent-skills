@@ -350,7 +350,6 @@ OpenAiChatModel chatModel = OpenAiChatModel.builder()
 - **Native Structured Output**: Use `AdvisorParams.ENABLE_NATIVE_STRUCTURED_OUTPUT` for models that support it (OpenAI, Ollama, Mistral AI) — avoids JSON schema indirection.
 - **No default temperature**: Spring AI 2.x no longer sets a default temperature. Always configure `temperature` in `ChatOptions` or via `spring.ai.<provider>.chat.options.temperature`.
 - **Builder-only ChatOptions**: All provider ChatOptions (AnthropicChatOptions, AzureOpenAiChatOptions, BedrockChatOptions, etc.) use builder pattern in 2.x. Setter-style construction is removed.
-- **Bug workaround**: Set `spring.http.client.factory=jdk` for Spring Boot 3.4+
 - **Thread safety**: `ChatClient` instances are thread-safe and should be reused
 - **Streaming stack**: Streaming requires WebFlux; non-streaming requires Servlet stack
 - **Tool calling**: Always blocking, even within streaming responses

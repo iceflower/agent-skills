@@ -276,7 +276,7 @@ public class MyMcpTools {
     @McpTool(
         name = "get_customer",
         description = "Retrieve customer information by ID",
-        annotations = @McpTool.Annotations(
+        annotations = @McpTool.McpAnnotations(
             readOnlyHint = true,
             destructiveHint = false,
             openWorldHint = true
@@ -290,12 +290,13 @@ public class MyMcpTools {
 }
 ```
 
-### @McpTool.Annotations Attributes
+### @McpTool.McpAnnotations Attributes
 
 | Attribute | Default | Description |
 |-----------|---------|-------------|
 | `readOnlyHint` | `false` | Whether the tool is read-only (no side effects) |
 | `destructiveHint` | `true` | Whether the tool may perform destructive operations |
+| `idempotentHint` | `true` | Whether calling the tool twice has the same effect as calling once |
 | `openWorldHint` | `true` | Whether the tool operates in an open world (unknown state space) |
 
 ### @McpToolParam
@@ -386,7 +387,7 @@ class McpClientConfig {
 - Use `@McpTool` for tools exposed via MCP server — not for internal tool calling
 - `@Tool` and `@McpTool` serve different purposes: `@Tool` for ChatClient tool calling, `@McpTool` for MCP server tool exposure
 - Always provide meaningful `description` — MCP clients use it for tool discovery
-- Use `@McpTool.Annotations` hints to help MCP clients optimize tool usage
+- Use `@McpTool.McpAnnotations` hints to help MCP clients optimize tool usage
 - `@McpProgressToken` requires `McpSyncServerExchange` parameter in the method signature
 - Progress notifications are optional — guard against null `progressToken`
 

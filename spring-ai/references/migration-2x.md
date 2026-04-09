@@ -7,7 +7,7 @@
 | Spring Boot | 3.x | **4.0+** (Spring Framework 7.0) |
 | JDK | 17+ | 17+ (JDK 25 LTS recommended) |
 | Jackson | **Jackson 2** (`com.fasterxml.jackson`) | **Jackson 3** (`tools.jackson`) |
-| Spring AI BOM | `1.x.x` | `2.0.0-M4+` |
+| Spring AI BOM | `1.1.x` | `2.0.0-M4+` |
 
 ---
 

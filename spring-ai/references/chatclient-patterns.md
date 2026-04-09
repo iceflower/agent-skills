@@ -189,8 +189,8 @@ ChatClient chatClient = ChatClient.builder(chatModel)
     .defaultSystem("You are a {role}")
     .defaultUser("Default user context")
 
-    .defaultOptions(ChatOptions.builder()
-        .model("gpt-4o")
+    .defaultOptions(OpenAiChatOptions.builder()
+        .model("gpt-5-mini")
         .temperature(0.7)
         .build())
 

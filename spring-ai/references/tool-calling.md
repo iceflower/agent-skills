@@ -180,6 +180,7 @@ chatClient.prompt()
 ### Advisor-Controlled
 
 ```java
+// ToolCallingManager is auto-configured by Spring Boot
 var toolCallAdvisor = ToolCallAdvisor.builder()
     .toolCallingManager(toolCallingManager)
     .advisorOrder(BaseAdvisor.HIGHEST_PRECEDENCE + 300)
@@ -193,6 +194,8 @@ ChatClient chatClient = ChatClient.builder(chatModel)
 ### User-Controlled (Manual Loop)
 
 ```java
+// toolCallbacks: obtain via ToolCallbacks.from(new MyTools())
+// toolCallingManager: auto-configured by Spring Boot
 ToolCallingChatOptions options = ToolCallingChatOptions.builder()
     .toolCallbacks(toolCallbacks)
     .internalToolExecutionEnabled(false)
@@ -369,12 +372,14 @@ spring:
 @Configuration
 class McpClientConfig {
     @Bean
-    McpClientCustomizer<McpAsyncClient.Builder> mcpClientCustomizer() {
+    McpClientCustomizer<?> mcpClientCustomizer() {
         return builder -> builder
             .requestTimeout(Duration.ofSeconds(30));
     }
 }
 ```
+
+> `McpClientCustomizer` auto-configures MCP clients. The type parameter matches the client builder type (sync or async).
 
 ### MCP Tool Annotations Rules
 

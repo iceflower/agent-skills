@@ -251,16 +251,25 @@ class MyController {
 ## OpenAI-Compatible Endpoints
 
 ```java
-// Mutate API for different providers with OpenAI-compatible API
-OpenAiApi groqApi = baseOpenAiApi.mutate()
+// Create base OpenAI API and mutate for different providers
+OpenAiApi baseApi = OpenAiApi.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    .build();
+
+OpenAiChatModel baseModel = OpenAiChatModel.builder()
+    .openAiApi(baseApi)
+    .build();
+
+// Mutate for Groq (OpenAI-compatible API)
+OpenAiApi groqApi = baseApi.mutate()
     .baseUrl("https://api.groq.com/openai")
     .apiKey(System.getenv("GROQ_API_KEY"))
     .build();
 
-OpenAiChatModel groqModel = baseChatModel.mutate()
+OpenAiChatModel groqModel = baseModel.mutate()
     .openAiApi(groqApi)
     .defaultOptions(OpenAiChatOptions.builder()
-        .model("llama3-70b-8192")
+        .model("llama-3.3-70b-versatile")
         .temperature(0.5)
         .build())
     .build();

@@ -277,7 +277,7 @@ String answer = chatClient.prompt()
 Advisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
     .queryTransformers(
         RewriteQueryTransformer.builder()
-            .chatClientBuilder(chatClientBuilder.build().mutate())
+            .chatClientBuilder(chatClientBuilder)
             .build())
     .documentRetriever(VectorStoreDocumentRetriever.builder()
         .vectorStore(vectorStore)
@@ -285,6 +285,8 @@ Advisor ragAdvisor = RetrievalAugmentationAdvisor.builder()
         .build())
     .build();
 ```
+
+> Inject `ChatClient.Builder chatClientBuilder` via Spring DI. Do not call `.build().mutate()` — pass the builder directly.
 
 #### Allow Empty Context
 
@@ -333,6 +335,7 @@ DocumentRetriever retriever = VectorStoreDocumentRetriever.builder()
 Compresses conversation history into a standalone query.
 
 ```java
+// Inject ChatClient.Builder via Spring DI
 QueryTransformer transformer = CompressionQueryTransformer.builder()
     .chatClientBuilder(chatClientBuilder)
     .build();
@@ -370,6 +373,8 @@ MultiQueryExpander expander = MultiQueryExpander.builder()
     .includeOriginal(true)
     .build();
 ```
+
+> All transformers accept `ChatClient.Builder` — inject it via Spring DI. Do not pre-build the `ChatClient`.
 
 ## Query Augmentation
 

@@ -567,7 +567,7 @@ argocd app get myapp-prod --hard-refresh
 
 ---
 
-## 13. Anti-Patterns
+## 12. Anti-Patterns
 
 - Manually applying changes with `kubectl` — bypasses GitOps loop
 - Storing plaintext secrets in Git — use sealed/external secrets

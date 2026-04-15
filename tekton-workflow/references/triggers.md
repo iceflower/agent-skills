@@ -42,7 +42,7 @@ spec:
     - name: git-repo-url
     - name: git-repo-name
     - name: trigger-event
-  respecTemplates:
+  specTemplates:
     - apiVersion: tekton.dev/v1
       kind: PipelineRun
       metadata:
@@ -406,7 +406,7 @@ spec:
     - name: pr-number
     - name: pr-branch
     - name: pr-base
-  respecTemplates:
+  specTemplates:
     - apiVersion: tekton.dev/v1
       kind: PipelineRun
       metadata:

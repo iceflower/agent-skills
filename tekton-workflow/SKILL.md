@@ -96,7 +96,7 @@ spec:
 
   steps:
     - name: build
-      image: ghcr.io/containers/buildah:latest
+      image: ghcr.io/containers/buildah:v1.43.1
       workingDir: $(workspaces.source.path)
       script: |
         buildah bud -t $(params.IMAGE_URL) .
@@ -387,7 +387,7 @@ spec:
     - name: git-revision
     - name: git-repo-url
     - name: git-repo-name
-  respecTemplates:
+    specTemplates:
     - apiVersion: tekton.dev/v1
       kind: PipelineRun
       metadata:

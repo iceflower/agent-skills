@@ -242,3 +242,4 @@ ENTRYPOINT ["java", \
 ## Additional References
 
 - For BuildKit, multi-arch builds, signal handling, and image provenance, see [references/advanced-patterns.md](references/advanced-patterns.md)
+- For building OCI images without Docker daemon or Dockerfile (Jib, Buildpacks, Kaniko, Shipwright), see [references/dockerless-builds.md](references/dockerless-builds.md)

@@ -111,24 +111,207 @@ metadata:
 
 ### Progressive Delivery with Argo Rollouts
 
+#### Canary Deployment
+
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: myapp
+  name: order-service-canary
+  namespace: payments
+spec:
+  replicas: 5
+  revisionHistoryLimit: 5
+  strategy:
+    canary:
+      steps:
+        - setWeight: 10
+        - pause: { duration: 3m }
+        - setWeight: 30
+        - pause: { duration: 5m }
+        - setWeight: 50
+        - pause: { duration: 10m }
+        - setWeight: 100
+      canaryService: order-service-canary
+      stableService: order-service-stable
+      trafficRouting:
+        nginx:
+          stableIngress: order-service-ingress
+```
+
+#### BlueGreen Deployment
+
+BlueGreen maintains two identical environments and switches traffic instantly:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: order-service-bluegreen
+  namespace: payments
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  strategy:
+    blueGreen:
+      activeService: order-service-active
+      previewService: order-service-preview
+      autoPromotionEnabled: false
+      autoPromotionSeconds: 300
+      scaleDownDelaySeconds: 60
+      scaleDownDelayRevisionLimit: 2
+      abortScaleDownDelaySeconds: 30
+      previewReplicaCount: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-active
+spec:
+  selector:
+    app: order-service
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-preview
+spec:
+  selector:
+    app: order-service
+  ports:
+    - port: 80
+      targetPort: 8080
+```
+
+Key BlueGreen fields:
+
+| Field | Purpose |
+| --- | --- |
+| `activeService` | Service receiving production traffic |
+| `previewService` | Service for testing the new version before promotion |
+| `autoPromotionEnabled` | `false` requires manual promotion; `true` promotes automatically |
+| `autoPromotionSeconds` | Auto-promote after N seconds if `autoPromotionEnabled: false` |
+| `scaleDownDelaySeconds` | How long to keep the old ReplicaSet after switch (default: 30s) |
+| `previewReplicaCount` | Number of replicas for preview (useful for cost control) |
+
+#### AnalysisTemplate for Auto-Rollback
+
+AnalysisTemplates define metric-based checks that trigger automatic rollback when thresholds are breached:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: success-rate-check
+  namespace: payments
+spec:
+  args:
+    - name: service-name
+      value: order-service
+  metrics:
+    - name: success-rate
+      interval: 1m
+      successCondition: result[0] >= 0.95
+      failureLimit: 3
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring.svc:9090
+          query: |
+            sum(rate(http_requests_total{service="{{args.service-name}}", status=~"2.."}[1m]))
+            /
+            sum(rate(http_requests_total{service="{{args.service-name}}"}[1m]))
+    - name: error-rate
+      interval: 1m
+      failureCondition: result[0] > 0.05
+      failureLimit: 2
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring.svc:9090
+          query: |
+            sum(rate(http_requests_total{service="{{args.service-name}}", status=~"5.."}[1m]))
+            /
+            sum(rate(http_requests_total{service="{{args.service-name}}"}[1m]))
+    - name: p99-latency
+      interval: 1m
+      successCondition: result[0] <= 500
+      failureLimit: 2
+      provider:
+        prometheus:
+          address: http://prometheus.monitoring.svc:9090
+          query: |
+            histogram_quantile(0.99,
+              sum(rate(http_request_duration_seconds_bucket{service="{{args.service-name}}"}[1m]))
+              by (le))
+```
+
+#### Rollout with Analysis Integration
+
+Attach AnalysisTemplate to Canary steps for automated promotion/rollback:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: order-service-canary
+  namespace: payments
 spec:
   replicas: 5
   strategy:
     canary:
       steps:
         - setWeight: 20
-        - pause: { duration: 5m }
+        - pause: { duration: 2m }
+        - analysis:
+            templates:
+              - templateName: success-rate-check
+            args:
+              - name: service-name
+                value: order-service
         - setWeight: 50
         - pause: { duration: 5m }
         - setWeight: 100
-      canaryService: myapp-canary
-      stableService: myapp-stable
+      canaryService: order-service-canary
+      stableService: order-service-stable
       trafficRouting:
         nginx:
-          stableIngress: myapp-ingress
+          stableIngress: order-service-ingress
 ```
+
+#### Argo CD + Argo Rollouts Integration
+
+Argo CD natively manages Rollout resources. Key integration points:
+
+1. **Health Check**: Argo CD includes built-in health assessment for Rollout CRD. Status mapping:
+   - `Healthy` → Rollout is fully promoted
+   - `Progressing` → Canary step in progress or paused
+   - `Degraded` → Analysis failed, rollback triggered
+   - `Suspended` → Rollout paused awaiting manual approval
+
+2. **Sync Policy**: Rollouts work with both auto-sync and manual sync:
+
+```yaml
+syncPolicy:
+  automated:
+    selfHeal: true
+    prune: true
+  syncOptions:
+    - CreateNamespace=true
+```
+
+3. **Manual Promotion via Argo CD CLI**:
+
+```bash
+# Promote a paused BlueGreen rollout
+argocd app set order-service-bluegreen --parameter promote=true
+
+# Resume a paused canary step
+kubectl argo rollouts promote order-service-canary -n payments
+
+# Abort current rollout (triggers rollback)
+kubectl argo rollouts abort order-service-canary -n payments
+```
+
+4. **AnalysisRun Lifecycle**: AnalysisRuns are created as child resources of Rollouts. Argo CD tracks them as part of the application tree and reports overall health based on analysis results.

@@ -65,6 +65,7 @@ For task-oriented routing (combining multiple skills), see `references/by-task.m
 | Terraform, IaC, state management, modules              | terraform-workflow       |
 | Dockerfile, multi-stage builds, container security     | dockerfile               |
 | GitOps, Argo CD, ApplicationSet, sync strategies       | gitops-argocd            |
+| Tekton, Pipeline, Task, Triggers, Kubernetes-native CI | tekton-workflow          |
 | CI/CD, GitHub Actions, deployment pipelines            | ci-cd                    |
 | Karpenter, NodePool, autoscaling, spot instances       | karpenter-workflow       |
 | Dev Containers, devcontainer.json, Codespaces          | devcontainer             |

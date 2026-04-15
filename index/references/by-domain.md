@@ -100,6 +100,11 @@ Detailed routing information for each skill, including core coverage and relatio
 - **Core coverage**: Argo CD application management, sync strategies, secret management, multi-cluster deployment, rollback, notifications, ApplicationSet, progressive delivery
 - **Related skills**: helm-workflow (Helm-based deployments), k8s-workflow (Kubernetes targets), ci-cd (CI/CD integration)
 
+### tekton-workflow
+
+- **Core coverage**: Kubernetes-native CI/CD with Task, Pipeline, Trigger CRDs, workspace sharing, Tekton Catalog reuse, webhook triggers, CI/CD integration
+- **Related skills**: k8s-workflow (Kubernetes fundamentals), ci-cd (GitHub Actions comparison), gitops-argocd (GitOps CD), dockerfile (container builds), helm-workflow (Helm deployment)
+
 ### ci-cd
 
 - **Core coverage**: CI/CD pipeline patterns with GitHub Actions, deployment pipelines, branch protection

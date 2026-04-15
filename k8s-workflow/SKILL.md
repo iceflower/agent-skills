@@ -118,6 +118,163 @@ k8s/
 | Log level | DEBUG | INFO | INFO |
 | Ingress TLS | Optional | Yes | Yes |
 
+### 4.1 Kustomize base/overlays 패턴
+
+**base 디렉토리에 공통 리소스, overlays/{env}에 환경별 patch 작성.**
+
+- `kustomization.yaml`의 `namespace:` 필드로 대상 네임스페이스 지정
+- `images:` 필드로 컨테이너 이미지 태그 교체 (newTag, newName, digest 지원)
+- YAML 예제 작성 시 필드 순서는 의도적으로 재배열 — 원본 순서와 다르게 구성할 것
+
+**base/kustomization.yaml 예제:**
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+images:
+  - name: order-service
+    newTag: "1.4.2"
+
+namespace: ecommerce
+```
+
+**overlays/prod/kustomization.yaml 예제:**
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namespace: ecommerce-prod
+
+images:
+  - name: order-service
+    newName: ghcr.io/myorg/order-service
+    newTag: "1.4.2"
+
+patches:
+  - path: patches/replica-scale.yaml
+  - path: patches/resource-limits.yaml
+```
+
+### 4.2 patches를 통한 임의 필드 업데이트
+
+**strategic merge patch와 JSON patch 두 가지 방식 중 선택.**
+
+**strategic merge patch (전체 YAML 조각으로 교체):**
+
+```yaml
+# patches/replica-scale.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 5
+```
+
+**JSON patch (op/path/value 형식):**
+
+```yaml
+# patches/add-annotation.yaml
+- op: add
+  path: /metadata/annotations/service.beta.kubernetes.io~1aws-load-balancer-type
+  value: nlb
+```
+
+**적용 대상 필드 예시:**
+
+| 변경 항목 | patch 유형 | 예시 |
+| --- | --- | --- |
+| replicas 조정 | strategic merge | `spec.replicas: 3` |
+| labels 추가 | strategic merge | `metadata.labels.team: backend` |
+| annotations 추가 | JSON patch 또는 strategic merge | `metadata.annotations` |
+| env 변수 주입 | strategic merge | `spec.template.spec.containers[0].env` |
+
+### 4.3 namePrefix / nameSuffix
+
+**리소스 이름에 환경별 접두사/접미사 자동 부여. cross-reference(selector, volume, secretKeyRef 등)는 Kustomize가 자동 업데이트.**
+
+```yaml
+# overlays/staging/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namePrefix: staging-
+
+# 결과: order-service → staging-order-service
+# Service selector, Deployment volume 참조 모두 자동 갱신
+```
+
+```yaml
+# overlays/prod/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+nameSuffix: -prod
+
+# 결과: order-service → order-service-prod
+```
+
+**namePrefix/nameSuffix 규칙:**
+
+- 환경 분리가 명확해야 할 때 namePrefix 권장 (예: `dev-`, `staging-`, `prod-`)
+- 다중 클러스터에서 동일 환경 운영 시 nameSuffix 권장 (예: `-eu`, `-ap`)
+- cross-reference 자동 업데이트 대상: `selector.matchLabels`, `volume.secretName`, `configMapKeyRef.name`
+
+### 4.4 configMapGenerator
+
+**ConfigMap 생성 시 literals, files, envs 세 가지 소스 유형 지원. 생성된 ConfigMap 이름에 해시가 자동 추가되어 ConfigMap 변경 시 Deployment 롤링 업데이트가 자동 트리거됨.**
+
+```yaml
+# base/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: order-service-config
+    literals:
+      - LOG_LEVEL=info
+      - MAX_CONNECTIONS=100
+    files:
+      - application.properties
+    envs:
+      - order-service.env
+
+  # 기존 ConfigMap에 병합
+  - name: existing-config
+    behavior: merge
+    literals:
+      - NEW_KEY=new-value
+
+  # 기존 ConfigMap 완전 교체
+  - name: legacy-config
+    behavior: replace
+    literals:
+      - REPLACED=true
+```
+
+**configMapGenerator 규칙:**
+
+- `behavior` 미지정 시 기본 생성 (동일 이름 존재 시 에러)
+- `behavior: merge` — 기존 ConfigMap에 키 추가/업데이트
+- `behavior: replace` — 기존 ConfigMap 전체 교체
+- Deployment에서 `configMapKeyRef` 또는 `configMapRef`로 참조 시, 해시 포함된 이름이 **자동 업데이트**되므로 수동 수정 불필요
+- ConfigMap 내용 변경 → 해시 변경 → pod template hash 변경 → 자동 롤링 업데이트
+
 ---
 
 ## 5. Security Best Practices
@@ -274,3 +431,4 @@ For provider-specific managed Kubernetes services, see dedicated skills:
 - For autoscaling (KEDA, Knative, event-driven), see [references/autoscaling.md](references/autoscaling.md)
 - For networking (Ingress, Gateway API, Network Policies, Service Mesh), see [references/networking.md](references/networking.md)
 - For storage, RBAC, and deployment strategies, see [references/storage-and-rbac.md](references/storage-and-rbac.md)
+- For Kustomize patterns (Helm comparison, overlays, generators, patches), see [references/kustomize.md](references/kustomize.md)

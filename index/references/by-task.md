@@ -106,6 +106,11 @@ Skill combinations recommended for common task types. Primary skills should be l
 - **Primary**: gitops-argocd
 - **Secondary**: helm-workflow, k8s-workflow, ci-cd
 
+### Kubernetes-native CI/CD pipeline
+
+- **Primary**: tekton-workflow
+- **Secondary**: k8s-workflow (Kubernetes fundamentals), ci-cd (GitHub Actions comparison), dockerfile (container builds), gitops-argocd (GitOps CD)
+
 ## Testing
 
 ### Writing unit/integration tests

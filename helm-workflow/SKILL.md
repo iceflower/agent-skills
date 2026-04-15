@@ -3,14 +3,14 @@ name: helm-workflow
 description: >-
   Helm chart development and release management including chart structure,
   values design, template best practices, hooks, dependency management,
-  testing, and repository management. Covers Helm vs Kustomize selection.
+  testing, and repository management. Covers Helm v3/v4 and Kustomize selection.
   Use when creating, reviewing, or managing Helm charts.
 license: MIT
 metadata:
   author: iceflower
   version: "1.0"
-  last-reviewed: "2026-03"
-compatibility: Requires Helm CLI
+  last-reviewed: "2026-04"
+compatibility: Requires Helm CLI (v3.x or v4.x)
 ---
 
 # Helm Workflow Rules
@@ -168,6 +168,79 @@ helm upgrade myapp ./mychart \
 
 > See [references/template-patterns.md](references/template-patterns.md) for detailed patterns including helper templates, template functions, whitespace control, NOTES.txt, and testing examples.
 
+### §3.1 Library Charts for Template Sharing
+
+Library charts (`type: library`) are Helm charts that contain only templates — they produce no Kubernetes resources when rendered. Use them to share common template logic across multiple application charts.
+
+#### Defining a Library Chart
+
+```yaml
+# lib-chart/Chart.yaml
+apiVersion: v2
+name: lib-chart
+description: Shared Helm templates for platform services
+type: library            # No resources rendered — templates only
+version: 1.0.0
+```
+
+A library chart typically contains:
+
+```text
+lib-chart/
+├── Chart.yaml              # type: library
+├── templates/
+│   ├── _deployment.tpl     # Reusable Deployment template
+│   ├── _service.tpl        # Reusable Service template
+│   ├── _ingress.tpl        # Reusable Ingress template
+│   └── _helpers.tpl        # Shared labels, selectors, names
+```
+
+#### Consuming a Library Chart
+
+Reference the library chart as a dependency in the parent chart:
+
+```yaml
+# app-a/Chart.yaml
+apiVersion: v2
+name: app-a
+type: application
+version: 1.0.0
+
+dependencies:
+  - name: lib-chart
+    version: "1.x"
+    repository: "file://../lib-chart"
+    # or: repository: "oci://ghcr.io/org/charts"
+```
+
+Then invoke shared templates using `include`:
+
+```yaml
+# app-a/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lib-chart.fullname" . }}
+  labels:
+    {{- include "lib-chart.labels" . | nindent 4 }}
+spec:
+  {{- include "lib-chart.deploymentSpec" . | nindent 2 }}
+```
+
+#### When to Use Library Charts
+
+- Multiple services share common template patterns (Deployment, Service, Ingress structure)
+- Platform teams want to enforce standard labels, annotations, or resource structures
+- `_helpers.tpl` has grown too large — split into purpose-specific library charts
+- Replacing copy-paste template patterns with reusable chart dependencies
+
+#### Library Chart Rules
+
+- Library charts must declare `type: library` — Helm will skip resource rendering
+- Library charts should not include `values.yaml` with defaults — consumers provide all values
+- Version library charts independently — bump when shared templates change
+- Use `file://` for local development, OCI registries for distribution
+
 ---
 
 ## 4. Release Management
@@ -184,6 +257,7 @@ helm upgrade myapp ./mychart \
 
 ```bash
 # Install with atomic (auto-rollback on failure)
+# Helm v4: --atomic renamed to --rollback-on-failure
 helm install myapp ./mychart \
   --namespace production \
   --create-namespace \
@@ -207,6 +281,8 @@ helm upgrade --install myapp ./mychart \
   --timeout 5m \
   -f values-prod.yaml
 ```
+
+> **Helm v4 Breaking Changes**: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`. Server-side apply is now the default for new releases. See [§11 Helm v4 Migration](#11-helm-v4-migration) for details.
 
 ### Rollback
 
@@ -237,6 +313,8 @@ helm rollback myapp 3 -n production --wait
 | `post-delete` | After release deleted | External resource cleanup |
 | `pre-rollback` | Before rollback | Backup current state |
 | `post-rollback` | After rollback | Verify rollback success |
+
+> **Note**: `crd-install` hook was **removed in Helm v4**. Use the `crds/` directory for CRD management instead.
 
 ### Hook Definition
 
@@ -420,7 +498,47 @@ helm install myapp oci://ghcr.io/org/charts/mychart --version 1.2.0
 
 ---
 
-## 11. Anti-Patterns
+## 11. Helm v4 Migration
+
+Helm v4 (current: v4.1.4) introduces breaking changes from v3. Most charts work without modification, but CLI usage and some behaviors have changed.
+
+### Breaking Changes from v3
+
+| v3 Flag / Behavior | v4 Equivalent | Notes |
+| --- | --- | --- |
+| `--atomic` | `--rollback-on-failure` | Same behavior, renamed flag |
+| `--force` | `--force-replace` | Same behavior, renamed flag |
+| `helm registry login https://ghcr.io` | `helm registry login ghcr.io` | Domain only, no `https://` prefix |
+| `crd-install` hook | Use `crds/` directory | `crd-install` hook removed |
+| Client-side apply (default) | Server-side apply (default) | New releases use SSA |
+| In-process post-renderers | Plugin-based post-renderers only | External binary or plugin required |
+
+### New Features in v4
+
+- **Wasm-based plugins** — optional WebAssembly runtime for custom functionality
+- **OCI digest support** — install charts by digest for supply chain security: `helm install myapp oci://registry/chart --version "sha256:abc..."`
+- **Multi-document values** — split complex values across multiple YAML files
+- **Custom template functions** — extend Go templates via plugins
+- **kstatus watcher** — improved resource readiness monitoring
+- **Content-based caching** — faster dependency resolution
+
+### Argo CD Compatibility
+
+> **Important**: Argo CD (as of v3.3.x) does **not** fully support Helm v4. Argo CD internally uses Helm 3.x. If Helm v4 is installed locally, the `argocd` CLI may produce errors. Track [argoproj/argo-cd#27280](https://github.com/argoproj/argo-cd/issues/27280) for status.
+
+**Recommendation**: Use Helm v3.x for Argo CD-integrated workflows. Helm v4 can be used for local development and direct CLI operations.
+
+### Migration Checklist
+
+- [ ] Update CI/CD scripts: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`
+- [ ] Replace `crd-install` hooks with `crds/` directory
+- [ ] Update `helm registry login` to use domain names only (no `https://`)
+- [ ] Verify Argo CD compatibility if using GitOps workflows
+- [ ] Test post-renderer plugins if using custom post-renderers
+
+---
+
+## 12. Anti-Patterns
 
 - Using `helm install` without `--atomic` in CI/CD — leaves failed releases behind
 - Hardcoding values in templates instead of using `values.yaml`
@@ -435,6 +553,6 @@ helm install myapp oci://ghcr.io/org/charts/mychart --version 1.2.0
 
 ## Related Skills
 
-- For GitOps deployment of Helm charts with Argo CD, see [gitops-argocd](../gitops-argocd/) skill
+- For Argo CD + Helm integration (App of Apps, helm diff sync, Image Updater, Helm values overrides), see [gitops-argocd](../gitops-argocd/) skill — Argo CD + Helm integration is primarily handled in gitops-argocd
 - For Kubernetes manifest conventions and best practices, see [k8s-workflow](../k8s-workflow/) skill
 - For secret management in Helm charts, see [secrets-management](../secrets-management/) skill

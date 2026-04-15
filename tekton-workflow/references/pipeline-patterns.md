@@ -80,6 +80,34 @@ spec:
 | Inject credentials | `Secret` |
 | Large artifact storage (>10Gi) | `PersistentVolumeClaim` with appropriate storageClass |
 
+### PVC Auto-Cleanup (v1.11+)
+
+When using `volumeClaimTemplate` in PipelineRun, Tekton v1.11+ supports automatic PVC cleanup:
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: order-service-run-006
+  annotations:
+    tekton.dev/auto-cleanup-pvc: "true"
+spec:
+  pipelineRef:
+    name: order-service-pipeline
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 1Gi
+```
+
+- The `tekton.dev/auto-cleanup-pvc: "true"` annotation automatically deletes PVCs after PipelineRun completes
+- Only applies to `volumeClaimTemplate`-created PVCs — user-provided PVCs are never deleted
+- Prevents storage accumulation from ephemeral pipeline runs
+
 ---
 
 ## ServiceAccount Per-Task Patterns

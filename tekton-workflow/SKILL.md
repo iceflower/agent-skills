@@ -2,7 +2,7 @@
 name: tekton-workflow
 description: >-
   Kubernetes-native CI/CD pipeline system including Task, Pipeline, Trigger CRDs,
-  workspace sharing, Tekton Hub reuse, and CI/CD integration patterns.
+  workspace sharing, Artifact Hub reuse, and CI/CD integration patterns.
   Use when building or reviewing Tekton pipelines on Kubernetes.
 license: MIT
 metadata:
@@ -120,6 +120,41 @@ spec:
 | `steps` | Sequential containers | Order matters; exit code 0 = success |
 | `stepTemplate` | Default config for all steps | Security context, env vars |
 | `sidecars` | Parallel containers | Long-running services (dind, docker daemon) |
+| `stepActions` | Reusable step definitions | **GA since v1.8** — no feature flag needed |
+
+### StepActions (Reusable Steps)
+
+`StepAction` lets you define reusable steps that can be referenced across multiple Tasks:
+
+```yaml
+# Define a reusable StepAction
+apiVersion: tekton.dev/v1
+kind: StepAction
+metadata:
+  name: build-image
+spec:
+  params:
+    - name: IMAGE
+      type: string
+  image: ghcr.io/containers/buildah:latest
+  script: |
+    buildah bud -t $(params.IMAGE) .
+    buildah push $(params.IMAGE)
+```
+
+```yaml
+# Reference in a Task
+steps:
+  - name: build
+    ref:
+      name: build-image
+    params:
+      - name: IMAGE
+        value: $(params.IMAGE_URL)
+```
+
+- StepActions are **stable (GA)** since Tekton Pipelines v1.8 — no `enable-step-actions` feature flag needed
+- Use for common operations (build, test, scan) shared across multiple Tasks
 
 ### Params and Results
 
@@ -255,22 +290,21 @@ tasks:
 
 ---
 
-## 4. Tekton Hub Reuse
+## 4. Task Reuse (Artifact Hub)
 
-### Finding and Installing Tasks
+> **Important**: The public Tekton Hub (`hub.tekton.dev`) was **shut down on January 8, 2026** and the repository was archived. Use Artifact Hub or self-hosted alternatives instead.
+
+### Finding Tasks on Artifact Hub
 
 ```bash
-# Search for tasks
-tkn hub search git-clone
+# Browse tasks on Artifact Hub
+# https://artifacthub.io/packages/search?kind=14
 
-# Install to namespace
-tkn hub install task git-clone --namespace ci-cd
-
-# List installed tasks
-tkn hub list
+# Install from Tekton Catalog (manual YAML apply)
+kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-clone/0.9/git-clone.yaml
 ```
 
-### Common Hub Tasks
+### Common Catalog Tasks
 
 | Task | Purpose | Source |
 | --- | --- | --- |
@@ -278,8 +312,14 @@ tkn hub list
 | `buildah` | Build and push container images | Tekton Catalog |
 | `maven` | Maven build, test, package | Tekton Catalog |
 | `kubernetes-actions` | kubectl operations | Tekton Catalog |
-| `kaniko` | Build images without Docker daemon | Tekton Catalog |
 | `argocd-task-sync-and-wait` | Argo CD sync from pipeline | Tekton Catalog |
+
+### Self-Hosted Hub
+
+If your team needs a searchable Hub experience, deploy a self-hosted instance:
+
+- [OpenShift Pipelines Hub](https://github.com/openshift-pipelines/hub) — forkable Tekton Hub implementation
+- Catalog YAML files can be vendored into your own repository and applied via GitOps
 
 ### Using ClusterTasks
 
@@ -299,10 +339,10 @@ taskRef:
 
 ### Reuse Over Rewrite
 
-- Always check Tekton Hub before writing custom Tasks
-- Hub Tasks are maintained, tested, and follow best practices
-- Extend Hub Tasks via wrapper Tasks when customization is needed
-- Do not copy Hub Task YAML into your repo — install and reference
+- Always check the [Tekton Catalog](https://github.com/tektoncd/catalog) before writing custom Tasks
+- Catalog Tasks are maintained, tested, and follow best practices
+- Extend Catalog Tasks via wrapper Tasks when customization is needed
+- Vendor Catalog Task YAMLs into your own repo for version control
 
 ---
 

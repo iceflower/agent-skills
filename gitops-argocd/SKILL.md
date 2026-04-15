@@ -248,6 +248,10 @@ Argo CD syncs resources in a deterministic order based on Kubernetes API convent
 | `PostSync` | After main sync | Smoke tests, notifications, cleanup |
 | `SyncFail` | On sync failure | Alerting, rollback triggers, incident creation |
 | `Skip` | Excluded from sync | Documentation, annotations — never applied |
+| `PreDelete` | Before application deletion | Data export, finalizer cleanup (v2.10+) |
+| `PostDelete` | After all resources deleted | External resource cleanup (v2.10+) |
+
+> **PreDelete/PostDelete** (v2.10+): Only run during full application deletion, not during regular sync operations. Hook failure blocks the deletion process.
 
 ### Hook Delete Policies
 

@@ -194,16 +194,18 @@ pack build ghcr.io/myorg/order-service \
 
 ---
 
-## §3 Kaniko
+## §3 Kaniko ⚠️ Archived
+
+> **Warning**: Google **archived Kaniko in June 2025**. The repository is read-only and no longer receiving updates or security patches. The last release was v1.24.0 (May 2025). For new projects, consider alternatives: Jib (Java), Buildpacks (polyglot), Buildah, or Shipwright.
 
 Build container images from Dockerfile inside Kubernetes or any container runtime — without Docker daemon or root privileges.
 
 ### When to Use
 
-- CI/CD running inside Kubernetes (Tekton, Argo Workflows, GitLab Runner)
+- **Existing** CI/CD pipelines already using Kaniko (migration cost is high)
 - Environments where Docker daemon is unavailable or prohibited
 - Dockerfile-based builds that need non-root execution
-- Multi-stage Dockerfile support in restricted environments
+- **Not recommended for new projects** — see alternatives above
 
 ### Key Characteristics
 
@@ -216,7 +218,7 @@ Build container images from Dockerfile inside Kubernetes or any container runtim
 ### Tekton Task Integration
 
 ```yaml
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: kaniko-build

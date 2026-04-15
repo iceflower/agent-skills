@@ -379,3 +379,72 @@ kustomize build k8s/overlays/prod | kubectl diff -f -
 # 적용
 kustomize build k8s/overlays/prod | kubectl apply -f -
 ```
+
+---
+
+## 8. Replacements (Vars 대체)
+
+> **Important**: Kustomize `vars`는 **deprecated**되었습니다. 새 프로젝트에서는 `replacements`를 사용하세요.
+
+### Why Replacements Over Vars
+
+`vars`는 복잡한 경로 구문과 디버깅 어려움을 가지고 있었습니다. `replacements`는 명시적인 source/target 구조로 훨씬 이해하기 쉽습니다.
+
+### Basic Replacement
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+replacements:
+  - source:
+      kind: Service
+      name: order-service
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: Deployment
+          name: order-service
+        fieldPaths:
+          - spec.template.spec.containers.[name=api].env.[name=SERVICE_NAME].value
+```
+
+This replaces the `SERVICE_NAME` environment variable in the Deployment with the Service name.
+
+### Cross-Resource Replacements
+
+| Source | Target Use Case | Example |
+| --- | --- | --- |
+| Service `metadata.name` | Deployment env var, ConfigMap reference | Service discovery |
+| ConfigMap `metadata.name` | Deployment volume mount | Config binding |
+| Deployment `metadata.labels` | Service selector | Label synchronization |
+| Secret `metadata.name` | Deployment env from secret | Secret reference |
+
+### Structured Data Replacements (v5.8.0+)
+
+Kustomize v5.8.0+ supports replacements inside ConfigMap/Secret `data` fields containing YAML/JSON:
+
+```yaml
+replacements:
+  - source:
+      kind: ConfigMap
+      name: app-config
+      fieldPath: data.application\.yaml
+    targets:
+      - select:
+          kind: Deployment
+        fieldPaths:
+          - spec.template.spec.containers.[name=api].env.[name=APP_CONFIG].value
+```
+
+### Replacement Rules
+
+- Always prefer `replacements` over `vars` in new projects
+- Use dot-notation with bracket selectors for array elements: `[name=container]`
+- Escape dots in field names with backslash: `application\.yaml`
+- Test replacements with `kustomize build` before applying
+- For migrations from `vars`, verify each replacement target manually — automatic conversion is not available

@@ -3,14 +3,14 @@ name: helm-workflow
 description: >-
   Helm chart development and release management including chart structure,
   values design, template best practices, hooks, dependency management,
-  testing, and repository management. Covers Helm vs Kustomize selection.
+  testing, and repository management. Covers Helm v3/v4 and Kustomize selection.
   Use when creating, reviewing, or managing Helm charts.
 license: MIT
 metadata:
   author: iceflower
   version: "1.0"
-  last-reviewed: "2026-03"
-compatibility: Requires Helm CLI
+  last-reviewed: "2026-04"
+compatibility: Requires Helm CLI (v3.x or v4.x)
 ---
 
 # Helm Workflow Rules
@@ -257,6 +257,7 @@ spec:
 
 ```bash
 # Install with atomic (auto-rollback on failure)
+# Helm v4: --atomic renamed to --rollback-on-failure
 helm install myapp ./mychart \
   --namespace production \
   --create-namespace \
@@ -280,6 +281,8 @@ helm upgrade --install myapp ./mychart \
   --timeout 5m \
   -f values-prod.yaml
 ```
+
+> **Helm v4 Breaking Changes**: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`. Server-side apply is now the default for new releases. See [§12 Helm v4 Migration](#12-helm-v4-migration) for details.
 
 ### Rollback
 
@@ -310,6 +313,8 @@ helm rollback myapp 3 -n production --wait
 | `post-delete` | After release deleted | External resource cleanup |
 | `pre-rollback` | Before rollback | Backup current state |
 | `post-rollback` | After rollback | Verify rollback success |
+
+> **Note**: `crd-install` hook was **removed in Helm v4**. Use the `crds/` directory for CRD management instead.
 
 ### Hook Definition
 
@@ -490,6 +495,46 @@ helm install myapp oci://ghcr.io/org/charts/mychart --version 1.2.0
 - **Helm**: Distributing charts to others, complex conditional logic, lifecycle hooks, release management
 - **Kustomize**: Internal applications, simple environment overlays, no templating needed
 - **Hybrid**: Use Helm for packaging + Kustomize for environment overlays (`helm template | kustomize`)
+
+---
+
+## 12. Helm v4 Migration
+
+Helm v4 (current: v4.1.4) introduces breaking changes from v3. Most charts work without modification, but CLI usage and some behaviors have changed.
+
+### Breaking Changes from v3
+
+| v3 Flag / Behavior | v4 Equivalent | Notes |
+| --- | --- | --- |
+| `--atomic` | `--rollback-on-failure` | Same behavior, renamed flag |
+| `--force` | `--force-replace` | Same behavior, renamed flag |
+| `helm registry login https://ghcr.io` | `helm registry login ghcr.io` | Domain only, no `https://` prefix |
+| `crd-install` hook | Use `crds/` directory | `crd-install` hook removed |
+| Client-side apply (default) | Server-side apply (default) | New releases use SSA |
+| In-process post-renderers | Plugin-based post-renderers only | External binary or plugin required |
+
+### New Features in v4
+
+- **Wasm-based plugins** — optional WebAssembly runtime for custom functionality
+- **OCI digest support** — install charts by digest for supply chain security: `helm install myapp oci://registry/chart --version "sha256:abc..."`
+- **Multi-document values** — split complex values across multiple YAML files
+- **Custom template functions** — extend Go templates via plugins
+- **kstatus watcher** — improved resource readiness monitoring
+- **Content-based caching** — faster dependency resolution
+
+### Argo CD Compatibility
+
+> **Important**: Argo CD (as of v3.3.x) does **not** fully support Helm v4. Argo CD internally uses Helm 3.x. If Helm v4 is installed locally, the `argocd` CLI may produce errors. Track [argoproj/argo-cd#27280](https://github.com/argoproj/argo-cd/issues/27280) for status.
+
+**Recommendation**: Use Helm v3.x for Argo CD-integrated workflows. Helm v4 can be used for local development and direct CLI operations.
+
+### Migration Checklist
+
+- [ ] Update CI/CD scripts: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`
+- [ ] Replace `crd-install` hooks with `crds/` directory
+- [ ] Update `helm registry login` to use domain names only (no `https://`)
+- [ ] Verify Argo CD compatibility if using GitOps workflows
+- [ ] Test post-renderer plugins if using custom post-renderers
 
 ---
 

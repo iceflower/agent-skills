@@ -282,7 +282,7 @@ helm upgrade --install myapp ./mychart \
   -f values-prod.yaml
 ```
 
-> **Helm v4 Breaking Changes**: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`. Server-side apply is now the default for new releases. See [§12 Helm v4 Migration](#12-helm-v4-migration) for details.
+> **Helm v4 Breaking Changes**: `--atomic` → `--rollback-on-failure`, `--force` → `--force-replace`. Server-side apply is now the default for new releases. See [§11 Helm v4 Migration](#11-helm-v4-migration) for details.
 
 ### Rollback
 

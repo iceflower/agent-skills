@@ -168,6 +168,79 @@ helm upgrade myapp ./mychart \
 
 > See [references/template-patterns.md](references/template-patterns.md) for detailed patterns including helper templates, template functions, whitespace control, NOTES.txt, and testing examples.
 
+### §3.1 Library Charts for Template Sharing
+
+Library charts (`type: library`) are Helm charts that contain only templates — they produce no Kubernetes resources when rendered. Use them to share common template logic across multiple application charts.
+
+#### Defining a Library Chart
+
+```yaml
+# lib-chart/Chart.yaml
+apiVersion: v2
+name: lib-chart
+description: Shared Helm templates for platform services
+type: library            # No resources rendered — templates only
+version: 1.0.0
+```
+
+A library chart typically contains:
+
+```text
+lib-chart/
+├── Chart.yaml              # type: library
+├── templates/
+│   ├── _deployment.tpl     # Reusable Deployment template
+│   ├── _service.tpl        # Reusable Service template
+│   ├── _ingress.tpl        # Reusable Ingress template
+│   └── _helpers.tpl        # Shared labels, selectors, names
+```
+
+#### Consuming a Library Chart
+
+Reference the library chart as a dependency in the parent chart:
+
+```yaml
+# app-a/Chart.yaml
+apiVersion: v2
+name: app-a
+type: application
+version: 1.0.0
+
+dependencies:
+  - name: lib-chart
+    version: "1.x"
+    repository: "file://../lib-chart"
+    # or: repository: "oci://ghcr.io/org/charts"
+```
+
+Then invoke shared templates using `include`:
+
+```yaml
+# app-a/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lib-chart.fullname" . }}
+  labels:
+    {{- include "lib-chart.labels" . | nindent 4 }}
+spec:
+  {{- include "lib-chart.deploymentSpec" . | nindent 2 }}
+```
+
+#### When to Use Library Charts
+
+- Multiple services share common template patterns (Deployment, Service, Ingress structure)
+- Platform teams want to enforce standard labels, annotations, or resource structures
+- `_helpers.tpl` has grown too large — split into purpose-specific library charts
+- Replacing copy-paste template patterns with reusable chart dependencies
+
+#### Library Chart Rules
+
+- Library charts must declare `type: library` — Helm will skip resource rendering
+- Library charts should not include `values.yaml` with defaults — consumers provide all values
+- Version library charts independently — bump when shared templates change
+- Use `file://` for local development, OCI registries for distribution
+
 ---
 
 ## 4. Release Management
@@ -435,6 +508,6 @@ helm install myapp oci://ghcr.io/org/charts/mychart --version 1.2.0
 
 ## Related Skills
 
-- For GitOps deployment of Helm charts with Argo CD, see [gitops-argocd](../gitops-argocd/) skill
+- For Argo CD + Helm integration (App of Apps, helm diff sync, Image Updater, Helm values overrides), see [gitops-argocd](../gitops-argocd/) skill — Argo CD + Helm integration is primarily handled in gitops-argocd
 - For Kubernetes manifest conventions and best practices, see [k8s-workflow](../k8s-workflow/) skill
 - For secret management in Helm charts, see [secrets-management](../secrets-management/) skill

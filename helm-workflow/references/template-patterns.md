@@ -128,5 +128,57 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "myapp:1.0.0"
+           value: "myapp:1.0.0"
 ```
+
+## ConfigMap-Based Rolling Update
+
+When a ConfigMap or Secret changes, Kubernetes does **not** automatically restart pods that reference it. Use `sha256sum` annotations on the Deployment `spec.template.metadata` to trigger a rolling update whenever the underlying configuration changes.
+
+### ConfigMap Checksum Annotation
+
+```yaml
+# templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mychart.fullname" . }}
+spec:
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        {{- include "mychart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          envFrom:
+            - configMapRef:
+                name: {{ include "mychart.fullname" . }}-config
+```
+
+### Secret Checksum Annotation
+
+```yaml
+# templates/deployment.yaml (with Secret)
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+```
+
+### How It Works
+
+1. `include (print $.Template.BasePath "/configmap.yaml") .` renders the full ConfigMap template content
+2. `sha256sum` computes a hash of the rendered content
+3. The hash is stored as a pod template annotation
+4. When ConfigMap content changes, the hash changes
+5. Kubernetes detects the pod template spec change → triggers rolling update
+
+### Rules
+
+- Always use `include` with the template file path — do not reference rendered resource names
+- Use separate annotation keys per resource type: `checksum/config`, `checksum/secret`
+- Works with Argo CD — helm diff detects annotation changes and syncs automatically
+- Do not use this pattern for resources that change frequently without needing restarts (e.g., metrics)

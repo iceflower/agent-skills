@@ -27,7 +27,7 @@ Jib automatically splits the application into multiple layers for optimal cachin
 
 ```kotlin
 plugins {
-    id("com.google.cloud.tools.jib") version "3.4.5"
+    id("com.google.cloud.tools.jib") version "3.5.3"
 }
 
 jib {
@@ -65,7 +65,7 @@ jib {
 <plugin>
     <groupId>com.google.cloud.tools</groupId>
     <artifactId>jib-maven-plugin</artifactId>
-    <version>3.4.5</version>
+    <version>3.5.1</version>
     <configuration>
         <from>
             <image>eclipse-temurin:21-jre-alpine</image>
@@ -137,7 +137,7 @@ Transform source code into OCI images automatically using buildpacks — no Dock
 brew install buildpacks/tap/pack
 
 # Linux
-curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.36.2/pack-v0.36.2-linux.tgz" | sudo tar -xzf - -C /usr/local/bin pack
+curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.2/pack-v0.40.2-linux.tgz" | sudo tar -xzf - -C /usr/local/bin pack
 ```
 
 ### Builder Selection
@@ -438,7 +438,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install pack
         run: |
-          curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.36.2/pack-v0.36.2-linux.tgz" | sudo tar -xzf - -C /usr/local/bin pack
+          curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.2/pack-v0.40.2-linux.tgz" | sudo tar -xzf - -C /usr/local/bin pack
       - name: Build with Buildpacks
         run: |
           pack build ghcr.io/myorg/order-service:${{ github.sha }} \
@@ -451,7 +451,7 @@ jobs:
 #### Tekton — Kaniko
 
 ```yaml
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: build-pipeline-run-

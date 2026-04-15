@@ -498,7 +498,7 @@ helm install myapp oci://ghcr.io/org/charts/mychart --version 1.2.0
 
 ---
 
-## 12. Helm v4 Migration
+## 11. Helm v4 Migration
 
 Helm v4 (current: v4.1.4) introduces breaking changes from v3. Most charts work without modification, but CLI usage and some behaviors have changed.
 
@@ -538,7 +538,7 @@ Helm v4 (current: v4.1.4) introduces breaking changes from v3. Most charts work 
 
 ---
 
-## 11. Anti-Patterns
+## 12. Anti-Patterns
 
 - Using `helm install` without `--atomic` in CI/CD — leaves failed releases behind
 - Hardcoding values in templates instead of using `values.yaml`

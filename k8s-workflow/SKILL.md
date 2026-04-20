@@ -558,10 +558,12 @@ Envoy Gateway is the CNCF reference implementation for Gateway API.
 
 ```bash
 # 1. Download install YAML
+# Check latest release: https://github.com/envoyproxy/gateway/releases
 curl -sfL https://github.com/envoyproxy/gateway/releases/download/v1.7.2/install.yaml > /tmp/install.yaml
 
 # 2. Install without CRDs (CRDs are installed separately above)
 #    Note: install.yaml CRDs have annotations exceeding kubectl's 262144-byte limit
+#    Requires: python3-yaml (sudo apt install python3-yaml)
 python3 -c "
 import yaml, sys
 with open('/tmp/install.yaml') as f:

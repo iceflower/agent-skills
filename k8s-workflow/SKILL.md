@@ -10,8 +10,8 @@ description: >-
 license: MIT
 metadata:
   author: iceflower
-  version: "1.0"
-  last-reviewed: "2026-03"
+  version: "1.1"
+  last-reviewed: "2026-04"
 compatibility: Requires kubectl and Kubernetes cluster access
 ---
 
@@ -424,6 +424,239 @@ For provider-specific managed Kubernetes services, see dedicated skills:
 - For GitOps deployment with Argo CD, see [gitops-argocd](../gitops-argocd/) skill
 - For Helm chart management, see [helm-workflow](../helm-workflow/) skill
 - For Karpenter node provisioning, see [karpenter-workflow](../karpenter-workflow/) skill
+
+---
+
+## 10. k3s (Lightweight Kubernetes)
+
+### When to Use k3s
+
+- Edge computing, IoT, home lab, or resource-constrained environments
+- Raspberry Pi clusters (ARM64)
+- CI/CD ephemeral clusters
+- Development environments where full k8s overhead is unnecessary
+
+### k3s vs Full Kubernetes
+
+| Feature | k3s | Full Kubernetes |
+|---------|-----|-----------------|
+| Control plane | Single binary (~100MB) | Multiple components |
+| Datastore | SQLite (default), etcd, external | etcd required |
+| Resource usage | ~500MB RAM | ~1-2GB RAM |
+| ARM64 support | First-class, native | Supported, more setup |
+| Built-in addons | CoreDNS, ServiceLB, local-path-provisioner | All external |
+
+### Install k3s Server
+
+```bash
+# Standard install (Traefik + ServiceLB enabled)
+curl -sfL https://get.k3s.io | sh -
+
+# Disable Traefik (to use Envoy Gateway instead)
+curl -sfL https://get.k3s.io | sh -s - server --disable traefik
+
+# Pin specific version
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.31.6+k3s1 sh -s - server --disable traefik
+```
+
+> **Important**: Do NOT use `--disable servicelb` if you plan to use Gateway API with Envoy Gateway. ServiceLB provides LoadBalancer IPs for Gateway resources.
+
+### Install k3s Agent
+
+```bash
+# Get token from server
+sudo cat /var/lib/rancher/k3s/server/node-token
+
+# On agent node
+curl -sfL https://get.k3s.io | \
+  K3S_URL=https://<server-ip>:6443 \
+  K3S_TOKEN=<node-token> \
+  sh -
+```
+
+### k3s-Specific Gotchas
+
+#### Metrics Server Requires `--kubelet-insecure-tls`
+
+k3s uses self-signed kubelet certificates. The standard Metrics Server manifest will fail with TLS errors:
+
+```bash
+# After installing Metrics Server, patch the deployment:
+kubectl patch deployment metrics-server -n kube-system --type='json' \
+  -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--kubelet-insecure-tls"}]'
+```
+
+#### Helm is Not Pre-installed
+
+k3s does not include Helm by default. Install the release binary directly:
+
+```bash
+HELM_VERSION="v3.20.2"
+curl -fsSL https://get.helm.sh/helm-${HELM_VERSION}-linux-arm64.tar.gz -o /tmp/helm.tar.gz
+tar -zxvf /tmp/helm.tar.gz -C /tmp linux-arm64/helm
+sudo mv /tmp/linux-arm64/helm /usr/local/bin/helm
+rm -rf /tmp/linux-arm64 /tmp/helm.tar.gz
+```
+
+For other architectures, replace `linux-arm64` with `linux-amd64`, `linux-386`, or `linux-ppc64le`.
+
+#### Container Images on ARM64
+
+Not all container images support `arm64`. Verify before deploying:
+
+```yaml
+# NOT arm64 compatible (will fail with "exec format error")
+image: kennethreitz/httpbin
+
+# ARM64 compatible alternative
+image: docker.io/kong/httpbin:latest
+```
+
+Use `docker manifest inspect <image>` to verify multi-arch support.
+
+### Reinstalling k3s Server (Preserving State)
+
+To change server flags (e.g., add `--disable servicelb` back):
+
+```bash
+# Stop k3s
+sudo systemctl stop k3s
+
+# Reinstall with new flags (existing SQLite DB and workloads are preserved)
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.31.6+k3s1 sh -s - server --disable traefik
+
+# Restart
+sudo systemctl restart k3s
+```
+
+---
+
+## 11. Gateway API
+
+### Overview
+
+Gateway API is the next-generation Kubernetes API for traffic management, replacing Ingress. It provides richer routing, multi-tenancy, and role separation.
+
+| Resource | Purpose |
+|----------|---------|
+| `GatewayClass` | Defines the controller (e.g., Envoy Gateway, Istio) |
+| `Gateway` | Configures listeners (ports, protocols, TLS) |
+| `HTTPRoute` | HTTP routing rules to backend services |
+| `GRPCRoute` | gRPC routing rules |
+| `TLSRoute` | TCP/TLS routing rules |
+| `ReferenceGrant` | Cross-namespace route attachments |
+
+### Install Gateway API CRDs
+
+```bash
+# Standard channel (stable, recommended)
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
+
+# Experimental channel (includes additional features)
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/experimental-install.yaml
+```
+
+### Install Envoy Gateway
+
+Envoy Gateway is the CNCF reference implementation for Gateway API.
+
+```bash
+# 1. Download install YAML
+# Check latest release: https://github.com/envoyproxy/gateway/releases
+curl -sfL https://github.com/envoyproxy/gateway/releases/download/v1.7.2/install.yaml > /tmp/install.yaml
+
+# 2. Install without CRDs (CRDs are installed separately above)
+#    Note: install.yaml CRDs have annotations exceeding kubectl's 262144-byte limit
+#    Option A: Requires python3-yaml (sudo apt install python3-yaml)
+python3 -c "
+import yaml, sys
+with open('/tmp/install.yaml') as f:
+    docs = list(yaml.safe_load_all(f))
+for doc in docs:
+    if doc and doc.get('kind') == 'CustomResourceDefinition':
+        continue
+    print('---')
+    yaml.safe_dump(doc, sys.stdout, default_flow_style=False)
+" | kubectl apply -f -
+
+#    Option B: No dependencies required (awk-based)
+#    awk '/^---$/{p=1;next} /^kind: CustomResourceDefinition$/{p=0} p' /tmp/install.yaml | kubectl apply -f -
+
+# 3. Create GatewayClass
+kubectl apply -f - <<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy-gateway-class
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+EOF
+```
+
+### Gateway API + LoadBalancer
+
+Gateway resources of type `LoadBalancer` require a LoadBalancer controller:
+
+| Environment | Controller |
+|-------------|------------|
+| k3s | ServiceLB (built-in, keep enabled) |
+| Cloud (AWS/GCP/Azure) | Cloud provider controller |
+| Bare metal | MetalLB |
+
+> **Warning**: If `--disable servicelb` is used in k3s, Gateway resources will show `AddressNotAssigned` status.
+
+### Verify Gateway API
+
+```bash
+# Check GatewayClass
+kubectl get gatewayclass
+
+# Check Gateway status
+kubectl get gateway -A
+kubectl describe gateway <name> -n <namespace>
+
+# Check HTTPRoute attachment
+kubectl get httproute -A
+
+# Test connectivity
+curl http://<gateway-external-ip>/headers
+```
+
+### Gateway API Quick Start
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: my-gateway
+spec:
+  gatewayClassName: envoy-gateway-class
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: my-route
+spec:
+  parentRefs:
+  - name: my-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api
+    backendRefs:
+    - name: my-service
+      port: 8080
+```
+
+---
 
 ## Additional References
 

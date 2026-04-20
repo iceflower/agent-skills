@@ -488,13 +488,17 @@ kubectl patch deployment metrics-server -n kube-system --type='json' \
 
 #### Helm is Not Pre-installed
 
-k3s does not include Helm by default. Install separately:
+k3s does not include Helm by default. Install the release binary directly:
 
 ```bash
-curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-chmod 700 /tmp/get_helm.sh
-/tmp/get_helm.sh
+HELM_VERSION="v3.20.2"
+curl -fsSL https://get.helm.sh/helm-${HELM_VERSION}-linux-arm64.tar.gz -o /tmp/helm.tar.gz
+tar -zxvf /tmp/helm.tar.gz -C /tmp linux-arm64/helm
+sudo mv /tmp/linux-arm64/helm /usr/local/bin/helm
+rm -rf /tmp/linux-arm64 /tmp/helm.tar.gz
 ```
+
+For other architectures, replace `linux-arm64` with `linux-amd64`, `linux-386`, or `linux-ppc64le`.
 
 #### Container Images on ARM64
 
@@ -563,7 +567,7 @@ curl -sfL https://github.com/envoyproxy/gateway/releases/download/v1.7.2/install
 
 # 2. Install without CRDs (CRDs are installed separately above)
 #    Note: install.yaml CRDs have annotations exceeding kubectl's 262144-byte limit
-#    Requires: python3-yaml (sudo apt install python3-yaml)
+#    Option A: Requires python3-yaml (sudo apt install python3-yaml)
 python3 -c "
 import yaml, sys
 with open('/tmp/install.yaml') as f:
@@ -574,6 +578,9 @@ for doc in docs:
     print('---')
     yaml.safe_dump(doc, sys.stdout, default_flow_style=False)
 " | kubectl apply -f -
+
+#    Option B: No dependencies required (awk-based)
+#    awk '/^---$/{p=1;next} /^kind: CustomResourceDefinition$/{p=0} p' /tmp/install.yaml | kubectl apply -f -
 
 # 3. Create GatewayClass
 kubectl apply -f - <<EOF

@@ -30,3 +30,6 @@ bun.lock
 # Generated reports
 COMPLIANCE_REPORT.md
 *_REPORT.md
+
+# Local device configs (contains sensitive info)
+raspberry-pi-cluster/
